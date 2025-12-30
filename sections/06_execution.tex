@@ -72,7 +72,12 @@ The multi-agent configuration panel allows registering multiple agents with diff
 
 Tool call monitoring captures all LLM calls with prompts and responses, file system operations, Python script executions, and user input requests in real-time. The checkpoint panel enables resuming from or forking past execution states.
 
-% [ILLUSTRATION OPPORTUNITY: Screenshot or diagram of the Canvas App showing the graph visualization, agent panel, detail panel, and control panel]
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{canvas_app.png}
+\caption{The NormCode Canvas App visual debugging environment. The graph visualization (center) shows the inference flow with semantic operations in purple/blue and syntactic operations in gray. The left panel provides agent configuration and tool call monitoring. The right panel displays node details with tensor inspection, reference data, and execution state. Progress indicators show real-time execution status with 18/20 nodes completed.}
+\label{fig:canvas_app}
+\end{figure}
 
 \subsection{Command-Line Interface}
 

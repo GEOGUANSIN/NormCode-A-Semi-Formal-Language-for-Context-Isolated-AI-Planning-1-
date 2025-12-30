@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NormCode System Overview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: #0a0a0f;
+            color: #e8e6e3;
+            min-height: 100vh;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #f0f0f0;
+            margin-bottom: 40px;
+            letter-spacing: 0.02em;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 240px;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        /* Compilation Pipeline - Left Column */
+        .compilation-pipeline {
+            background: linear-gradient(145deg, #12121a 0%, #0d0d14 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .pipeline-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #7a7a8a;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .phase {
+            background: #16161f;
+            border: 1px solid #2a2a3a;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .phase:hover {
+            border-color: #4a4a6a;
+            transform: translateX(4px);
+        }
+        
+        .phase-number {
+            position: absolute;
+            top: -8px;
+            left: 12px;
+            background: #0a0a0f;
+            padding: 0 6px;
+            font-size: 0.65rem;
+            color: #5a5a7a;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .phase-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 4px;
+        }
+        
+        .phase-desc {
+            font-size: 0.72rem;
+            color: #8a8a9a;
+            line-height: 1.4;
+        }
+        
+        .phase-files {
+            margin-top: 8px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .file-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #1a1a24;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .file-badge.input { color: #7eb8da; border-color: #3a5a7a; }
+        .file-badge.output { color: #a8d4a0; border-color: #4a6a4a; }
+        
+        .phase-arrow {
+            text-align: center;
+            color: #4a4a5a;
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+        
+        /* Node Graph - Center */
+        .node-graph {
+            background: linear-gradient(145deg, #12121a 0%, #0d0d14 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 520px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .graph-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #7a7a8a;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .graph-canvas {
+            position: relative;
+            height: 380px;
+            width: 100%;
+        }
+        
+        /* SVG for edges */
+        .graph-canvas svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .edge {
+            stroke: #3a4a5a;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .edge.semantic {
+            stroke: #6a5acd;
+            stroke-dasharray: none;
+        }
+        
+        .edge.syntactic {
+            stroke: #4a5a6a;
+            stroke-dasharray: 4 3;
+        }
+        
+        /* Nodes */
+        .node {
+            position: absolute;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .node:hover {
+            transform: scale(1.05);
+            z-index: 20;
+        }
+        
+        /* Node types */
+        .node.ground {
+            background: linear-gradient(135deg, #1a2a3a 0%, #0f1a25 100%);
+            border: 2px solid #3a5a7a;
+            color: #7eb8da;
+        }
+        
+        .node.semantic-func {
+            background: linear-gradient(135deg, #2a1a3a 0%, #1a0f25 100%);
+            border: 2px solid #6a4a8a;
+            color: #b8a0da;
+        }
+        
+        .node.semantic-value {
+            background: linear-gradient(135deg, #1a1a3a 0%, #0f0f25 100%);
+            border: 2px solid #4a5a9a;
+            color: #8a9eda;
+        }
+        
+        .node.syntactic {
+            background: linear-gradient(135deg, #1a1a1f 0%, #12121a 100%);
+            border: 2px solid #3a3a4a;
+            color: #8a8a9a;
+        }
+        
+        .node.output {
+            background: linear-gradient(135deg, #1a2a1a 0%, #0f1a0f 100%);
+            border: 2px solid #4a7a4a;
+            color: #a0d4a0;
+        }
+        
+        .node-label {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .node-index {
+            font-size: 0.6rem;
+            color: #6a6a7a;
+            margin-top: 3px;
+        }
+        
+        .node-type {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 4px;
+            opacity: 0.7;
+        }
+        
+        /* Legend */
+        .graph-legend {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            padding: 14px;
+            margin-top: 10px;
+            background: #16161f;
+            border: 1px solid #2a2a3a;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: #7a7a8a;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+        
+        .legend-dot.ground { background: #3a5a7a; }
+        .legend-dot.semantic-func { background: #6a4a8a; }
+        .legend-dot.semantic-value { background: #4a5a9a; }
+        .legend-dot.syntactic { background: #3a3a4a; }
+        .legend-dot.output { background: #4a7a4a; }
+        
+        /* Execution Runtime - Right Column */
+        .execution-runtime {
+            background: linear-gradient(145deg, #12121a 0%, #0d0d14 100%);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .runtime-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #7a7a8a;
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .runtime-component {
+            background: #16161f;
+            border: 1px solid #2a2a3a;
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .component-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #d0d0d0;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .component-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        
+        .component-icon.waitlist { background: #2a3a4a; color: #7eb8da; }
+        .component-icon.blackboard { background: #2a2a3a; color: #b0b0c0; }
+        .component-icon.repos { background: #3a2a4a; color: #c0a0d0; }
+        
+        .component-desc {
+            font-size: 0.7rem;
+            color: #7a7a8a;
+            line-height: 1.4;
+        }
+        
+        .status-indicators {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .status-badge.pending { background: #2a2a3a; color: #7a7a8a; }
+        .status-badge.running { background: #2a3a4a; color: #7eb8da; }
+        .status-badge.completed { background: #2a3a2a; color: #7eb87a; }
+        .status-badge.failed { background: #3a2a2a; color: #da7a7a; }
+        
+        /* Audit Trail Section */
+        .audit-trail {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #2a2a3a;
+        }
+        
+        .audit-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #6a8a6a;
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .audit-entry {
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #6a7a6a;
+            padding: 4px 0;
+            border-bottom: 1px solid #1a2a1a;
+        }
+        
+        .audit-entry .step { color: #8aba8a; }
+        .audit-entry .action { color: #7a9a7a; }
+        
+        /* Data Isolation Callout */
+        .isolation-callout {
+            margin-top: 30px;
+            background: linear-gradient(135deg, #1a2a2a 0%, #0f1a1a 100%);
+            border: 1px solid #2a4a4a;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .callout-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #7ababa;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .callout-title::before {
+            content: "◆";
+            font-size: 0.6rem;
+        }
+        
+        .callout-text {
+            font-size: 0.7rem;
+            color: #6a9a9a;
+            line-height: 1.5;
+        }
+        
+        /* Flow arrows between sections */
+        .section-connector {
+            display: none; /* Hidden for cleaner look, enable if needed */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NormCode: Compilation to Auditable Execution</h1>
+        
+        <div class="main-layout">
+            <!-- Left: Compilation Pipeline -->
+            <div class="compilation-pipeline">
+                <div class="pipeline-title">Compilation Pipeline</div>
+                
+                <div class="phase">
+                    <div class="phase-number">PHASE 1</div>
+                    <div class="phase-name">Derivation</div>
+                    <div class="phase-desc">Natural language → structured concepts and dependencies</div>
+                    <div class="phase-files">
+                        <span class="file-badge input">NL intent</span>
+                        <span class="file-badge output">.ncds</span>
+                    </div>
+                </div>
+                
+                <div class="phase-arrow">↓</div>
+                
+                <div class="phase">
+                    <div class="phase-number">PHASE 2</div>
+                    <div class="phase-name">Formalization</div>
+                    <div class="phase-desc">Assign flow indices, sequence types, concept bindings</div>
+                    <div class="phase-files">
+                        <span class="file-badge input">.ncds</span>
+                        <span class="file-badge output">.ncd</span>
+                        <span class="file-badge output">.ncn</span>
+                    </div>
+                </div>
+                
+                <div class="phase-arrow">↓</div>
+                
+                <div class="phase">
+                    <div class="phase-number">PHASE 3</div>
+                    <div class="phase-name">Post-Formalization</div>
+                    <div class="phase-desc">Add paradigms, perception norms, resource grounding</div>
+                    <div class="phase-files">
+                        <span class="file-badge input">.ncd</span>
+                        <span class="file-badge output">.ncd+</span>
+                    </div>
+                </div>
+                
+                <div class="phase-arrow">↓</div>
+                
+                <div class="phase">
+                    <div class="phase-number">PHASE 4</div>
+                    <div class="phase-name">Activation</div>
+                    <div class="phase-desc">Generate executable JSON repositories</div>
+                    <div class="phase-files">
+                        <span class="file-badge input">.ncd+</span>
+                        <span class="file-badge output">.json</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center: Node Graph -->
+            <div class="node-graph">
+                <div class="graph-title">Inference Graph (Execution View)</div>
+                
+                <div class="graph-canvas" id="graphCanvas">
+                    <!-- SVG for edges - drawn by JS -->
+                    <svg id="edgesSvg"></svg>
+                    
+                    <!-- Row 1: Ground + Parse + Sections -->
+                    <div class="node ground" id="n-doc" style="left: 10px; top: 20px;">
+                        <div class="node-label">:document:</div>
+                        <div class="node-index">⊙ ground</div>
+                    </div>
+                    
+                    <div class="node ground" id="n-cfg" style="left: 10px; top: 90px;">
+                        <div class="node-label">:config:</div>
+                        <div class="node-index">⊙ ground</div>
+                    </div>
+                    
+                    <div class="node semantic-func" id="n-parse" style="left: 140px; top: 55px;">
+                        <div class="node-label">&parse</div>
+                        <div class="node-index">1.1 · imperative</div>
+                    </div>
+                    
+                    <div class="node semantic-value" id="n-sections" style="left: 270px; top: 55px;">
+                        <div class="node-label">:sections:</div>
+                        <div class="node-index">tensor[n]</div>
+                    </div>
+                    
+                    <!-- Row 2: Syntactic operations -->
+                    <div class="node syntactic" id="n-select" style="left: 420px; top: 20px;">
+                        <div class="node-label">%select[0]</div>
+                        <div class="node-index">1.2.1 · assigning</div>
+                    </div>
+                    
+                    <div class="node syntactic" id="n-loop" style="left: 420px; top: 90px;">
+                        <div class="node-label">%each</div>
+                        <div class="node-index">1.2.L · looping</div>
+                    </div>
+                    
+                    <!-- Row 2 continued: Loop body -->
+                    <div class="node semantic-func" id="n-analyze" style="left: 560px; top: 90px;">
+                        <div class="node-label">&analyze</div>
+                        <div class="node-index">1.2.L.1 · imperative</div>
+                    </div>
+                    
+                    <div class="node semantic-value" id="n-analyses" style="left: 560px; top: 165px;">
+                        <div class="node-label">:analyses:</div>
+                        <div class="node-index">tensor[n]</div>
+                    </div>
+                    
+                    <!-- Row 3: Validation + Grouping -->
+                    <div class="node semantic-func" id="n-validate" style="left: 180px; top: 165px;">
+                        <div class="node-label">?validate</div>
+                        <div class="node-index">2.1 · judgement</div>
+                    </div>
+                    
+                    <div class="node syntactic" id="n-group" style="left: 350px; top: 220px;">
+                        <div class="node-label">%group</div>
+                        <div class="node-index">2.2 · grouping</div>
+                    </div>
+                    
+                    <!-- Row 4: Final output -->
+                    <div class="node output" id="n-result" style="left: 350px; top: 300px;">
+                        <div class="node-label">:result:</div>
+                        <div class="node-index">← final output</div>
+                    </div>
+                </div>
+                
+                <!-- Legend below graph -->
+                <div class="graph-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot ground"></div>
+                        <span>Ground Data</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot semantic-func"></div>
+                        <span>Semantic (LLM)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot semantic-value"></div>
+                        <span>Value</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot syntactic"></div>
+                        <span>Syntactic (Free)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot output"></div>
+                        <span>Output</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right: Execution Runtime -->
+            <div class="execution-runtime">
+                <div class="runtime-title">Orchestrator</div>
+                
+                <div class="runtime-component">
+                    <div class="component-name">
+                        <span class="component-icon waitlist">▤</span>
+                        Waitlist
+                    </div>
+                    <div class="component-desc">Prioritized queue of inferences sorted by flow index</div>
+                </div>
+                
+                <div class="runtime-component">
+                    <div class="component-name">
+                        <span class="component-icon blackboard">◫</span>
+                        Blackboard
+                    </div>
+                    <div class="component-desc">Real-time execution state tracker</div>
+                    <div class="status-indicators">
+                        <span class="status-badge pending">pending</span>
+                        <span class="status-badge running">running</span>
+                        <span class="status-badge completed">done</span>
+                        <span class="status-badge failed">fail</span>
+                    </div>
+                </div>
+                
+                <div class="runtime-component">
+                    <div class="component-name">
+                        <span class="component-icon repos">◈</span>
+                        Repositories
+                    </div>
+                    <div class="component-desc">Concept refs & inference configs with tensor structure</div>
+                </div>
+                
+                <!-- Audit Trail -->
+                <div class="audit-trail">
+                    <div class="audit-title">⬡ Audit Trail</div>
+                    <div class="audit-entry">
+                        <span class="step">1.1</span> 
+                        <span class="action">LLM call → :sections:</span>
+                    </div>
+                    <div class="audit-entry">
+                        <span class="step">1.2.1</span> 
+                        <span class="action">select[0] (deterministic)</span>
+                    </div>
+                    <div class="audit-entry">
+                        <span class="step">1.2.L.1</span> 
+                        <span class="action">LLM call × 3 iterations</span>
+                    </div>
+                    <div class="audit-entry">
+                        <span class="step">2.1</span> 
+                        <span class="action">LLM judge → true</span>
+                    </div>
+                    <div class="audit-entry">
+                        <span class="step">2.2</span> 
+                        <span class="action">group (deterministic)</span>
+                    </div>
+                </div>
+                
+                <!-- Data Isolation Callout -->
+                <div class="isolation-callout">
+                    <div class="callout-title">Data Isolation</div>
+                    <div class="callout-text">
+                        Each node receives only explicitly declared inputs. Step 2.1 cannot access raw :document:—only what 1.1 explicitly passed.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Draw edges after DOM loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const svg = document.getElementById('edgesSvg');
+            const canvas = document.getElementById('graphCanvas');
+            
+            // Edge definitions: [fromId, toId, type]
+            const edges = [
+                ['n-doc', 'n-parse', 'semantic'],
+                ['n-cfg', 'n-parse', 'semantic'],
+                ['n-parse', 'n-sections', 'semantic'],
+                ['n-sections', 'n-select', 'syntactic'],
+                ['n-sections', 'n-loop', 'syntactic'],
+                ['n-loop', 'n-analyze', 'semantic'],
+                ['n-analyze', 'n-analyses', 'semantic'],
+                ['n-sections', 'n-validate', 'semantic'],
+                ['n-validate', 'n-group', 'syntactic'],
+                ['n-analyses', 'n-group', 'syntactic'],
+                ['n-group', 'n-result', 'semantic'],
+            ];
+            
+            function getNodeBounds(id) {
+                const node = document.getElementById(id);
+                if (!node) return null;
+                return {
+                    x: node.offsetLeft + node.offsetWidth / 2,
+                    y: node.offsetTop + node.offsetHeight / 2,
+                    right: node.offsetLeft + node.offsetWidth,
+                    left: node.offsetLeft,
+                    top: node.offsetTop,
+                    bottom: node.offsetTop + node.offsetHeight,
+                    width: node.offsetWidth,
+                    height: node.offsetHeight
+                };
+            }
+            
+            function drawEdges() {
+                // Add arrow markers first
+                svg.innerHTML = `
+                    <defs>
+                        <marker id="arrow-semantic" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#6a5acd"/>
+                        </marker>
+                        <marker id="arrow-syntactic" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+                            <polygon points="0 0, 8 3, 0 6" fill="#5a6a7a"/>
+                        </marker>
+                    </defs>
+                `;
+                
+                edges.forEach(([fromId, toId, type]) => {
+                    const from = getNodeBounds(fromId);
+                    const to = getNodeBounds(toId);
+                    if (!from || !to) return;
+                    
+                    let x1, y1, x2, y2;
+                    
+                    // Determine connection points based on relative positions
+                    const dx = to.x - from.x;
+                    const dy = to.y - from.y;
+                    
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        // Horizontal connection
+                        if (dx > 0) {
+                            x1 = from.right; y1 = from.y;
+                            x2 = to.left; y2 = to.y;
+                        } else {
+                            x1 = from.left; y1 = from.y;
+                            x2 = to.right; y2 = to.y;
+                        }
+                    } else {
+                        // Vertical connection
+                        if (dy > 0) {
+                            x1 = from.x; y1 = from.bottom;
+                            x2 = to.x; y2 = to.top;
+                        } else {
+                            x1 = from.x; y1 = from.top;
+                            x2 = to.x; y2 = to.bottom;
+                        }
+                    }
+                    
+                    // Create smooth curve
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    
+                    // Calculate control points for bezier
+                    const ctrlDist = Math.min(Math.abs(x2 - x1), Math.abs(y2 - y1)) * 0.5 + 20;
+                    let cx1, cy1, cx2, cy2;
+                    
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        cx1 = x1 + ctrlDist; cy1 = y1;
+                        cx2 = x2 - ctrlDist; cy2 = y2;
+                    } else {
+                        cx1 = x1; cy1 = y1 + ctrlDist;
+                        cx2 = x2; cy2 = y2 - ctrlDist;
+                    }
+                    
+                    const d = `M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`;
+                    path.setAttribute('d', d);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke-width', '2');
+                    path.setAttribute('stroke', type === 'semantic' ? '#6a5acd' : '#5a6a7a');
+                    
+                    if (type === 'syntactic') {
+                        path.setAttribute('stroke-dasharray', '6 4');
+                    }
+                    
+                    path.setAttribute('marker-end', `url(#arrow-${type})`);
+                    svg.appendChild(path);
+                });
+            }
+            
+            // Draw after layout settles
+            setTimeout(drawEdges, 150);
+            window.addEventListener('resize', () => setTimeout(drawEdges, 50));
+        });
+    </script>
+</body>
+</html>
+
