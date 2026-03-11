@@ -1,6 +1,20 @@
 \section{Design Philosophy}
 
-NormCode's design is guided by three core principles that address a fundamental tension in AI systems: the need for human oversight in processes that are increasingly automated.
+NormCode's design is guided by four core principles that address a fundamental tension in AI systems: the need for human oversight in processes that are increasingly automated.
+
+\subsection{Why a Language, Not a Framework}
+
+NormCode belongs to a different category than LangChain, Dify, or any agent orchestration framework. The distinction matters because only languages can be \textit{learned}---frameworks are used, platforms are subscribed to, but a language becomes how you think and communicate.
+
+Three properties make this distinction consequential for AI agent workflows.
+
+\textbf{Learn once, describe any workflow.} A NormCode plan is not tied to any specific LLM model, orchestration engine, or deployment platform. Like SQL's relationship to databases, once you know the syntax, you can describe any AI agent workflow. The plan remains valid whether the underlying model is GPT-4, Claude, or Qwen, and whether the orchestrator is NormCode's own runtime or a future compliant engine. Frameworks require re-learning when the platform changes; a language transfers.
+
+\textbf{Every step is debuggable in isolation.} Because there is no global context, each step has a known, bounded set of inputs. When something goes wrong at step 7, the inputs for step 7 are explicitly declared in the plan's indentation---no hidden state to unwind, no accumulated context to reconstruct. This bounded debuggability is a structural property of the language itself, not a feature of any particular tooling.
+
+\textbf{The plan is a portable artifact.} A \texttt{.ncds} file is a plain text document. It can be version-controlled in Git, reviewed in a pull request, shared with a colleague, handed to a different orchestrator, or archived for compliance review. There is no vendor lock-in, no platform migration problem, no proprietary binary format. The workflow you describe belongs to you---not to any service's internal representation.
+
+These three properties together explain why NormCode targets the position of a language rather than a framework. Frameworks are infrastructure; a language is a medium of thought and communication that outlasts any particular implementation.
 
 \subsection{Dual-Readability: Bridging Human and Machine}
 

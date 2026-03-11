@@ -1,0 +1,18 @@
+/* ==========================================================================
+   Shared Components — Reusable UI patterns used across all pages
+   Split into individual modules under css/components/
+   ========================================================================== */
+
+@import url('components/buttons.css');
+@import url('components/cards.css');
+@import url('components/code.css');
+@import url('components/tables.css');
+@import url('components/callouts.css');
+@import url('components/badges.css');
+@import url('components/layout-helpers.css');
+@import url('components/media-panels.css');
+@import url('components/utilities.css');
+@import url('components/timeline.css');
+@import url('components/tutorial.css');
+@import url('components/role-tabs.css');
+@import url('components/text-blocks.css');

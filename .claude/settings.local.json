@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/ProgU/PycharmProjects/NormCode-A-Semi-Formal-Language-for-Context-Isolated-AI-Planning-1-/iccbr_paper/article/**)",
+      "Bash(done)"
+    ]
+  }
+}
