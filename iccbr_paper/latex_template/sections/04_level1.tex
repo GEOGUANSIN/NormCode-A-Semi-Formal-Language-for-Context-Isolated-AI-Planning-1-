@@ -3,12 +3,10 @@
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\textwidth]{figures/fig1_v2.png}
-  \caption{Two-level CBR architecture. Level~2 (top) manages abstract cases ---
-    NormCode runtime definitions (plans); Level~1 (bottom) manages concrete cases ---
-    suspended runtimes captured at each flow index. Route~A distills human experience
-    into new plans via the compilation pipeline; Route~B instantiates plans with new
-    inputs to generate fresh Level~1 cases.}
+  \includegraphics[width=0.92\textwidth]{figures/fig1_v2.png}
+  \caption{Two-level CBR architecture. Level~2 (top): abstract cases (plans);
+    Level~1 (bottom): concrete cases (suspended runtimes). Route~A distills
+    experience into plans; Route~B instantiates plans to generate Level~1 cases.}
   \label{fig:architecture}
 \end{figure}
 
@@ -23,7 +21,7 @@ completed; $\mathcal{C}_f$ is the \textbf{Concept Repository snapshot}: all tens
 all nodes completed through $f$; $\mathcal{E}_f^{\,?}$ is an optional environment
 snapshot, present when $\mathcal{C}_f$ contains perceptual signs. Because the scope
 rule prevents any node from accessing data outside its declared block, $\mathcal{C}_f$
-is epistemically clean --- no hidden context dependency. The \textit{case base}
+is self-contained --- there is no hidden context dependency. The \textit{case base}
 $\mathcal{CB}$ is the set of all Level~1 cases across all runs:
 \begin{equation}
   \mathcal{CB} = \{(r, f, \mathcal{B}_f, \mathcal{C}_f, \mathcal{E}_f^{\,?}) \mid
@@ -37,7 +35,7 @@ point for a new execution. Two triggers: (1)~a run fails at flow index $f^*$;
 (2)~a new task is similar to a past execution. Case inspection via the Tensor Inspector
 opens $\mathcal{C}_f$ at any flow index in table, list, or JSON view. Because
 $\mathcal{C}_f$ contains exactly the bounded inputs of each completed step, this
-inspection is O(1) --- failure localization (C1).
+inspection is direct and constant-effort --- failure localization (C1).
 
 \textbf{Reuse --- Fork.} The Fork operation implements reuse: (1)~new run identifier
 $r'$ is created; (2)~orchestrator loads $(\mathcal{B}_f, \mathcal{C}_f)$ from retrieved

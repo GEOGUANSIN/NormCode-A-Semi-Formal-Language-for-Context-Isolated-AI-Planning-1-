@@ -52,16 +52,22 @@ is NormCode \cite{anon2025}, a semi-formal planning language whose compiler-veri
 scope rule ensures every execution checkpoint is a genuinely self-contained case ---
 eliminating the implicit shared state that makes retrieval unreliable and failure
 non-localizable in standard orchestration frameworks.
-\textbf{Level~1} treats each checkpoint as a concrete case (suspended runtime:
-Blackboard + Concept Repository snapshot); Fork implements retrieve-and-reuse, Value
-Override implements revision with automatic stale-boundary propagation.
-\textbf{Level~2} treats each compiled plan as an abstract case; four production-ready
-plans demonstrate domain generality, and the compiler is itself a NormCode plan
-enabling recursive case learning.
-Three structural properties follow: \textbf{(C1)} failure localization in O(1)
-operations; \textbf{(C2)} pre-execution review via compiler-generated narrative;
+\textbf{Level~1} treats each checkpoint as a concrete case (suspended runtime);
+Fork implements retrieve-and-reuse, Value Override implements revision with automatic
+stale-boundary propagation.
+\textbf{Level~2} treats each compiled plan as an abstract case; the compilation
+pipeline is itself a NormCode plan, enabling recursive case learning.
+Three structural properties follow: \textbf{(C1)} direct checkpoint
+inspection; \textbf{(C2)} pre-execution review via compiler-generated narrative;
 \textbf{(C3)} scope-bounded selective re-execution.
-Two case studies illustrate both levels in practice.
+Four deployed plans serve as structured evidence: PPT Generation produces
+presentation decks at ${\sim}40$\,s per slide on commercial APIs; Code Assistant
+carries out multi-step software-engineering tasks spanning up to ten reasoning
+cycles; NC~Compilations converts natural-language specifications into executable
+NormCode plans; and Canvas Assistant, when connected to an external AI code editor,
+automates plan debugging. Together these plans form a self-sustaining ecosystem in
+which plans produce, debug, and refine one another --- realizing cumulative
+case-based learning at system scale.
 
 \keywords{case-based reasoning \and LLM workflows \and AI workflow development
 \and workflow management \and agents \and LLM reasoning \and agent DSL}
@@ -95,7 +101,6 @@ Two case studies illustrate both levels in practice.
 \input{sections/10_related}
 
 %----------------------------------------------------------------
-\newpage
 \begin{credits}
 \subsubsection{\ackname} Acknowledgements will be added in the camera-ready version after blind review.
 

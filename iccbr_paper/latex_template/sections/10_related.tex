@@ -33,7 +33,7 @@ persistent observe-reason-act loops at production scale. NormCode expresses thes
 patterns as compiled plans: each loop iteration is a scoped node with a flow index and
 automatic checkpoint. In standard ReAct the reasoning-action chain is an implicit
 continuation with no structural transparency; AgentStepper \cite{agentstepper2026}
-retrofits interactive debugging for this reason. NormCode makes these properties
+retrofits interactive debugging for this reason. NormCode aims to make these properties
 structural from the start: every agent step is a Level~1 case, inspectable under
 failure localization (C1) and revisable under selective re-execution (C3).
 

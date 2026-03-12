@@ -2,7 +2,7 @@
 \label{sec:discussion}
 
 \textbf{Language as the substrate for sustainable improvement.}
-C1, C2, and C3 are structural consequences of the reasoning medium, not design
+C1, C2, and C3 are structural consequences of the workflow language, not design
 choices about the Canvas App --- and each directly enables a dimension of cumulative
 improvement. C1~(failure localization) follows from Local Addressability: every step
 has an exact flow index and exactly declared inputs, so every run deposits concrete
@@ -18,9 +18,13 @@ Together, C1--C3 realize the CBR cycle at both levels: every run accumulates
 experience (Level~1), every domain revision extends the abstract case library
 (Level~2), and the compilation pipeline --- itself a Level~2 case --- improves through
 the same cycle recursively \cite{bergmann2002,muller2015b}. Existing LLM orchestration
-tools can add checkpoint UI features; they cannot produce C1--C3 structurally without
-first providing a reasoning medium that satisfies the six properties of
-Sect.~\ref{sec:normcode}.
+tools may expose similar checkpointing or graph-authoring affordances, but to our
+knowledge they do not guarantee C1--C3 by construction without an equivalent scoped
+intermediate representation satisfying the properties of Sect.~\ref{sec:normcode}.
+
+Accordingly, our claims concern inspectability, revisability, and bounded
+re-execution in multi-step LLM workflows, not universal superiority of final-task
+quality.
 
 \subsection{Limitations}
 

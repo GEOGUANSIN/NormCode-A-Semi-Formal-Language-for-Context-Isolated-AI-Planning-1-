@@ -15,40 +15,41 @@ Tooling can add persistence and tracing, but the underlying limitation remains: 
 plan, its intermediate semantics, and the conditions for valid continuation are scattered
 across code and prompts rather than expressed in a single interpretable form.
 
-\textbf{What is missing is a reasoning medium} --- a language in which multi-step
-reasoning can be explicitly represented, inspected, verified, executed, and refined.
-A viable reasoning medium must be simultaneously human-readable, machine-executable,
-and structurally enforceable.
+\textbf{What is missing is a workflow language} in which multi-step reasoning can be
+explicitly represented, inspected, verified, executed, and revised --- simultaneously
+human-readable, machine-executable, and structurally enforceable.
 
-\textbf{NormCode is that medium.} NormCode \cite{anon2025} is a semi-formal planning
-language for LLM workflows satisfying six properties that together constitute a working
-reasoning medium: Interpretable, Enforceable, Composable, Locally Addressable,
-Generalizable, and Portable (Sect.~\ref{sec:normcode}). The scope rule is the
-structural mechanism that guarantees every checkpoint is a \textbf{self-contained case}
-with no implicit context dependency (Sect.~\ref{sec:normcode}).
+\textbf{NormCode} \cite{anon2025} is a semi-formal planning language designed for that
+role. Its scope rule guarantees that every execution checkpoint is a
+\textbf{self-contained case} with no implicit context dependency
+(Sect.~\ref{sec:normcode}). Three practical capabilities follow from this guarantee:
+direct inspection of the exact scoped inputs at any flow index~(C1), pre-execution
+structural review of the compiled plan~(C2), and scope-bounded selective
+re-execution~(C3). \textbf{NormCode Canvas~(v1.1.3)} is the deployed system that
+realizes C1--C3 and exposes a two-level CBR architecture: Level~1 manages concrete
+cases (suspended runtimes at each checkpoint); Level~2 manages abstract cases
+(executable plans that encode reusable workflow patterns). We do \textit{not} claim
+universal superiority in end-task quality; our claims concern inspectability,
+revisability, and bounded re-execution of multi-step LLM workflows.
 
-\textbf{NormCode Canvas (v1.1.3)} is the deployed system that exposes both levels.
-Three practical properties follow structurally from the reasoning medium:
-constant-effort failure localization~(C1), pre-execution structural review~(C2), and
-scope-bounded selective re-execution~(C3) ---
-demonstrated in Sect.~\ref{sec:canvas}--\ref{sec:casestudies}.
+\textbf{Relation to the companion paper.} The companion paper \cite{anon2025} is a
+language specification: it defines NormCode's grammar, type system, and scope rule.
+That paper answers \textit{what NormCode is}. This paper answers \textit{what NormCode
+makes possible in practice}, grounded in four deployed workflows ranging from PPT
+generation and code assistance to self-hosted compilation and interactive canvas
+control.
 
-\textbf{Relation to the companion language paper \cite{anon2025}.} The companion paper
-is a language specification: it defines NormCode's grammar, symbol set, type system,
-and scope rule, and gives a formal account of the execution architecture. That paper
-answers \textit{what NormCode is}. This paper answers \textit{what NormCode makes
-possible}. In demonstration of its applicability, we present four production-ready
-workflows ranging from PPT generation and code assistance to self-hosted NormCode
-compilation.
-
-\textbf{Contributions:}
-(1)~Two-level CBR realized by a reasoning medium (Sect.~\ref{sec:level1}--\ref{sec:level2}):
-Level~1 cases as suspended runtimes; Level~2 cases as runtime definitions; the compilation
-pipeline as distillation; self-hosting as recursive case-based learning.
-(2)~The six properties of a reasoning medium (Sect.~\ref{sec:normcode}): Interpretable,
-Enforceable, Composable, Locally Addressable, Generalizable, Portable.
-(3)~Three measurable properties of the deployed system
-(Sect.~\ref{sec:canvas}--\ref{sec:casestudies}): failure localization (C1),
-pre-execution review (C2), and selective re-execution (C3).
-(4)~Four production-ready workflows (Sect.~\ref{sec:casestudies}): PPT generation,
-code assistance, self-hosted compilation, and interactive canvas control.
+\textbf{Contributions.}
+(1)~A two-level CBR account of LLM workflow development
+(Sect.~\ref{sec:level1}--\ref{sec:level2}): Level~1 cases as suspended runtimes,
+Level~2 cases as executable plans, and a compilation pipeline that is itself a
+Level~2 case.
+(2)~A scoped workflow language satisfying six properties
+(Sect.~\ref{sec:normcode}): Interpretable, Enforceable, Composable, Locally
+Addressable, Generalizable, and Portable.
+(3)~A deployed system realizing three structural capabilities
+(Sect.~\ref{sec:canvas}--\ref{sec:casestudies}): direct checkpoint inspection~(C1),
+pre-execution review~(C2), and selective re-execution~(C3).
+(4)~Structured evidence from four production workflows
+(Sect.~\ref{sec:casestudies}), including an ecosystem where plans produce, debug,
+and refine one another.

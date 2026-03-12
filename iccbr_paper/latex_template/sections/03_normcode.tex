@@ -1,12 +1,12 @@
-\section{NormCode as a Reasoning Medium}
+\section{NormCode as a Workflow Language}
 \label{sec:normcode}
 
-A reasoning medium is a representational language in which reasoning plans are
-formulated, not merely described. This section demonstrates that NormCode satisfies six
-properties that together constitute a working reasoning medium for AI orchestration.
-The formal language specification is in \cite{anon2025}.
+NormCode is a representational language in which reasoning plans are formulated, not
+merely described. This section argues that NormCode satisfies six properties needed of a
+practical workflow language for AI orchestration. The formal language specification is
+in \cite{anon2025}.
 
-\subsection{Six Properties of a Working Reasoning Medium}
+\subsection{Six Properties of a Practical Workflow Language}
 
 (P1)~\textbf{Interpretable}: the \texttt{.ncds} format reads like structured natural
 language; Formalization produces \texttt{.ncn}, a plain-prose narrative for
@@ -17,13 +17,23 @@ the actual formal plan, not a paraphrase. (P3)~\textbf{Composable}: three symbol
 one scope rule express nested loops, conditionals, parallel derivation, and multi-agent
 coordination at any plan scale. (P4)~\textbf{Locally Addressable}: every step has a
 dot-separated flow index; each step is self-contained, so any checkpoint can be
-examined, revised, or reused without understanding preceding steps. (P5)~\textbf{Generalizable}: the three primitives are domain-agnostic --- PPT
-generation, code review, BOM matching, medical treatment planning --- without
-domain-specific extensions. (P6)~\textbf{Portable}: a NormCode plan is a plain-text
+examined, revised, or reused without reconstructing preceding steps.
+(P5)~\textbf{Generalizable}: the same three primitives support multiple workflow classes
+in our deployed examples, including PPT generation, code assistance, self-hosted
+compilation, and interactive canvas control, without domain-specific syntax.
+(P6)~\textbf{Portable}: a NormCode plan is a plain-text
 \texttt{.ncds} with \texttt{concept\_repo.json} and \texttt{inference\_repo.json} ---
 version-controlled, shareable, and executable by any compliant orchestrator.
 
 \subsection{Syntax and the Scope Rule}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{figures/fig2_scope_rule_isolation.png}
+  \caption{NormCode syntax and scope rule. Left: annotated \texttt{.ncds}; right:
+    isolation boundary at runtime. Each node's tensor is self-contained (C1).}
+  \label{fig:scope}
+\end{figure}
 
 Three markers constitute the full syntax (formal specification in \cite{anon2025}):
 \texttt{<-}~Value, \texttt{<=}~Functional, \texttt{<*}~Context (loop-current element).
@@ -40,13 +50,4 @@ semantic checkpoints are bounded-stochastic. Concept data are stored as
 \textbf{References} (named-axis tensors); large inputs pass as \textit{perceptual
 signs} --- compact pointers transmuted to content only at the moment of an LLM call,
 preventing context accumulation. The Detail Panel exposes every completed step's exact
-bounded inputs in O(1) operations (failure localization, C1).
-
-\begin{figure}[!htbp]
-  \centering
-  \includegraphics[width=\textwidth]{figures/fig2_scope_rule_isolation.png}
-  \caption{NormCode syntax and scope rule (left: annotated \texttt{.ncds} example;
-    right: isolation boundary at runtime). Each completed node's tensor is a
-    self-contained object --- no hidden context dependency.}
-  \label{fig:scope}
-\end{figure}
+bounded inputs with constant-effort direct inspection (failure localization, C1).

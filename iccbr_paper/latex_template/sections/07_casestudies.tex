@@ -1,57 +1,114 @@
 \section{Case Studies}
 \label{sec:casestudies}
 
-Four production-ready NormCode plans are mentioned in the paper, each encoding a distinct
-orchestration class as a Level~2 case: \textbf{PPT Generation} (${\sim}30$ inferences;
-nested loop, 6 layouts, 14 component types), \textbf{Code Assistant} (${\sim}40$;
-ReAct outer loop with parallel Explore), \textbf{NC~Compilations} (${\sim}25$;
-self-hosting Level~2 validation --- the compiler is itself a NormCode plan), and
-\textbf{Canvas Assistant} (${\sim}20$; built-in chat controller with natural-language
-command dispatch). Syntactic nodes constitute 60--70\% of total inferences across all
-plans. NC~Compilations has been successfully executed end-to-end with
-qwen-plus, producing correct repositories for plans such as report writing and contract reviewing.
-The other two of the four plans are traced in detail below.
+We use four deployed NormCode plans as \textbf{structured evidence} for the paper's
+claims, not as a benchmark of universal output quality. Together they cover distinct
+workflow classes and show that C1--C3 hold across different control-flow patterns,
+human review points, and revision boundaries. Syntactic nodes constitute 60--70\% of
+total inferences across these plans. NC~Compilations has been executed end-to-end with
+\texttt{qwen-plus}, producing correct repositories for plans such as report writing and
+contract review. Two of the four plans are then traced in more detail below.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\textwidth]{figures/ppt_and_code_ncs.png}
-  \caption{PPT Generation (left) and Code Assistant (right) as Level~2 cases
-    (\texttt{.ncds}, abbreviated).
-    Left: nested dual-output loop (HTML + PPTX per slide).
-    Right: ReAct outer loop \cite{yao2023} with inner explore, plan, edit, and verify stages.
+  \includegraphics[width=\textwidth]{figures/three_plans_ncs.png}
+  \caption{Three production NormCode plans as Level~2 cases (\texttt{.ncds},
+    abbreviated). Left: NC~Compilations --- sequential compilation pipeline
+    (Sect.~\ref{sec:level2:distillation}). Center: PPT Generation --- nested
+    dual-output loop (HTML + PPTX per slide). Right: Code Assistant --- ReAct
+    outer loop \cite{yao2023} with inner explore, plan, edit, and verify stages.
     \textcolor{blue}{\texttt{<-}} Value; \textcolor{violet}{\texttt{<=}} Functional;
-    \textcolor{orange}{\texttt{<*}} Context.}
+    \textcolor{orange}{\texttt{<*}} Context. All three plans are reviewable as
+    explicit plans before any run begins (C2).}
   \label{fig:plans}
 \end{figure}
 
 \subsection{Case Study 1: PPT Agent --- Level 2 Reuse and Level 1 Accumulation}
 
-\texttt{ppt\_generation.ncds} (Fig.~\ref{fig:plans}, left) is a Level~2 case encoding
-a parallel dual-output pipeline: HTML and PPTX slides are generated from the same
-componentized content JSON per slide. The most expensive semantic nodes are
-\texttt{generate componentized content} and \texttt{generate diagram code};
-the remainder run with negligible cost and a total latency around 5 minutes with
-visible intermediate steps. The production plan uses Chinese concept names throughout
+\texttt{ppt\_generation.ncds} (Fig.~\ref{fig:plans}, center) is a Level~2 case encoding a
+parallel dual-output pipeline: HTML and PPTX slides are generated from the same
+componentized content JSON per slide. The workflow's main evidence contribution is that
+it combines nontrivial control flow with sharply bounded revision points. The most
+expensive semantic nodes are \texttt{generate componentized content} and
+\texttt{generate diagram code}; the remaining nodes run with negligible cost, for a
+total latency of roughly 5 minutes with visible intermediate steps. C1 is visible at
+the slide level: operators can inspect the exact scoped inputs to a problematic slide or
+diagram node without reconstructing earlier context. C3 is visible when a checkpoint is
+revised: only downstream slide-generation nodes need to refresh, rather than the entire
+deck pipeline. The production plan uses Chinese concept names throughout
 (Fig.~\ref{fig:ppt}); the compiler and orchestrator are agnostic to natural language.
-Reusing a checkpoint requires the referenced files or APIs to remain accessible ---
-the case encodes \textit{what} was used, not its content.
+Reuse still requires referenced files or APIs to remain accessible: the case encodes
+\textit{what} was referenced, not the external resource content itself.
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=\textwidth]{figures/fig4.png}
-  \caption{Six slides produced by the PPT Generation plan (Chinese-language run).
-    Each slide is a Level~1 checkpoint accumulated during execution.}
+  \includegraphics[width=0.88\textwidth]{figures/fig4.png}
+  \caption{Six slides from the PPT Generation plan (Chinese-language run). Each
+    slide is a Level~1 checkpoint; slide-local revisions resume from the affected
+    checkpoint rather than regenerating the full deck (C3).}
   \label{fig:ppt}
 \end{figure}
 
 \subsection{Case Study 2: Code Assistant --- A ReAct Plan as a Level~2 Case}
 
 \texttt{code\_assistant.ncds} (Fig.~\ref{fig:plans}, right) is a Level~2 case encoding
-a ReAct-loop software engineering workflow \cite{yao2023}. Each cycle, Explore
+a ReAct-loop software-engineering workflow \cite{yao2023}. Each cycle, Explore
 \textit{observes} (parallel file reads, zero LLM cost), Plan \textit{reasons} (one LLM
 call over scoped exploration results), Implement \textit{acts} (surgical edits with an
-inner lint-fix loop), and Verify checks results. Implement receives the change plan,
-not the raw file contents from Explore --- scope isolation in action. Every run
-generates a Level~1 case base: every stage is a checkpoint, and the Canvas App
-makes each one inspectable and revisable (Sect.~\ref{sec:canvas}).
+inner lint-fix loop), and Verify checks results. This case most clearly illustrates the
+scope rule: Implement receives the change plan, not the raw file contents from Explore.
+That separation makes the evidence for C1 especially concrete, because the operator can
+inspect the exact inputs passed into each stage rather than a merged conversational
+history. It also supports C3: revising a planning or implementation checkpoint re-runs
+only the downstream stages that depend on it. Every run generates a Level~1 case base,
+so each iteration of the ReAct loop becomes inspectable and revisable in Canvas
+(Sect.~\ref{sec:canvas}).
+
+Table~\ref{tab:cases} summarizes all four deployed plans and their operational status
+at the time of writing.
+
+\begin{table}[!htbp]
+  \centering
+  \scriptsize
+  \setlength{\tabcolsep}{3pt}
+  \caption{Four deployed NormCode plans: workflow class, scale, and operational status.}
+  \label{tab:cases}
+  \begin{tabular}{p{1.7cm}p{2.4cm}p{2.6cm}p{4.4cm}}
+    \toprule
+    Plan & Workflow and scale & Control-flow pattern & Operational status \\
+    \midrule
+    PPT Generation & Slide-deck generation; ${\sim}30$ inferences; 6 layouts, 14 component types & Nested dual-output loop (HTML + PPTX per slide) & Runs on \texttt{qwen-turbo}/\texttt{qwen-plus} commercial APIs with negligible cost; produces a full presentation at ${\sim}40$\,s per slide. \\
+    Code Assistant & Software-engineering workflow; ${\sim}40$ inferences & ReAct outer loop with parallel Explore & Executes up to 10-step reasoning cycles to carry out complex code editing tasks with scoped explore, plan, implement, and verify stages. \\
+    NC~Compilations & Self-hosted compilation; ${\sim}25$ inferences & Sequential pipeline (Derivation $\rightarrow$ Activation) & With \texttt{qwen-plus}/\texttt{GLM-4.7}, produces within ${\sim}15$ steps executable plans for report writing, paper drafting, and contract review that run directly as new NormCode plans. \\
+    Canvas Assistant & Built-in chat controller; ${\sim}20$ inferences & Interactive command-dispatch loop & Handles a wide range of canvas tasks; when connected to an AI code editor (Cursor, Claude Code), enables automated plan debugging by overtaking the canvas interface on the user's behalf. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Ecosystem Status}
+
+In case-based reasoning, individual case quality improves as the case base grows: more
+retained cases mean richer retrieval, better-informed reuse, and more targeted revision.
+The same dynamic applies at both levels of NormCode. At Level~1, every run of every
+plan deposits new concrete cases; operators who fork and revise these cases accumulate
+experience that directly benefits future runs and plan improvement. At Level~2, each plan
+in the ecosystem fills a complementary role that reinforces the others.
+NC~Compilations acts as the ecosystem's \textit{plan producer}: driven by
+\texttt{qwen-plus} or \texttt{GLM-4.7}, it converts natural-language task descriptions
+into executable NormCode plans within ${\sim}15$ compilation steps, generating new
+Level~2 cases for report writing, paper drafting, and contract review that run directly
+without manual post-editing. The Code Assistant serves as an \textit{agentic explorer},
+carrying out multi-step software-engineering tasks spanning up to ten reasoning cycles
+with scoped explore, plan, implement, and verify stages; each completed cycle enriches
+the case base with reusable intermediate states. The Canvas Assistant functions as the
+ecosystem's \textit{plan debugger}: when connected to an external AI code editor such
+as Cursor \cite{cursor2024} or Claude Code \cite{claudecode2026}, it can overtake the
+canvas interface to inspect checkpoints, diagnose failures, and apply fixes on the
+user's behalf --- automating the Level~1 CBR cycle for any plan in the ecosystem.
+
+These roles form a closed improvement loop: NC~Compilations produces new plans; those
+plans accumulate Level~1 cases as they run; the Canvas Assistant debugs failing runs;
+the Code Assistant extends the platform itself. Each plan's quality grows with the
+ecosystem's accumulated experience, realizing at system scale the cumulative learning
+that the CBR cycle predicts.
 
