@@ -7,7 +7,7 @@ What is missing is a *working language* — a shared, portable representation th
 any stakeholder can learn once and apply to any workflow, independent of model,
 framework, or platform.
 
-We present the **NormCode Canvas** (v1.1.3), a visual execution and debugging
+We present the **NormCode Canvas** (v1.8.0), a visual execution and debugging
 environment for NormCode — a semi-formal language for AI agent planning that
 enforces explicit data isolation between steps, making workflows auditable by
 construction. We demonstrate the system through two scenarios: (A) an end-to-end
