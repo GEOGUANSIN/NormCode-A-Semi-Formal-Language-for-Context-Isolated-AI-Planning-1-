@@ -44,8 +44,9 @@ every step is epistemically self-contained by the scope rule), \textit{Generaliz
 compliant orchestrator).
 
 The scope rule is the structural mechanism: each step's inputs are declared explicitly
-in an indented block, and the compiler verifies that no step accesses data outside its
-block. The orchestrator enforces this at runtime. A checkpoint captured under this
+in an indented block. The compiler determines each step's scope during formalization;
+the orchestrator enforces it at runtime by constructing each step's input from only its
+declared references --- a step simply never receives undeclared data. A checkpoint captured under this
 guarantee is a \textbf{self-contained case}: its tensor contains exactly the data
 downstream steps will use, with no implicit context dependency.
 

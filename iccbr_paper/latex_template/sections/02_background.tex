@@ -66,9 +66,9 @@ workflow language, not inferred post-hoc from logs.
 
 \textbf{Definition.} A workflow language provides \textit{structural isolation} if:
 (1)~each step can access only data explicitly declared in its own scope block;
-(2)~this constraint is verified by the compiler before execution; (3)~the orchestrator
+(2)~the compiler determines each step's scope during formalization; (3)~the orchestrator
 constructs each step's input from only its declared references, enforcing the constraint
-at runtime.
+at runtime by construction --- a step simply never receives undeclared data.
 
 If a language provides structural isolation, then for every completed step $k$: the
 stored output tensor contains exactly the data downstream steps will need; any failure

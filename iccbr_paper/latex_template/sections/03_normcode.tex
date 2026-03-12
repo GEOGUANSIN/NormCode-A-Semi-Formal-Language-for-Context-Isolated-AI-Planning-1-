@@ -21,8 +21,9 @@ scope rule, compiler, and orchestrator operate identically regardless of the nat
 language used.
 
 \paragraph{P2 --- Enforceable.}
-What is reviewed must be exactly what executes. The compiler verifies plan structure
-before the first run; the orchestrator enforces the scope rule at runtime. The
+What is reviewed must be exactly what executes. The compiler determines plan structure
+and each step's scope before the first run; the orchestrator enforces the scope rule at
+runtime by constructing each step's input from only its declared references. The
 \texttt{.ncn} is a deterministic rendering of the actual formal plan --- not a
 paraphrase. The medium has structural teeth.
 
@@ -61,8 +62,11 @@ Three markers constitute the full syntax:
 
 \textbf{Indentation defines scope.} The inputs available to any inference are exactly
 the concepts declared in its immediately enclosing indented block. There is no implicit
-sharing. This is the scope rule: structurally enforced, compiler-verified,
-runtime-enforced.
+sharing. This is the scope rule: the compiler determines each step's scope during
+formalization; the orchestrator enforces it at runtime by constructing each step's
+input from only its declared references. If an inference requires data not present in
+its scope, execution proceeds with the available inputs --- the remedy is to revise the
+plan to declare the missing dependency explicitly.
 
 A two-concept example (\texttt{.ncds} authoring format):
 

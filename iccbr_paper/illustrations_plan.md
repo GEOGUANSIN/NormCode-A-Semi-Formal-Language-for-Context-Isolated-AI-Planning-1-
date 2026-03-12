@@ -1,6 +1,6 @@
 # Illustrations Plan — ICCBR 2026 Paper
 
-**Paper:** "NormCode Canvas: Process-Oriented CBR for LLM Workflow Execution via Structural Isolation"
+**Paper:** "NormCode Canvas as a Case-Based Reasoning Development Platform for Large Language Model Agentic Workflows"
 **Format:** LNCS, 14 pages, single-column, Deployed Applications track
 **Figure budget:** 4 main-body figures (LNCS single-column; each figure ~half a page)
 
@@ -52,7 +52,7 @@ Arrow pointing down from one plan card, labeled:
 
 ---
 
-**Middle band — Compilation Pipeline (the distillation process)**
+**Middle band — Compilation Pipeline (two routes into Level 2)**
 
 A horizontal arrow spanning the full width, with 4 phase labels above it:
 ```
@@ -60,7 +60,11 @@ Derivation → Formalization → Post-Formalization → Activation
 ```
 
 Below the arrow, in smaller text:
-> "Natural language task description → compiled, executable plan"
+> "→ compiled, executable plan (Level 2 case)"
+
+**Two routes that produce Level 2 cases (show both):**
+- **Route A — Distillation of experience:** Experience (from Level 1 runs, debugging, failures) → human author (revises/designs) → pipeline → new/revised plan. Dashed arrow from Level 1 up to pipeline; optional "human author" or "author + pipeline" label.
+- **Route B — Direct compilation of mature rationale:** Mature rationale (e.g. clear task description, design doc) → pipeline (no prior runs required) → new plan. Arrow or label from left into pipeline: "Natural language / rationale → pipeline".
 
 On the left side of the arrow, a curved upward arrow pointing back to Level 2, labeled:
 > "Retain (revised plan)"
@@ -98,12 +102,15 @@ On the right side, 4 CBR operation labels connected to relevant nodes with dotte
 
 ---
 
-**Connecting arrows:**
-- A thick downward arrow from Level 2 (a plan card) to Level 1 (the execution row): "Run → generates Level 1 cases"
-- A dashed upward arrow from Level 1 (accumulated checkpoints) to the compilation pipeline: "Experience → distillation → new Level 2 case"
+**Connecting arrows (causality):**
+- **Down:** Thick arrow from Level 2 (a plan card) to Level 1 (the execution row): "Run (with input and environment) → generates Level 1 cases". Level 1 cases are created **only by execution**; they are not produced by the compilation pipeline.
+- **Level 2 cases = two routes (both feed the pipeline; pipeline output = Level 2 case):**
+  - **Route A — Distillation of experience:** Dashed arrow from Level 1 (experience from runs) to the pipeline. Label: "Experience → human author + pipeline → new/revised Level 2 case". Experience informs the author, who revises or designs; the pipeline compiles to a revised plan.
+  - **Route B — Direct compilation of mature rationale:** Arrow or label from the left into the pipeline: "Mature rationale (task description, design) → pipeline → new Level 2 case". No prior runs required; direct compilation produces a new plan.
+- Show pipeline output feeding back into the Level 2 row so **both routes** produce Level 2 cases.
 
 **Caption:**
-> **Fig. 1.** NormCode realizes CBR at two levels simultaneously. *Level 2*: A compiled NormCode plan is an abstract case — a runtime definition from which all executions of this type are instantiated. The six production plans constitute a case library of abstract reasoning patterns. The compilation pipeline (Derivation → Formalization → Post-Formalization → Activation) is the distillation process; it is itself a NormCode plan (self-hosted). *Level 1*: Each execution checkpoint is a concrete case — a suspended runtime state (Blackboard + Concept Repository snapshot) persisted in SQLite. The four CBR operations map directly onto Canvas operations at this level.
+> **Fig. 1.** NormCode realizes CBR at two levels simultaneously. *Level 2*: A compiled NormCode plan is an abstract case — a runtime definition from which all executions of this type are instantiated. Level 2 cases arise from two routes: (A) distillation of experience (experience → human author + pipeline → new/revised plan) and (B) direct compilation of mature rationale (rationale → pipeline → new plan). The compilation pipeline (Derivation → Formalization → Post-Formalization → Activation) is itself a NormCode plan (self-hosted). *Level 1*: Each execution checkpoint is a concrete case — a suspended runtime state (Blackboard + Concept Repository snapshot) persisted in SQLite. The four CBR operations map directly onto Canvas operations at this level.
 
 ---
 
@@ -112,34 +119,36 @@ On the right side, 4 CBR operation labels connected to relevant nodes with dotte
 **Section:** §3 (NormCode as a Reasoning Medium)
 **Type:** Constructed diagram — annotated code block + isolation boundary illustration
 **Size:** Full column width; ~1/3 page
-**Purpose:** Show how the three-symbol syntax + indentation scope rule produces isolated
+**Purpose:** Show how the three markers plus indentation (scope rule) produce isolated
 tensors, which is the enabling condition for reliable Level 1 cases.
+
+**Grammar (match paper §3 and docs):** Three markers are `<-` (Value Concept), `<=` (Functional Concept), `<*` (Context Concept). Use ASCII `<-` and `<=` in the figure. The paper's example does not use `::`; keep the code block identical to §3.
 
 ### Layout
 
 **Left half — Annotated `.ncds` example:**
 
-A code block (light gray background, monospace font) showing a short plan fragment:
+A code block (light gray background, monospace font) showing the same fragment as in §3:
 
 ```
-← summary
-    ≤= summarize the findings
-    ← report
-        ≤= :: read the uploaded file
-        ← source_doc
-    ← style_guide
+<- summary
+    <= summarize the findings
+    <- report
+        <= read the uploaded file
+        <- source_doc
+    <- style_guide
 ```
 
 Callout annotations connected with thin arrows:
-- `←` symbol: "Concept declaration (input or output)"
-- `≤=` symbol: "Inference operation"
-- `::` modifier: "Syntactic — zero LLM cost; deterministic"
-- Indentation block under `← report`: "Scope block — `report` can access only `source_doc`"
-- `← summary` at top level: "Flow index 1.1 — `summary` can access only `report` and `style_guide`"
+- `<-` symbol: "Value Concept — data (inputs/outputs) flowing between steps"
+- `<=` symbol: "Functional Concept — operation that derives its parent from declared inputs"
+- Indentation block under `<- report`: "Scope block — inference for `report` can access only `source_doc`"
+- `<- summary` at top level: "Flow index 1 — `summary` can access only `report` (1.2) and `style_guide` (1.3)"
+- Do not add a `::` callout; syntactic operators ($, &, @, *) are described elsewhere in §3.
 
-**Right half — Isolation boundary diagram:**
+**Right half — Isolation boundary / data-flow diagram:**
 
-A small two-node graph:
+Runtime dependency implied by the scope rule (multiple concepts, not literally two nodes):
 ```
 [source_doc ✓] ──→ [ report ✓ ]
                          │
@@ -163,10 +172,10 @@ A small two-node graph:
 Above the diagram: "Compiler verifies: no step can reference data outside its scope block"
 Below: "Each completed node's tensor = self-contained case object"
 
-Highlight box (amber): "Scope violation = compile-time error, not runtime risk"
+Highlight box (amber): "No hidden data in execution — if a step needs data not in its scope, the plan must be revised to declare it explicitly"
 
 **Caption:**
-> **Fig. 2.** NormCode's scope rule as the enabling condition for Level 1 case integrity. Left: Three symbols (`←`, `≤=`, `::`) and indentation constitute the full syntax. The scope block under each concept declaration specifies exactly which prior concepts that step may access; the compiler verifies this before execution. Right: The resulting runtime structure — each completed node's tensor contains exactly the data its step used, with no implicit dependency on prior context. This structural isolation makes every checkpoint a self-contained, retrievable case.
+> **Fig. 2.** NormCode's scope rule as the enabling condition for Level 1 case integrity. Left: Three markers (`<-`, `<=`, `<*`) and indentation constitute the syntax; the scope block under each concept declaration specifies exactly which concepts that step receives. Right: The resulting runtime structure — the orchestrator constructs each step's input from only its declared references, so no hidden data enters execution. If a step needs data not in its scope, the plan must be revised to declare it explicitly. This structural isolation makes every checkpoint a self-contained, retrievable case.
 
 ---
 
@@ -272,6 +281,42 @@ Two screenshots side by side:
 
 ---
 
+## GAPS AND ATTRACTIVITY IMPROVEMENTS
+
+**Assessment:** The current plan covers the two-level CBR story, scope rule, one Canvas screenshot, and the retrieve–revise case study. To improve clarity and attractivity, three additions are recommended:
+
+### 1. Overall ecosystem / pipeline diagram (currently lacking)
+
+**Gap:** Fig. 1 explains *what* NormCode does (two-level CBR) but not *where* it sits: author → compiler → runtime → case base, or how it differs from LangChain/LangGraph (structural isolation as differentiator).
+
+**Recommendation:** Add one of the following (within or beyond the 4-figure budget):
+- **Option A — Full pipeline (authoring → execution):** One diagram showing: `.ncds` authoring → Compilation (4 phases) → Orchestrator + Canvas → SQLite case base. Positions NormCode as a full stack, not just “CBR layer.” Place in §1 or §3; can be small (e.g. ~1/4 page) or supplementary.
+- **Option B — Ecosystem positioning:** NormCode vs. typical LLM stacks: “Conversation history / shared state” vs. “Scope-verified, checkpoint = case.” Helps readers from the LLM-tooling community see the value proposition in one glance.
+- **Priority:** High for attractivity; Option A is more informative for a Deployed Applications paper. If figure budget is tight, make this **Supp. Figure D — NormCode pipeline (authoring to execution)** and reference it in the introduction.
+
+### 2. Additional Canvas app snapshots
+
+**Current:** Fig. 3 is one annotated screenshot (breakpoint + Tensor Inspector + controls). Sufficient for “CBR interface exists,” but the paper would feel more concrete with more evidence of the *deployed* system.
+
+**Recommendation:**
+- **Fig. 3 as two-panel:** Panel A = current plan (breakpoint + Tensor Inspector); Panel B = second state: e.g. Run History / checkpoint list, or the **.ncn Review Panel** (C2). Same figure, two snapshots → stronger “this is a real tool” impression.
+- **Optional second figure or in-text thumbnail:** One small screenshot in §6 or §7 showing a different plan (e.g. PPT Generation) or the plan selector, to show generality without a full extra figure.
+- **Checklist for any Canvas screenshot:** Graph with ≥8 nodes, Tensor Inspector with real data, one of [Fork | Value Override | Run History | .ncn panel] visible; no API keys or sensitive paths.
+
+### 3. NormCode code-block artifacts (elevate and unify)
+
+**Current:** Snippets appear as inline `lstlisting` in §3, §5, §7, and appendix; only the appendix uses a caption. Fig. 2 includes an annotated code block as part of a constructed diagram. There is no unified “artifact” look or citable listings.
+
+**Recommendation:**
+- **Unified listing style:** In `main.tex` (or a shared snippet style), define a consistent look for all NormCode: same font, background, border; optional thin “artifact bar” with filename (e.g. `plan.ncds`, `output.ncn`) so it reads as real artifacts, not ad-hoc examples.
+- **1–2 key snippets as captioned listings:** Promote the minimal scope-rule example (§3) and optionally one .ncn excerpt to `\begin{lstlisting}[caption={...}, label=lst:...]` so they are “Listing 1”, “Listing 2” and can be cited. Improves traceability and looks intentional.
+- **Optional “artifact strip”:** For the main .ncds example, add a one-line header inside or above the block, e.g. `┌─ plan.ncds ─────────────────────┐`, so the paper clearly presents *artifacts* of the system.
+- **Do not duplicate Fig. 2:** The annotated code in Fig. 2 stays as the main *explained* example; the in-text listings are the *reference* versions. Keep wording and symbols consistent between Fig. 2 and Listing 1 so they reinforce each other.
+
+**Summary:** Adding (1) one ecosystem/pipeline diagram, (2) a second Canvas snapshot (e.g. as second panel in Fig. 3), and (3) a unified, captioned treatment of NormCode snippets will improve both understanding and the perceived quality of the paper without overloading the figure budget.
+
+---
+
 ## FIGURE PRIORITY AND SECTION DEPENDENCIES
 
 | Priority | Figure | Paper section | Blocker? | Creation method |
@@ -328,6 +373,16 @@ A table/visual showing the six production plans:
 
 *(Fill actual numbers from production data before camera-ready)*
 
+### Supp. Figure D — NormCode ecosystem / pipeline (authoring → execution)
+
+**Purpose:** One-page clarity on where NormCode sits: full path from authoring to execution and case base.
+
+**Content (choose one focus):**
+- **Pipeline:** `.ncds` → Derivation → Formalization → Post-Formalization → Activation → Orchestrator + Canvas → SQLite. Optional: annotate “.ncn review” after Formalization, “Level 2 case” = compiled plan, “Level 1 cases” = checkpoints.
+- **Positioning:** Contrast box “Typical LLM stack (shared state, implicit context)” vs. “NormCode (scope-verified, checkpoint = self-contained case).”
+
+Reference in §1 or §3; use as supplementary if main figure budget is full.
+
 ---
 
 ## PRODUCTION NOTES
@@ -351,17 +406,23 @@ A table/visual showing the six production plans:
 - Target: figures readable at 100% zoom in single-column PDF; minimum font size 8pt
 - LNCS page width ≈ 12.2 cm; plan figure heights so total figure + caption ≤ 6 cm
 
+**Listings / code artifacts:**
+- Define a custom `lstdefinestyle` or use consistent `lstset` for all NormCode (e.g. `language=`, `basicstyle=`, `backgroundcolor=`, `frame=`) so every `.ncds` / `.ncn` block matches.
+- Add `caption=` and `label=lst:...` to at least the minimal scope-rule example in §3 and, if space, one `.ncn` block; cite as “Listing 1” in text.
+- Optional: use a listings “title” or a one-line comment inside the block to show filename (e.g. `% plan.ncds`) for an artifact feel.
+
 **File naming convention:**
 ```
 iccbr_paper/figures/
 ├── fig1_two_level_cbr.pdf        (constructed — vector)
 ├── fig2_scope_rule_isolation.pdf (constructed — vector)
-├── fig3_canvas_cbr_interface.png (screenshot + overlays)
+├── fig3_canvas_cbr_interface.png (screenshot + overlays; consider fig3a_*.png, fig3b_*.png if two-panel)
 ├── fig4_retrieve_revise_cycle.pdf (constructed — vector, preferred)
 │   fig4_retrieve_revise_cycle.png (screenshot alternative, if used)
 ├── suppA_six_properties.pdf
 ├── suppB_compilation_pipeline.pdf
-└── suppC_production_plans.pdf
+├── suppC_production_plans.pdf
+└── suppD_ecosystem_pipeline.pdf  (optional — authoring → execution or positioning)
 ```
 
 ---
