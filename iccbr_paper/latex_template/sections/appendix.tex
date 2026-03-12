@@ -98,7 +98,7 @@ This appendix shows the NormCode plan used for the base-X addition benchmark
 (Sect.~\ref{sec:evaluation}). The plan adds two arbitrary-base numbers digit-by-digit
 with carry-over, structured as three nested loops. It validates both execution
 correctness (100\% accuracy up to 150-digit numbers) and Level~1 CBR (checkpoints at
-each loop iteration are inspectable and revisable via C1 and C3).
+each loop iteration are inspectable and revisable via failure localization (C1) and selective re-execution (C3)).
 
 \begin{lstlisting}[caption={Base-X addition plan (\texttt{.ncds} format).},
                    label={lst:basex}]
@@ -140,4 +140,4 @@ accumulated state.
 iteration: the Tensor Inspector shows the current digit, carry value, and accumulated
 sum at that flow index. Overriding a carry value at flow index \texttt{1.1.3.2} (for
 example) and resuming triggers selective re-execution of only the downstream digit
-addition steps --- C3 with exactly the minimum necessary re-execution.
+addition steps --- selective re-execution (C3) with exactly the minimum necessary re-execution.

@@ -1,33 +1,17 @@
 \section{Background}
 \label{sec:background}
 
-\subsection{The CBR Cycle}
+\subsection{CBR and Process-Oriented CBR}
 
 Case-Based Reasoning \cite{aamodt1994,kolodner1993} solves new problems by retrieving
-and adapting solutions from a case base of past experiences. The standard four-stage
-cycle --- \textbf{Retrieve} a similar past case, \textbf{Reuse} its solution as a
-starting point, \textbf{Revise} it to fit the new problem, \textbf{Retain} the result
-as a new case --- provides a principled framework for experience-based problem solving.
+and adapting past cases. The four-stage cycle --- \textbf{Retrieve}, \textbf{Reuse},
+\textbf{Revise}, \textbf{Retain} --- depends critically on case integrity: each case
+must be a self-contained record of a past solution state, free of implicit context.
 
-The quality of the CBR cycle depends critically on the integrity of cases: a case must
-be a self-contained, reliable record of a past solution state. Cases contaminated with
-irrelevant or implicit context produce unreliable retrieval and incorrect reuse.
-
-\subsection{Process-Oriented CBR}
-
-Traditional CBR treats cases as problem--solution pairs \cite{kolodner1993}.
-Process-Oriented CBR (POCBR) extends this to \textbf{processes as cases} --- the case
-captures a workflow trace: the sequence of operations, their intermediate states, and
-the data that flowed between steps \cite{bergmann2002,minor2014}.
-
-POCBR is valuable for complex multi-step tasks where the path to a solution matters as
-much as the solution itself. Applications include business process management,
-scientific workflow reuse, and clinical pathway adaptation.
-
-Multi-step LLM workflows are a natural POCBR domain: they are complex processes whose
-intermediate states contain valuable information about what worked, what failed, and
-where intervention was needed. The challenge is ensuring that intermediate states are
-suitable CBR cases.
+Process-Oriented CBR (POCBR) \cite{bergmann2002,minor2014} extends this to
+\textbf{processes as cases}: the case captures a workflow trace including intermediate
+states and data flow. Multi-step LLM workflows are a natural POCBR domain; the
+challenge is ensuring their intermediate states are suitable, self-contained cases.
 
 \subsection{The Case Integrity Problem in LLM Workflows}
 
@@ -40,17 +24,11 @@ Most LLM orchestration frameworks do not satisfy this requirement by default. A
 checkpoint captured at step $k$ in a typical orchestration framework is not a clean
 case: it is a snapshot of shared state at that moment, which may embed accumulated
 conversation history or prompt context from steps $1, \ldots, k-1$. Three consequences
-follow:
-
-\textbf{Unreliable retrieval.} Retrieving such a checkpoint and continuing from it in a
+follow: \textbf{Unreliable retrieval.} Retrieving such a checkpoint and continuing from it in a
 new execution context produces incorrect behavior: the implicit context the checkpoint
-depended on is no longer present.
-
-\textbf{Non-localizable failures.} When step $k$ fails, the cause may be anywhere in
+depended on is no longer present. \textbf{Non-localizable failures.} When step $k$ fails, the cause may be anywhere in
 the accumulated implicit state. Revision requires locating this cause --- which is not
-possible when the context boundary is implicit.
-
-\textbf{Irreproducible cases.} Two executions that load the same checkpoint may produce
+possible when the context boundary is implicit. \textbf{Irreproducible cases.} Two executions that load the same checkpoint may produce
 different outputs because the implicit context that was present during the original
 execution is not present during reuse.
 
@@ -63,11 +41,11 @@ POCBR in LLM workflows requires that intermediate execution states are
 case-integrity-preserving --- a property that must be guaranteed at the level of the
 workflow language, not inferred post-hoc from logs.
 
-\textbf{Definition.} A workflow language provides \textit{structural isolation} if:
-(1)~each step can access only data explicitly declared in its own scope block;
-(2)~the compiler determines each step's scope during formalization; (3)~the orchestrator
-constructs each step's input from only its declared references, enforcing the constraint
-at runtime by construction --- a step simply never receives undeclared data.
+\textbf{Definition.} A workflow language provides \textit{structural isolation} if each
+step can access only data explicitly declared in its own scope block; the compiler
+determines each step's scope during formalization; and the orchestrator constructs each
+step's input from only its declared references --- a step simply never receives
+undeclared data.
 
 If a language provides structural isolation, then for every completed step $k$: the
 stored output tensor contains exactly the data downstream steps will need; any failure

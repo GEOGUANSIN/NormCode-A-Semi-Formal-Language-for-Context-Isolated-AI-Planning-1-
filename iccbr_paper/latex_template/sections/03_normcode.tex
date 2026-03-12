@@ -8,57 +8,28 @@ The formal language specification is in \cite{anon2025}.
 
 \subsection{Six Properties of a Working Reasoning Medium}
 
-\paragraph{P1 --- Interpretable.}
-A reasoning medium must be legible to humans at multiple roles without programming
-expertise. The \texttt{.ncds} authoring format uses three markers and indentation ---
-syntax that reads like structured natural language. The compiler's Formalization phase
-produces \texttt{.ncn} (NormCode Natural): a plain-prose narrative available before any
-LLM call. A manager, compliance officer, or domain expert reads the \texttt{.ncn} and
-verifies the reasoning structure matches intent (C2). Because concept names are
-natural-language identifiers, plans can be authored in any language the authoring team
-uses: the production PPT Generation plan uses Chinese concept names throughout, and the
-scope rule, compiler, and orchestrator operate identically regardless of the natural
-language used.
-
-\paragraph{P2 --- Enforceable.}
-What is reviewed must be exactly what executes. The compiler determines plan structure
-and each step's scope before the first run; the orchestrator enforces the scope rule at
-runtime by constructing each step's input from only its declared references. The
-\texttt{.ncn} is a deterministic rendering of the actual formal plan --- not a
-paraphrase. The medium has structural teeth.
-
-\paragraph{P3 --- Composable.}
-Three symbols and one scope rule combine into arbitrarily complex workflows: nested
-loops, conditionals, parallel derivation, multi-agent coordination. A 5-node plan and a
-40-node plan are governed by the same grammar.
-
-\paragraph{P4 --- Locally Addressable.}
-Every reasoning step has a dot-separated flow index (1.1, 1.3.2, etc.). The scope rule
-makes every step epistemically self-contained: a developer can examine step 1.3.2
-without understanding steps 1.1--1.3.1, because the scope rule guarantees 1.3.2 depends
-only on what is declared in its own block.
-
-\paragraph{P5 --- Generalizable.}
-The three primitives are domain-agnostic. The same syntax expresses a PPT generation
-plan, a code review pipeline, a BOM matching task, a scientific data analysis, or a
-medical treatment pathway --- without domain-specific extensions.
-
-\paragraph{P6 --- Portable.}
-A NormCode plan is a plain text \texttt{.ncds} file accompanied by
-\texttt{concept\_repo.json} and \texttt{inference\_repo.json}. These artifacts are
+(P1)~\textbf{Interpretable}: the \texttt{.ncds} format reads like structured natural
+language; Formalization produces \texttt{.ncn}, a plain-prose narrative for
+pre-execution review (C2); concept names are natural-language identifiers, so plans can
+be authored in any language. (P2)~\textbf{Enforceable}: the compiler determines each
+step's scope before the first run; the \texttt{.ncn} is a deterministic rendering of
+the actual formal plan, not a paraphrase. (P3)~\textbf{Composable}: three symbols and
+one scope rule express nested loops, conditionals, parallel derivation, and multi-agent
+coordination at any plan scale. (P4)~\textbf{Locally Addressable}: every step has a
+dot-separated flow index; each step is self-contained, so any checkpoint can be
+examined, revised, or reused without understanding preceding steps. (P5)~\textbf{Generalizable}: the three primitives are domain-agnostic --- PPT
+generation, code review, BOM matching, medical treatment planning --- without
+domain-specific extensions. (P6)~\textbf{Portable}: a NormCode plan is a plain-text
+\texttt{.ncds} with \texttt{concept\_repo.json} and \texttt{inference\_repo.json} ---
 version-controlled, shareable, and executable by any compliant orchestrator.
 
 \subsection{Syntax and the Scope Rule}
 
-Three markers constitute the full syntax:
-\begin{itemize}
-  \item \texttt{<-}\ \ Value Concept: A named value, document, or intermediate result
-    --- data flowing between steps.
-  \item \texttt{<=}\ \ Functional Concept: An operation that derives its parent concept
-    from declared inputs.
-  \item \texttt{<*}\ \ Context Concept: In-loop state: marks the current element during
-    iteration.
-\end{itemize}
+Three markers constitute the full syntax: \texttt{<-}~Value Concept --- a named value,
+document, or intermediate result (data flowing between steps); \texttt{<=}~Functional
+Concept --- an operation that derives its parent concept from declared inputs;
+\texttt{<*}~Context Concept --- in-loop state, marking the current element during
+iteration.
 
 \textbf{Indentation defines scope.} The inputs available to any inference are exactly
 the concepts declared in its immediately enclosing indented block. There is no implicit
@@ -79,10 +50,20 @@ A two-concept example (\texttt{.ncds} authoring format):
     <- style_guide
 \end{lstlisting}
 
-Read bottom-up: \texttt{source\_doc} is read to produce \texttt{report};
-\texttt{report} and \texttt{style\_guide} are the declared inputs to the summarization
-inference. The \texttt{style\_guide} at the \texttt{summary} scope is explicit --- not
-inherited.
+Read top-to-bottom: \texttt{summary} is the output, depending on \texttt{report} and
+\texttt{style\_guide}; \texttt{report} depends on \texttt{source\_doc}. Execution
+proceeds inside-out: \texttt{source\_doc} (ground input) is resolved first, then
+\texttt{report}, then \texttt{summary}. The \texttt{style\_guide} at the
+\texttt{summary} scope is explicit --- not inherited.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig2_scope_rule_isolation.png}
+  \caption{NormCode syntax and scope rule (left: annotated \texttt{.ncds} example;
+    right: isolation boundary at runtime). Each completed node's tensor is a
+    self-contained object --- no hidden context dependency.}
+  \label{fig:scope}
+\end{figure}
 
 \textbf{Flow indices} assigned during Formalization give each concept a stable address.
 Following the sibling pattern --- the functional concept is always \texttt{.1} under its
@@ -126,22 +107,8 @@ nodes as purple hexagons and syntactic nodes as gray rectangles. Syntactic check
 are perfectly reproducible cases (same input $\rightarrow$ same output, always);
 semantic checkpoints are bounded-stochastic.
 
-\subsection{The Compilation Pipeline}
-
-A NormCode plan is compiled through four phases:
-\begin{enumerate}
-  \item \textbf{Derivation} (LLM-assisted): extracts concepts, inference operations,
-    dependencies, and hierarchical structure from the \texttt{.ncds} draft.
-  \item \textbf{Formalization} (rule-based): assigns flow indices; determines sequence
-    types; generates the \texttt{.ncn} plain-prose narrative.
-  \item \textbf{Post-Formalization}: assigns paradigm IDs (execution configurations),
-    tool faculties, tensor axis declarations, and agent assignments.
-  \item \textbf{Activation}: extracts \texttt{concept\_repo.json} and
-    \texttt{inference\_repo.json} for the orchestrator.
-\end{enumerate}
-
-The \texttt{.ncn} output of Phase~2 is the pre-execution interpretability artifact
-(C2). For the slide generation plan:
+The \texttt{.ncn} variant of normcode can be provided in the pre-execution interpretability
+ artifact (pre-execution review, C2). For the slide generation plan:
 
 \begin{lstlisting}
 (OUTPUT) collection of written slides
@@ -170,7 +137,7 @@ isolation enforced by the scope rule.
 When a step requires actual content, the orchestrator \textit{transmutes} the perceptual
 sign at the moment of the LLM call --- never earlier. The Tensor Inspector visualizes
 References in table, list, or JSON view --- making every completed step's exact bounded
-inputs inspectable in O(1) operations (C1).
+inputs inspectable in O(1) operations (failure localization, C1).
 
 \textbf{Environmental replication.} A checkpoint whose tensors contain perceptual signs
 is structurally self-contained, but resuming from it requires the referenced external

@@ -91,7 +91,7 @@ reasoning-action chain is an implicit continuation; the reasoning trace and runt
 state are not formally separated. In NormCode, each step in the agent loop is a node
 with a declared scope, a flow index, and an automatic checkpoint. The agent's execution
 trace is a Level~1 case base: every iteration step is inspectable, revisable, and
-reusable under the CBR operations C1 and C3. The absence of this property in existing
+reusable under failure localization (C1) and selective re-execution (C3). The absence of this property in existing
 frameworks is independently confirmed by recent work: AgentStepper \cite{agentstepper2026}
 introduces post-hoc interactive debugging (breakpoints, step-through, online prompt
 editing) for software development agents precisely because the underlying frameworks

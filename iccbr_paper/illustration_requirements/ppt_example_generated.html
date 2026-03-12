@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NormCode：让AI助手工作流更可靠的语言</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #16213e;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #0f3460;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .slide-counter {
+            font-size: 16px;
+            color: #94a3b8;
+        }
+        
+        .main-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+        
+        .slide-container {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        .navigation {
+            background: #16213e;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-top: 1px solid #0f3460;
+        }
+        
+        .nav-btn {
+            background: #0078D4;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .nav-btn:hover {
+            background: #106EBE;
+        }
+        
+        .nav-btn:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
+        }
+        
+        .slide-dots {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4a5568;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .dot.active {
+            background: #0078D4;
+        }
+        
+        .dot:hover {
+            background: #718096;
+        }
+        
+        .keyboard-hint {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>NormCode：让AI助手工作流更可靠的语言</h1>
+        <span class="slide-counter">幻灯片 <span id="current-slide">1</span> / 6</span>
+    </div>
+    
+    <div class="main-area">
+        <div class="slide-container">
+            
+        <section class="slide" id="slide-1">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;NormCode：让AI助手工作流更可靠的语言&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .top-line {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #0078D4, transparent 60%);
+        }
+
+        .content-area {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            right: 0;
+            bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 80px 40px 74px;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #0078D4;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 42px;
+            font-weight: 300;
+            color: #1A1A2E;
+            line-height: 1.2;
+            margin-bottom: 18px;
+            max-width: 700px;
+        }
+
+        h1 strong {
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #5A6577;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 600px;
+        }
+
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 50px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 80px 0 74px;
+        }
+
+        .presenter-info {
+            font-size: 14px;
+            color: #5A6577;
+            font-weight: 500;
+        }
+
+        .slide-number {
+            font-size: 12px;
+            color: #9CA3AF;
+            font-family: 'Calibri', sans-serif;
+        }
+
+        .corner-mark {
+            position: absolute;
+            bottom: 50px;
+            right: 60px;
+            width: 80px;
+            height: 80px;
+            border-right: 1px solid #E0E5EC;
+            border-bottom: 1px solid #E0E5EC;
+            opacity: 0.5;
+        }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;top-line&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;content-area&quot;&gt;
+            &lt;div class=&quot;tag&quot;&gt;NormCode 演示&lt;/div&gt;
+            &lt;h1&gt;NormCode：让AI助手工作流更可靠的语言&lt;/h1&gt;
+            &lt;p class=&quot;subtitle&quot;&gt;为什么你让AI分多步做事时，结果常常出人意料？\n——就像请不同专家接力完成任务，却没给他们各自的独立办公室&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;corner-mark&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;bottom-bar&quot;&gt;
+            &lt;span class=&quot;presenter-info&quot;&gt;&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;1&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; 开场请微笑停顿1秒，然后用聊天语气说：‘你有没有试过让AI先查资料、再写报告、最后润色？结果第二步用了第一步的错误数据，第三步又改错了重点……最后谁该负责？’ 紧接着自然引出副标题类比，语速放慢强调‘独立办公室’——这正是NormCode要解决的根本问题。全程约20秒，留40秒给后续互动或过渡。
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        <section class="slide" id="slide-2">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;NormCode是什么？——AI工作流的‘SQL’&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .header {
+            margin: 0 0 0 6px;
+            padding: 28px 60px 20px 54px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.25;
+        }
+
+        .content-area {
+            padding: 24px 60px 0 60px;
+            height: calc(100% - 120px);
+            overflow: hidden;
+        }
+
+        .lead-text {
+            font-size: 17px;
+            color: #5A6577;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+            padding-left: 16px;
+            border-left: 3px solid #0078D4;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 18px;
+            line-height: 1.55;
+            margin-bottom: 14px;
+            padding-left: 24px;
+            position: relative;
+            color: #3D3D3D;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0078D4;
+            opacity: 0.7;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 40px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px 0 54px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .slide-number { font-weight: 600; }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;NormCode是什么？——AI工作流的‘SQL’&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content-area&quot;&gt;
+            &lt;div class=&quot;lead-text&quot;&gt;中央一个简洁图标：三扇并排的‘门’（代表三个步骤），每扇门紧闭，门上贴着不同标签（如‘用户问题’‘搜索结果’‘最终报告’）；门之间用虚线隔开，箭头仅从左侧输入指向单扇门，门内有小纸条图标显示‘输入→思考→输出’流程；背景色块柔和，整体风格像儿童绘本中的安全小屋&lt;/div&gt;
+            &lt;ul&gt;
+                &lt;li&gt;一句话定义：一种半形式化语言，把复杂AI任务拆解成彼此独立、只接收明确输入的小步骤&lt;/li&gt;&lt;li&gt;核心类比：就像SQL让普通人能统一查询任何数据库，NormCode让你用同一套简洁语言描述任意AI工作流&lt;/li&gt;&lt;li&gt;关键意象：每个步骤都是一个‘密封房间’——它看不见前一步的结果，也影响不了后一步，只处理你亲手递进去的东西&lt;/li&gt;&lt;li&gt;结果：从此，AI工作流不再是黑箱拼接，而是可读、可查、可复现的清晰计划&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;span&gt;&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;2&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; 请放慢语速，每点说完稍作停顿（约2秒），配合手势模拟‘递东西进房间’的动作；重点强调‘密封房间’时，可以轻敲桌面示意‘隔绝’；当说到SQL类比时，微笑补充：‘就像你不用懂数据库怎么存数据，也能写出SELECT语句——NormCode也一样’；注意观察听众反应，若有人皱眉，立刻用‘比如让AI帮你写周报：第一步只看会议记录，第二步只看你的草稿，第三步才整合——每步都干净利落’来即时举例；本页严格控制在60秒内，为下一页痛点铺垫留出空间
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        <section class="slide" id="slide-3">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;两大常见痛点：为什么AI工作流容易失控？&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .header {
+            margin: 0 0 0 6px;
+            padding: 28px 60px 18px 54px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.25;
+        }
+
+        .columns {
+            display: flex;
+            margin-left: 6px;
+            height: calc(100% - 120px);
+        }
+
+        .column {
+            flex: 1;
+            padding: 24px 36px 16px 54px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column:last-child {
+            padding-left: 36px;
+            border-left: 1px solid #E8EBF0;
+        }
+
+        .column-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0078D4;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .column-rule {
+            width: 32px;
+            height: 2px;
+            background: #0078D4;
+            margin-bottom: 14px;
+            opacity: 0.6;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 16px;
+            line-height: 1.55;
+            margin-bottom: 10px;
+            padding-left: 18px;
+            position: relative;
+            color: #3D3D3D;
+        }
+
+        li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: #0078D4;
+            font-weight: 700;
+            font-size: 12px;
+            top: 2px;
+            opacity: 0.6;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 40px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px 0 54px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .slide-number { font-weight: 600; }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;两大常见痛点：为什么AI工作流容易失控？&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;columns&quot;&gt;
+            &lt;div class=&quot;column&quot;&gt;
+                &lt;div class=&quot;column-header&quot;&gt;痛点1｜上下文污染&lt;/div&gt;
+                &lt;div class=&quot;column-rule&quot;&gt;&lt;/div&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;痛点1｜上下文污染：步骤越多，AI越容易‘幻觉’——把第3页和第47页内容混在一起，就像在拥挤的会议室里同时听十个人讲话，根本分不清谁在说什么&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;column&quot;&gt;
+                &lt;div class=&quot;column-header&quot;&gt;痛点2｜无法追溯&lt;/div&gt;
+                &lt;div class=&quot;column-rule&quot;&gt;&lt;/div&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;痛点2｜无法追溯：出错了，你根本不知道是哪一步看错了输入、产出了错误结果，就像修车时找不到具体哪个零件出了问题——连检查清单都没有&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;span&gt;AI工作流治理：NormCode解决方案&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;3&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; 请用平缓语速读完两个痛点，每读完一个，停顿2秒，配合手势指向对应视觉侧。重点强调‘第3页和第47页’——这是真实用户反馈中高频出现的幻觉场景；‘连检查清单都没有’要加重语气，让听众立刻联想到自己修东西却找不到说明书的无力感。本页严格控制在60秒内，为下一页揭示NormCode解决方案留出呼吸感。
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        <section class="slide" id="slide-4">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;核心机制：每步只看显式输入 + 结构化推理&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .header {
+            margin: 0 0 0 6px;
+            padding: 28px 60px 20px 54px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.25;
+        }
+
+        .content-area {
+            padding: 24px 60px 0 60px;
+            height: calc(100% - 120px);
+            overflow: hidden;
+        }
+
+        .lead-text {
+            font-size: 17px;
+            color: #5A6577;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-style: italic;
+            padding-left: 16px;
+            border-left: 3px solid #0078D4;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 18px;
+            line-height: 1.55;
+            margin-bottom: 14px;
+            padding-left: 24px;
+            position: relative;
+            color: #3D3D3D;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0078D4;
+            opacity: 0.7;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 40px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px 0 54px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .slide-number { font-weight: 600; }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;核心机制：每步只看显式输入 + 结构化推理&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content-area&quot;&gt;
+            &lt;div class=&quot;lead-text&quot;&gt;三间并排的浅蓝色小房间示意图，从左到右标为‘步骤1’‘步骤2’‘步骤3’；房间之间有单向箭头门（仅允许前一步输出进入后一步输入），所有房间外墙均无窗户，且标注‘不看原始文档’；每个房间内有一张小桌，桌上放着一张纸（输入）和一支笔（动作），纸旁贴着便签条写明‘输出：XXX’&lt;/div&gt;
+            &lt;ul&gt;
+                &lt;li&gt;就像快递员只负责送指定包裹——每个步骤只能看到上一步明确交给它的文本，完全看不到原始长文档（‘密封房间’设计）&lt;/li&gt;&lt;li&gt;每一步都是一句清晰断言：‘摘要 = 对清洗后文本执行精简压缩’——明确写出输入（什么）、动作（做什么）、输出（变成什么）&lt;/li&gt;&lt;li&gt;步骤之间彼此‘不认识’：第二步不会偷偷参考第一步的草稿，也不会调用第三步的中间结果（彻底消除隐藏依赖）&lt;/li&gt;&lt;li&gt;结果是：你能像查快递物流一样，逐条核对每一步的输入和输出——哪步错了？错在哪？立刻定位，马上修正&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;span&gt;&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;4&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; （语速平稳，配合手势模拟‘递纸’动作）请特别注意第二点——这不是技术细节，而是思维方式的转变：我们不再说‘AI帮我总结’，而是说‘把清洗后的文本，用不超过100字压缩成核心观点’。（停顿2秒）这里的关键是‘谁给的？做什么？产出啥？’三个问题必须在一句话里答全。（看表提示）本页共4个要点，每个约12秒，留3秒换气。可能被问：‘如果上一步清洗错了，后面不全错了吗？’——这正是Slide5要展示的：NormCode如何让这种错误一眼可见、一改即愈。
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        <section class="slide" id="slide-5">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;一行代码，看懂NormCode：三个符号 + 缩进&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .header {
+            margin: 0 0 0 6px;
+            padding: 28px 60px 18px 54px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.25;
+        }
+
+        .content-area {
+            display: flex;
+            margin-left: 6px;
+            height: calc(100% - 120px);
+        }
+
+        .visual-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 30px;
+            background: #F0F4F8;
+            border-right: 1px solid #E8EBF0;
+            text-align: center;
+        }
+
+        .visual-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        .visual-description {
+            font-size: 15px;
+            color: #5A6577;
+            line-height: 1.6;
+            max-width: 360px;
+        }
+
+        .text-panel {
+            width: 360px;
+            padding: 28px 40px 20px 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .key-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        .caption {
+            font-size: 15px;
+            color: #5A6577;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 40px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px 0 54px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .slide-number { font-weight: 600; }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;一行代码，看懂NormCode：三个符号 + 缩进&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content-area&quot;&gt;
+            &lt;div class=&quot;visual-panel&quot;&gt;
+                &lt;div class=&quot;visual-icon&quot;&gt;📊&lt;/div&gt;
+                &lt;div class=&quot;visual-description&quot;&gt;显示一段真实的.ncds代码示例（三行，带缩进）：第一行顶格写 'raw_document &lt;- &quot;...&quot;'；第二行缩进2字符写 'clean_text &lt;= clean(raw_document)'；第三行缩进4字符写 'summary &lt;= summarize(clean_text)'。所有符号（←、⇐）加粗并用不同颜色区分（←用蓝色，⇐用橙色），缩进用阶梯式视觉对齐，右侧添加简笔图标辅助：蓝色文档图标对应←，橙色齿轮图标对应⇐，向上的弯曲箭头标注‘自底向上读’。&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;text-panel&quot;&gt;
+                &lt;div class=&quot;key-message&quot;&gt;一行代码，看懂NormCode：三个符号 + 缩进&lt;/div&gt;
+                &lt;p class=&quot;caption&quot;&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;span&gt;&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;5&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; 请用60秒讲完：先指代码最下面一行（summary），说‘我们先看结果——这是最终摘要’；再往上指第二行（clean_text），说‘它只依赖上面这行的输出，完全不知道原始文档长什么样’；最后指第一行（raw_document），强调‘每步都像一个密封小房间，只接收显式写出的输入’。重点重复‘看不见’这个词——这不是缺陷，而是NormCode刻意设计的保护机制，防止AI把原始噪音带进摘要。提醒观众：别从上往下读！缩进不是装饰，是执行时间表。
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        <section class="slide" id="slide-6">
+            <iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;谁需要NormCode？为什么它重要？&lt;/title&gt;
+    &lt;style&gt;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            color: #2D2D2D;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 20px auto;
+            background: #FAFBFC;
+            border: 1px solid #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #0078D4 0%, #005A9E 60%, #003F6E 100%);
+        }
+
+        .header {
+            margin: 0 0 0 6px;
+            padding: 28px 60px 18px 54px;
+            border-bottom: 1px solid #E8EBF0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A1A2E;
+            line-height: 1.25;
+        }
+
+        .content-area {
+            padding: 22px 60px 0 60px;
+            height: calc(100% - 120px);
+            overflow: hidden;
+        }
+
+        .intro {
+            font-size: 16px;
+            color: #5A6577;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .takeaways {
+            list-style: none;
+            padding: 0;
+            counter-reset: takeaway;
+        }
+
+        .takeaways li {
+            font-size: 17px;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            padding-left: 44px;
+            position: relative;
+            color: #3D3D3D;
+        }
+
+        .takeaways li::before {
+            counter-increment: takeaway;
+            content: counter(takeaway);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            width: 28px;
+            height: 28px;
+            background: #0078D4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cta-bar {
+            position: absolute;
+            bottom: 40px;
+            left: 60px;
+            right: 60px;
+            padding: 14px 20px;
+            background: #EBF5FB;
+            border-left: 4px solid #0078D4;
+            border-radius: 0 6px 6px 0;
+            font-size: 16px;
+            color: #1A1A2E;
+            font-weight: 500;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 6px;
+            right: 0;
+            height: 40px;
+            border-top: 1px solid #E8EBF0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px 0 54px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .slide-number { font-weight: 600; }
+
+        .speaker-notes {
+            width: 960px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .speaker-notes strong { color: #0078D4; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;slide&quot;&gt;
+        &lt;div class=&quot;side-accent&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;谁需要NormCode？为什么它重要？&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;content-area&quot;&gt;
+            &lt;p class=&quot;intro&quot;&gt;NormCode不是给AI‘补脑’的工具，而是给AI工作流装上的‘可靠性地基’。&lt;/p&gt;
+            &lt;ol class=&quot;takeaways&quot;&gt;
+                &lt;li&gt;需要它的人：处理复杂任务的团队——比如法律合同自动审核（5步以上）、医疗报告生成（每步都需留痕）、金融风控决策（必须可回溯）&lt;/li&gt;&lt;li&gt;需要它的人：运行长时间任务的系统——比如AI客服处理一通30分钟对话，中途断电后能从第7步精准续跑，不重来也不跳步&lt;/li&gt;&lt;li&gt;它真正解决的，是生产环境中最痛的问题：让每一步AI操作像‘密封房间’一样独立，像‘银行流水’一样可查，像‘电路检修’一样可定位故障点&lt;/li&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;cta-bar&quot;&gt;如果你的AI工作流已经走出演示阶段，正准备上线服务——NormCode不是‘将来要考虑’，而是‘今天就该部署’的基础设施。&lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;span&gt;&lt;/span&gt;
+            &lt;span class=&quot;slide-number&quot;&gt;6&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;speaker-notes&quot;&gt;
+        &lt;strong&gt;Speaker Notes:&lt;/strong&gt; （语速放慢，语气笃定）这是整场分享的落脚点。请停顿2秒，再清晰说出三个‘需要它的人’——每个都对应一个真实场景，听众会立刻对号入座。说到‘密封房间’‘银行流水’‘电路检修’时，可以自然抬手做‘分隔’‘记录’‘定位’的手势。最后call to action要加重‘今天就该部署’——呼应Slide1提出的‘为什么AI工作流常出错’，形成完整闭环。全程控制在60秒内，留5秒静默收尾。
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </section>
+        
+        </div>
+    </div>
+    
+    <nav class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()">← 上一张</button>
+        <div class="slide-dots" id="slide-dots"></div>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">下一张 →</button>
+    </nav>
+    
+    <div class="keyboard-hint">
+        使用 ← → 方向键导航
+    </div>
+    
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+        
+        function initDots() {
+            const dotsContainer = document.getElementById('slide-dots');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 1 ? ' active' : '');
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        function updateUI() {
+            // Update counter
+            document.getElementById('current-slide').textContent = currentSlide;
+            
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i + 1 === currentSlide);
+            });
+            
+            // Update slides
+            document.querySelectorAll('.slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i + 1 === currentSlide);
+            });
+            
+            // Update buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateUI();
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateUI();
+            }
+        }
+        
+        function goToSlide(n) {
+            currentSlide = n;
+            updateUI();
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+        
+        // Initialize
+        initDots();
+        updateUI();
+    </script>
+</body>
+</html>

@@ -2,70 +2,67 @@
 \label{sec:canvas}
 
 NormCode Canvas (v1.1.3) is the deployed system that makes both levels of CBR
-accessible in one environment. The CBR operations are its primary interaction model.
+accessible in one environment. Three practical properties follow structurally from the
+reasoning medium and are realized by Canvas:
+(1)~\textbf{(C1) Constant-effort failure localization.} At any breakpoint, the exact
+bounded inputs to step $k$ are directly inspectable --- not reconstructed from logs ---
+because the scope rule enforced them at runtime. (2)~\textbf{(C2) Pre-execution
+structural review.} The \texttt{.ncn} narrative is available before any LLM call; a
+domain expert can verify and reject the plan before computation begins. Unlike RLHF
+\cite{ouyang2022} or Constitutional AI \cite{bai2022}, this intervention operates at
+the plan structure level. (3)~\textbf{(C3) Scope-bounded selective re-execution.}
+Revising a case at flow index $f$ triggers re-execution of only transitively downstream
+nodes; all upstream results are reused from cache.
 
-\subsection{Level 1 Interface: Concrete Case Management}
-
-\textbf{Graph View.} Before execution, Canvas renders the complete inference graph from
-the compiled \texttt{concept\_repo.json} and \texttt{inference\_repo.json}. Every node
-is a potential Level~1 case (a future checkpoint), identified by its flow index. Semantic
-nodes (purple hexagons) and syntactic nodes (gray rectangles) are visually distinct.
-
-\textbf{Real-Time Execution --- Retain.} During a run, Canvas streams execution events
-via WebSocket. Every transition to completed writes a new Level~1 case to SQLite:
-(\texttt{run\_id}, \texttt{flow\_index}, Blackboard snapshot, Concept Repository
-snapshot). Retain is fully automatic.
-
-\textbf{Breakpoint + Tensor Inspector --- Retrieve.} Any node can be designated as a
-breakpoint by flow index. Execution pauses before that node runs, giving the operator
-the opportunity to inspect the case. The Tensor Inspector displays the full
-$N$-dimensional Reference: axis names, shapes, and content values or perceptual signs.
-Inspection is O(1) --- C1.
-
-\textbf{Value Override --- Revise.} At a breakpoint, or from the Checkpoint Panel on
-any completed case, the operator clicks Override to enter edit mode. On resume, the
-orchestrator records the modified tensor, marks all downstream nodes as stale (computed
-automatically from the dependency graph), and re-executes only stale nodes --- C3.
-
-\textbf{Fork --- Reuse.} The Checkpoint Panel lists all Level~1 cases organized by run
-ID and flow index. Fork instantiates a new execution from any checkpoint: new run $r'$,
-load stored $(\mathcal{B}_f, \mathcal{C}_f)$, all upstream marked completed, all
-downstream execute fresh. Fork supports failure recovery, A/B testing, cost efficiency,
-and iterative refinement.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig3.png}
+  \caption{NormCode Canvas (v1.1.3). The Graph Canvas (center) renders the full
+    inference graph; the Detail Panel (right) inspects any node's bounded inputs ---
+    failure localization (C1). The Checkpoint Panel browses per-project Level~1 cases
+    by run and flow index; Fork instantiates new executions from any checkpoint. The
+    Chat Panel supports human-in-the-loop interaction via the Canvas Assistant plan.}
+  \label{fig:canvas}
+\end{figure}
 
 \subsection{Level 2 Interface: Abstract Case Management}
 
-\textbf{The \texttt{.ncn} Review Panel.} Canvas exposes the \texttt{.ncn} in a review
-panel available before the first run. A domain expert reads the plain-prose narrative,
-verifies reasoning structure matches intent, and either approves or rejects for revision.
-This is C2 --- zero-cost pre-execution review.
+A Level~2 case in Canvas is a \textbf{NormCode project}: a directory containing the
+\texttt{.ncds} source, compiled \texttt{concept\_repo.json} and
+\texttt{inference\_repo.json}, agent configuration, and execution settings. The Project
+Panel is the entry point for opening, creating, and switching between projects. Before
+the first run, the \texttt{.ncn} narrative is available for pre-execution review (C2):
+a domain expert reads the plain-prose rendering, verifies that the reasoning structure
+matches intent, and approves or rejects before any LLM call. Canvas additionally ships
+a built-in \textbf{Canvas Assistant} NormCode plan that runs inside the app, dispatching
+natural-language messages to Canvas Integration facilities (\texttt{me.hands},
+\texttt{me.mind}, \texttt{me.vision}); its per-iteration checkpoints are themselves
+Level~1 cases. When the NC~Compilations plan runs, each compilation phase is a Level~1
+node --- making the compilation pipeline debuggable via Level~1 CBR.
 
-\textbf{Compilation Workflow Visibility.} When the NC~Compilations plan runs the
-compiler pipeline, Canvas shows it as a Level~1 execution: each compilation phase is a
-node producing checkpoints. The compilation pipeline is thus debuggable via Level~1 CBR.
+\subsection{Level 1 Interface: Concrete Case Management}
 
-\textbf{Canvas Assistant.} Canvas ships a built-in NormCode plan --- the Canvas
-Assistant --- that runs inside the Canvas App itself. Users interact through a chat panel;
-the plan classifies each natural-language message, dispatches it to the appropriate
-Canvas Integration facility (navigation via \texttt{me.hands}, execution control via
-\texttt{me.mind}, or state query via \texttt{me.vision}), and responds through the same
-chat. The plan is itself a live Level~1 CBR object: its per-iteration checkpoints are
-inspectable and revisable in the Tensor Inspector. This is a concrete instance of a plan
-using Canvas Integration facilities to control the very environment in which it runs.
+Level~1 cases are stored in a \textbf{per-project SQLite database}. Every completed
+node writes a checkpoint automatically (\texttt{run\_id}, \texttt{flow\_index},
+Blackboard snapshot, Concept Repository snapshot) --- Retain is fully automatic. The
+Graph Canvas renders the full inference graph before execution; every node is a
+potential checkpoint identified by its flow index. \textbf{Retrieve}: any node can be
+designated as a breakpoint; execution pauses and the Detail Panel displays the node's
+full $N$-dimensional Reference in O(1) --- failure localization (C1). \textbf{Revise}:
+the operator clicks Override at any breakpoint or completed case, edits a tensor, and
+resumes; only downstream stale nodes re-execute --- selective re-execution (C3).
+\textbf{Reuse}: the Checkpoint Panel browses all runs within the active project; Fork
+loads $(\mathcal{B}_f, \mathcal{C}_f)$ into a new run $r'$, marks upstream nodes
+completed, and executes downstream fresh --- supporting failure recovery, A/B testing,
+and iterative refinement.
 
 \subsection{Architecture}
 
-\textbf{Frontend:} React~18 with TypeScript; React Flow for graph visualization; Zustand
-for state management; TailwindCSS.
-
-\textbf{Backend:} FastAPI with Python~3.11; SQLite for case base persistence; native
-Python WebSockets for real-time execution events.
-
-\textbf{Orchestrator:} Dependency-driven scheduling via Waitlist (priority queue by flow
-index) and Blackboard (status tracker). The scope rule is enforced by construction: the
-orchestrator passes only the declared tensor references to each inference's input ---
-never the full Concept Repository.
-
-\textbf{Multi-agent support.} Multiple agents with different LLM models (e.g.,
-\texttt{qwen-plus}, \texttt{gpt-4o}, \texttt{claude-3-opus}) can be registered.
-Inferences are mapped to agents by pattern rules on flow indices.
+\textbf{Frontend:} React~18 with TypeScript; React Flow for graph visualization;
+TailwindCSS. \textbf{Backend:} FastAPI with Python~3.11; per-project SQLite for
+Level~1 case persistence; Python WebSockets for real-time execution events.
+\textbf{Orchestrator:} Dependency-driven scheduling via Waitlist and Blackboard; the
+scope rule is enforced by construction --- only declared tensor references are passed to
+each inference, never the full Concept Repository. Multiple agents with different LLM
+models (\texttt{qwen-plus}, \texttt{gpt-4o}, \texttt{claude-3-opus}) can be
+registered; inferences are mapped to agents by pattern rules on flow indices.

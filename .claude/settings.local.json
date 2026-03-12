@@ -5,7 +5,9 @@
       "Bash(do echo:*)",
       "Read(//c/Users/ProgU/PycharmProjects/NormCode-A-Semi-Formal-Language-for-Context-Isolated-AI-Planning-1-/iccbr_paper/article/**)",
       "Bash(done)",
-      "Bash(grep -oP '\\\\\\\\cite\\\\{[^}]+\\\\}')"
+      "Bash(grep -oP '\\\\\\\\cite\\\\{[^}]+\\\\}')",
+      "Bash(python -c \"import playwright; print\\(''playwright ok''\\)\")",
+      "Bash(python -c \"from PIL import Image; print\\(''PIL ok''\\)\")"
     ]
   }
 }
