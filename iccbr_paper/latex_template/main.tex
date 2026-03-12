@@ -1,0 +1,129 @@
+\documentclass[runningheads]{llncs}
+%
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Listings style for NormCode snippets
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  backgroundcolor=\color{gray!8},
+  rulecolor=\color{gray!40},
+  xleftmargin=6pt,
+  xrightmargin=6pt,
+}
+
+\begin{document}
+
+\title{NormCode Canvas: Two-Level Process-Oriented CBR\\for LLM Workflow Execution}
+
+\titlerunning{NormCode Canvas: Two-Level CBR for LLM Workflows}
+
+\author{Anonymous Author(s)}
+\authorrunning{Anonymous}
+
+\institute{Anonymous Institution\\
+\email{anonymous@anonymous.org}}
+
+\maketitle
+
+%----------------------------------------------------------------
+\begin{abstract}
+Case-Based Reasoning provides a proven framework for managing complex multi-step
+problem-solving: capture execution states as cases, retrieve the closest match for
+a new problem, adapt it, and retain the result. Applied to multi-step LLM
+workflows --- an increasingly prevalent architecture for AI deployment --- CBR
+suggests a natural operational model in which execution checkpoints are cases, fork
+is retrieve-and-reuse, and value override is revision. This model depends on a
+precondition: checkpoints must be genuinely self-contained. When reasoning steps
+share implicit accumulated state, a checkpoint at step $k$ embeds not just that
+step's output but all the prior state that leaked into it, making retrieval
+unreliable and revision non-localizable.
+
+We present \textbf{NormCode Canvas} (v1.1.3), a deployed system that realizes CBR at
+two levels. Building on NormCode \cite{anon2025} --- a semi-formal planning language
+whose scope rule is verified by the compiler and enforced by the orchestrator ---
+the system delivers: \textbf{(Level~1) Concrete case CBR within each run}: every
+execution checkpoint is a self-contained suspended runtime (Blackboard + Concept
+Repository snapshot); the four CBR operations map onto Canvas interactions
+(Retrieve via Tensor Inspector, Reuse via Fork, Revise via Value Override with
+automatic stale-boundary computation, Retain via continuous checkpointing).
+\textbf{(Level~2) Abstract case CBR across plans}: each compiled NormCode plan is an
+abstract case --- a runtime definition from which all executions of that task type
+are instantiated. Four production-ready plans serve as an example of this
+case library in practice; the compiler itself is a NormCode plan, enabling
+recursive case-based learning. Three measurable properties follow structurally:
+\textbf{(C1) Failure localization in O(1) operations}; \textbf{(C2) Zero-cost
+pre-execution verification} via compiler-generated plan narrative; \textbf{(C3)
+Scope-bounded selective re-run} preserving all upstream-cached nodes.
+
+Two case studies illustrate the architecture in use: PPT Agent executions
+accumulating a concrete case library under Level~2 plan reuse, and a Code
+Assistant session localizing a failure via breakpoint inspection and
+fork-and-compare (C1 and C3 with exact counts). Correctness is validated
+through 100\% accuracy on base-X addition (up to 150 digits) and self-hosted
+execution of NormCode's own four-phase compiler pipeline.
+
+\keywords{case-based reasoning \and process-oriented CBR \and LLM workflows
+\and workflow management \and visual debugging \and structural isolation
+\and deployed systems}
+\end{abstract}
+
+%================================================================
+\input{sections/01_introduction}
+
+%================================================================
+\input{sections/02_background}
+
+%================================================================
+\input{sections/03_normcode}
+
+%================================================================
+\input{sections/04_level1}
+
+%================================================================
+\input{sections/05_level2}
+
+%================================================================
+\input{sections/06_canvas}
+
+%================================================================
+\input{sections/07_casestudies}
+
+%================================================================
+\input{sections/08_evaluation}
+
+%================================================================
+\input{sections/09_discussion}
+
+%================================================================
+\input{sections/10_related}
+
+%================================================================
+\input{sections/11_conclusion}
+
+%================================================================
+\input{sections/appendix}
+
+%----------------------------------------------------------------
+\newpage
+\begin{credits}
+\subsubsection{\ackname} [To be completed by authors.]
+
+\subsubsection{Declaration on Generative AI}
+During the preparation of this work, the author(s) used AI-assisted writing tools for
+drafting and editing. After using these tools, the author(s) reviewed and edited the
+content as needed and take(s) full responsibility for the publication's content.
+\end{credits}
+
+\bibliographystyle{splncs04}
+\bibliography{bibliography}
+
+\end{document}

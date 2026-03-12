@@ -1,0 +1,92 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Language as the Substrate}
+
+C1, C2, and C3 are not design choices about the Canvas App. They are structural
+consequences:
+\begin{itemize}
+  \item \textbf{C1} follows from Local Addressability: every step has an exact flow
+    index; its inputs are exactly its declared scope.
+  \item \textbf{C2} follows from Interpretability + Enforceability: the \texttt{.ncn}
+    is human-readable, and what the reviewer reads is exactly what executes.
+  \item \textbf{C3} follows from Local Addressability + Enforceability: the scope rule
+    determines which downstream nodes depend on any step; the orchestrator enforces this
+    boundary.
+\end{itemize}
+
+Existing LLM orchestration tools can add checkpoint UI features. They cannot produce
+C1--C3 structurally without first providing a reasoning medium that satisfies these six
+properties.
+
+\subsection{Sustainable Improvement Through Two-Level CBR}
+
+\begin{itemize}
+  \item \textbf{Level~1 accumulation:} Every run deposits concrete cases. The case base
+    grows continuously; past checkpoints are available for retrieval, reuse, and revision
+    without operator intervention.
+  \item \textbf{Level~2 refinement:} Each domain that warrants a new plan extends the
+    abstract case library. Plans are revised as task patterns evolve, and revised plans
+    are retained.
+  \item \textbf{Recursive improvement:} The compilation pipeline --- itself a Level~2
+    case --- improves through the same revision cycle. A better compiler produces better
+    plans; better plans produce better Level~1 cases; better Level~1 cases inform better
+    Level~2 revisions.
+\end{itemize}
+
+This distinguishes NormCode from a logging or tracing tool. A logging tool records what
+happened. NormCode accumulates experience in a form that can be retrieved, reused, and
+improved --- which is what CBR theory has always proposed and what prior POCBR work
+\cite{bergmann2002,muller2015b} has developed for workflow domains.
+
+\subsection{What CBR Gains from a Reasoning Medium}
+
+\textbf{A language substrate that guarantees case integrity.} NormCode contributes a
+structural answer: the scope rule, enforced at compile time and runtime, guarantees that
+every checkpoint is a self-contained case.
+
+\textbf{A new case type: the suspended runtime.} The Level~1 case definition extends
+POCBR's case representation beyond workflow traces \cite{leake2008,bottrighi2016} to
+resumable execution environments. A trace records what happened; a suspended runtime is
+a state from which execution can be continued with exactly the same data-dependency
+behavior as the original execution. Retrieval of a suspended runtime produces a
+guarantee that retrieval of a trace does not.
+
+\textbf{A concrete instance of two-level CBR.} Muller \& Bergmann \cite{muller2015b}
+introduced generalized workflow cases as a two-level structure; this paper deploys it:
+an initial case library of four abstract reasoning patterns (Level~2), each generating
+concrete cases on every run (Level~1), with the distillation process (compilation
+pipeline) itself a Level~2 case.
+
+\subsection{Limitations}
+
+\textbf{Manual retrieval.} The Checkpoint Panel requires operator judgment to select the
+appropriate fork target. Learned similarity measures would lower this barrier
+substantially.
+
+\textbf{Unbounded case base growth.} The current system retains all checkpoints
+indefinitely. Competence-based pruning and quality-based filtering are well-studied
+approaches applicable here.
+
+\textbf{Semantic checkpoint reproducibility.} Semantic checkpoints (LLM outputs) are
+bounded-stochastic: same input $\rightarrow$ same output distribution, not a fixed
+value.
+
+\textbf{Environmental replication for perceptual-sign cases.} A checkpoint is
+structurally self-contained, but if its tensors contain perceptual signs pointing to
+external resources, those resources must be accessible and consistent for reuse to
+produce valid continuations. The case encodes \textit{what was referenced}, not the
+referenced content.
+
+\textbf{LLM-assisted derivation.} The Derivation phase uses an LLM to extract
+conceptual structure from natural language, introducing non-determinism in plan
+generation. A more formal derivation procedure is a direction for future work.
+
+\subsection{Generality}
+
+The two-level CBR architecture is not specific to NormCode's implementation. Any
+orchestration system that satisfies: (1)~structural isolation between steps,
+(2)~persistent addressable checkpoints, and (3)~resumable execution from any checkpoint,
+instantiates a Level~1 process-oriented CBR system. NormCode provides all four
+properties by design. Other domains --- scientific workflow management, legal document
+processing, medical treatment planning --- would benefit from the same architecture.

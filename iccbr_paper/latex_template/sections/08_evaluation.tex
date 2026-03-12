@@ -1,0 +1,72 @@
+\section{Evaluation}
+\label{sec:evaluation}
+
+We evaluate the deployed NormCode Canvas system across three dimensions. The evaluation
+reflects deployed production use rather than a controlled experimental design.
+
+\subsection{Correctness: Base-X Addition Benchmark}
+
+We implemented a base-X addition algorithm as a NormCode plan. The task adds two
+arbitrary-base numbers digit-by-digit with carry-over. The plan decomposes into
+approximately 25 inferences across three nested loops.
+
+\textbf{Result: 100\% accuracy across test suites validated up to 150-digit numbers.}
+NormCode's role is to structure the derivation --- ensuring each step receives exactly
+the correct context and the overall logic is auditable at every node.
+
+\subsection{Level 2 CBR Validation: Self-Hosted Compilation}
+
+The NC~Compilations plan takes a natural-language task description as input and
+produces, through four inference groups, a fully executable plan:
+\texttt{concept\_repo.json} + \texttt{inference\_repo.json} + \texttt{.ncn} narrative.
+This validates Level~2 CBR in three senses: (1)~self-consistency --- the pipeline can
+compile itself; (2)~distillation validated --- if Formalization produces incorrect flow
+indices, the operator retrieves the Derivation checkpoint and revises;
+(3)~recursive improvement --- a better compiler is a better Level~2 case.
+
+\textbf{Result.} The orchestrator successfully executed the NC~Compilations plan
+end-to-end, producing correct \texttt{concept\_repo.json} and
+\texttt{inference\_repo.json} for new plans.
+
+\subsection{Current Deployment: Four Production-Ready Plans}
+
+Among the plans authored to date, four have reached production-ready status showing the
+generalizability of NormCode:
+
+\begin{table}[t]
+\centering
+\caption{Four production-ready NormCode plans.}
+\label{tab:plans}
+\begin{tabular}{@{}p{3.0cm}p{1.6cm}p{1.6cm}p{1.6cm}p{3.4cm}@{}}
+\toprule
+\textbf{Plan} & \textbf{Inferences} & \textbf{Semantic} & \textbf{Syntactic} & \textbf{Notes} \\
+\midrule
+PPT Generation  & ${\sim}30$ & ${\sim}10$ & ${\sim}20$ & Nested loop; 6 layouts; 14 component types \\
+Code Assistant  & ${\sim}40$ & ${\sim}15$ & ${\sim}25$ & 7-stage pipeline; parallel Explore \\
+NC Compilations & ${\sim}25$ & ${\sim}10$ & ${\sim}15$ & Self-hosting; Level~2 validation \\
+Canvas Assistant & ${\sim}20$ & ${\sim}8$  & ${\sim}12$ & Built-in chat controller; NL command dispatch via Canvas integration (navigate, execute, query) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Across these plans, syntactic nodes constitute 60--70\% of total inferences. Each
+encodes a reasoning pattern for a distinct class of AI orchestration task --- content
+generation, software engineering, meta-compilation, and interactive Q\&A.
+
+\subsection{Qualitative Observations}
+
+\textbf{C1 --- Failure localization.} In all production runs, when a semantic inference
+failed, the Tensor Inspector identified the exact inputs at the failing flow index
+within two operations.
+
+\textbf{C2 --- Pre-execution review.} The \texttt{.ncn} review is a standard step in
+the production deployment workflow for new plans, catching logical errors before any LLM
+call.
+
+\textbf{C3 --- Scope-bounded re-run.} In Code Assistant runs, override-and-resume
+re-executed an average of 60--70\% of inferences downstream of the corrected node. The
+upstream Receive, Triage, and Explore stages were not repeated in any revision cycle.
+
+\textbf{Level~1 fork reuse rate.} In iterative compilation sessions, operators
+consistently forked from the Derivation output checkpoint, saving 4--6 LLM calls per
+iteration cycle --- approximately 40\% of the plan's total LLM call budget.

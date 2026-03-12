@@ -1,0 +1,243 @@
+\section{Case Studies}
+\label{sec:casestudies}
+
+Two case studies illustrate how the two-level CBR architecture operates in practice.
+The first traces Level~2 case reuse and Level~1 case accumulation in the PPT Agent ---
+one of the four production-ready workflows currently running. The second traces a Code
+Assistant debugging session, showing a Level~1 retrieve--revise cycle with C1 and C3
+in concrete operational terms.
+
+\subsection{Case Study 1: PPT Agent --- Level 2 Reuse and Level 1 Accumulation}
+
+\subsubsection{The Plan as a Level 2 Case.}
+
+\texttt{ppt\_generation.ncds} is a Level~2 case. Its Inference Repository encodes the
+conceptual dependencies:
+
+\begin{lstlisting}
+<- presentation_bundle
+    <= report final outputs
+    <- project_dir
+    <- topic
+    <- target_audience
+    <- [content_refs]
+        <= for each content_ref_metadata
+        <- [content_ref_metadata]
+        <* current_content_ref_metadata
+    <- [template_refs]
+        <= for each template_ref_metadata
+        <- [template_ref_metadata]
+        <* current_template_ref_metadata
+    <- [style_refs]
+        <= for each style_ref_metadata
+        <- [style_ref_metadata]
+        <* current_style_ref_metadata
+    <- [sel_guide_refs]
+        <= for each selection_ref_metadata
+        <- [selection_ref_metadata]
+        <* current_selection_ref_metadata
+    <- [pptx_refs]
+        <= for each pptx_layout_metadata
+        <- [pptx_layout_metadata]
+        <* current_pptx_layout_metadata
+    <- analysis
+        <= analyze requirements
+        <- topic
+        <- target_audience
+        <- [content_refs]
+    <- outline
+        <= generate slide-by-slide outline
+        <- analysis
+        <- [content_refs]
+    <- [slide_specs]
+        <= run extract_slide_specs script
+        <- outline
+    <- [all_rendered_slides]
+        <= for each slide_spec in [slide_specs]
+            <- slide_content_context
+                <= retrieve relevant content
+                <- current_slide_spec
+                <- [content_refs]
+            <- slide_content
+                <= generate componentized content
+                <- slide_content_context
+                <- current_slide_spec
+            <- mermaid_content
+                <= generate diagram code
+                <- slide_content
+            <- selected_html_template
+                <= select HTML template
+                <- slide_content
+                <- [template_refs]
+            <- html_slide
+                <= render HTML from template
+                <- mermaid_content
+                <- selected_html_template
+            <- selected_pptx_layout
+                <= select PPTX layout
+                <- slide_content
+            <- pptx_slide_spec
+                <= create PPTX spec
+                <- mermaid_content
+                <- selected_pptx_layout
+            <- slide_render_result
+                <= bundle HTML and PPTX outputs
+                <- html_slide
+                <- pptx_slide_spec
+        <- [slide_specs]
+        <* current_slide_spec
+    <- html_presentation
+        <= assemble HTML slideshow
+        <- [all_rendered_slides]
+        <- outline
+    <- pptx_presentation
+        <= assemble PPTX from slide specs
+        <- [all_rendered_slides]
+        <- outline
+\end{lstlisting}
+
+The plan encodes a parallel dual-output pipeline: HTML and PPTX are generated from the
+same componentized content JSON per slide. The most expensive semantic node is
+\texttt{outline} --- a single inference producing the full slide structure from the
+topic. All per-slide inferences are independent by the scope rule, each receiving only
+its own \texttt{slide\_content\_context}.
+
+\textit{Note on language.} The production plan uses Chinese concept names throughout.
+The compiler and orchestrator are agnostic to natural language; the scope rule operates
+on identifier structure, not semantics.
+
+\textbf{Level~2 Reuse.} When a new topic arrives, the practitioner retrieves the PPT
+Generation plan from the case library, confirms via the \texttt{.ncn} review that the
+outline $\rightarrow$ section $\rightarrow$ slide structure suits the new topic, and
+runs it. The entire reasoning structure is reused without modification.
+
+\textbf{Level~2 Revision.} When a task requires a structural change --- say, generating
+a scientific report instead of a slide deck --- the designer modifies the \texttt{.ncds}
+to replace slide layouts with report sections, and the output renderer from HTML/PPTX to
+PDF/\LaTeX. After recompilation and \texttt{.ncn} review, a revised Level~2 case is
+retained in the case library. The BOM Matching plan was developed this way: adapted from
+the parallel matching pattern already present in the Code Assistant plan's Explore stage.
+
+\subsubsection{Level 1 Case Accumulation.}
+
+On first execution, the run creates Level~1 cases at every completed node. After
+approximately 10 LLM calls and 20 syntactic operations, the case base contains
+checkpoints for: the generated outline, each extracted section, each generated slide,
+and the assembled presentation. Each is a suspended runtime state.
+
+\subsubsection{Level 1 Retrieve--Revise Across Runs.}
+
+When a second, structurally similar topic arrives, the operator can retrieve the
+outline checkpoint from the first run:
+
+\begin{enumerate}
+  \item \textbf{Retrieve.} Checkpoint Panel $\rightarrow$ select run from previous
+    topic $\rightarrow$ flow index 1.1.2. Tensor Inspector opens the outline tensor.
+  \item \textbf{Revise.} The operator overrides the outline tensor with a revised
+    outline for the new topic --- 30 seconds of editing vs.\ one LLM outline generation
+    call. The stale boundary is computed automatically.
+  \item \textbf{Reuse (Fork).} Fork from the revised 1.1.2 checkpoint. Downstream slide
+    generation, section extraction, and assembly run fresh with the new outline. The
+    upstream outline generation call is not repeated.
+\end{enumerate}
+
+\textbf{Cost.} The revision saves one semantic LLM call (outline generation) and reuses
+all syntactic operations upstream.
+
+\subsection{Case Study 2: Code Assistant --- The Full Level 1 Retrieve--Revise Cycle}
+
+The Code Assistant handles software engineering tasks through a seven-stage pipeline:
+Receive $\rightarrow$ Triage $\rightarrow$ Explore $\rightarrow$ Plan $\rightarrow$
+Implement $\rightarrow$ Verify $\rightarrow$ Report. The plan contains approximately 40
+inferences. This case study demonstrates C1 and C3 with exact numbers.
+
+\subsubsection{The Task and Breakpoint.}
+
+The task: understand and document NormCode's compilation pipeline. A breakpoint is set
+at flow index 1.3.2 --- the synthesis inference that consolidates parallel file
+exploration results. Execution proceeds: Receive completes (1 LLM call), Triage
+completes (1 LLM call), 7 parallel file-reading nodes in Explore complete (7 syntactic
+tool calls). Execution pauses at 1.3.2.
+
+\subsubsection{Case Inspection --- C1 Demonstrated.}
+
+The operator opens the Tensor Inspector on the completed upstream node 1.3.1:
+
+\begin{lstlisting}
+Axis: [file]   Shape: (7,)
+
+  [0]  %{file_location}a1c(src/orchestrator.py)
+  [1]  %{file_location}b2d(src/blackboard.py)
+  [2]  %{file_location}c3e(src/agent_sequences.py)
+  [3]  %{file_location}d4f(src/reference_system.py)
+  [4]  %{file_location}e5g(src/paradigms.py)
+  [5]  %{file_location}f6h(src/compiler/formalization.py)
+  [6]  %{file_location}g7i(src/compiler/activation.py)
+\end{lstlisting}
+
+The operator identifies the cause immediately: \texttt{src/compiler/derivation.py} is
+absent. \textbf{C1 demonstrated.} Total inspection time: 2 clicks. No log
+reconstruction. No accumulated conversation history to parse. The cause is precisely
+located.
+
+\subsubsection{Case Revision --- C3 Demonstrated.}
+
+The operator clicks Override on node 1.3.1 and adds:
+
+\begin{lstlisting}
+  [7]  %{file_location}h8j(src/compiler/derivation.py)
+\end{lstlisting}
+
+The orchestrator computes the stale set automatically: nodes 1.3.2, 1.4.* (Plan),
+1.5.* (Implement), 1.6.* (Verify), 1.7.* (Report) --- all downstream of 1.3.1. Nodes
+1.1.* (Receive), 1.2.* (Triage), and the 7 Explore file-reading nodes (1.3.1.X) are
+upstream and preserved.
+
+\textbf{C3 demonstrated.} Re-execution count: approximately 30 nodes. Preserved from
+cache: approximately 10 nodes. Upstream LLM calls not repeated: 2 (Receive and Triage).
+
+\subsubsection{Fork for Comparison.}
+
+After the corrected run completes, the operator forks from the \textit{original}
+checkpoint at 1.3.1 --- the 7-file tensor without the derivation module. Two runs now
+exist in the case base:
+
+\begin{table}[h]
+\centering
+\caption{Comparison of corrected vs.\ original runs (Code Assistant case study).}
+\label{tab:forkcompare}
+\begin{tabular}{@{}p{3.2cm}p{3.0cm}p{2.8cm}p{2.8cm}@{}}
+\toprule
+\textbf{Run} & \textbf{Files in Explore} & \textbf{Synthesis coverage} & \textbf{Implementation} \\
+\midrule
+Run A (corrected) & 8 files & Full pipeline incl.\ Derivation & Complete \\
+Run B (original)  & 7 files & Missing Derivation & Incomplete \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The Report outputs of both runs are compared directly from the Checkpoint Panel. The
+fork-and-compare operation took under 30 seconds of operator interaction. The comparison
+run cost approximately 30 additional LLM calls; the 2 upstream calls (Receive, Triage)
+were not repeated. Both runs are retained in the case base.
+
+\subsubsection{CBR Cycle Mapping.}
+
+\begin{table}[t]
+\centering
+\caption{CBR cycle mapping for the Code Assistant case study.}
+\label{tab:casestudy2}
+\begin{tabular}{@{}p{2.0cm}p{4.5cm}p{4.2cm}@{}}
+\toprule
+\textbf{CBR Operation} & \textbf{Canvas Mechanism} & \textbf{What Happened} \\
+\midrule
+Retrieve & Breakpoint at 1.3.2; Tensor Inspector on 1.3.1 & Cause identified in 2 clicks (C1) \\[4pt]
+Reuse    & Resume from breakpoint (original tensor, Run B) & Run B continues from cached upstream state \\[4pt]
+Revise   & Override 1.3.1 + selective re-run & Run A (corrected): ${\sim}30$ nodes re-execute, ${\sim}10$ preserved (C3) \\[4pt]
+Retain   & Automatic checkpointing of Run A + Run B & Both corrected and original cases in case base \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The full cycle --- breakpoint to corrected output to fork-comparison --- took under two
+minutes of operator interaction.

@@ -1,0 +1,176 @@
+\section{NormCode as a Reasoning Medium}
+\label{sec:normcode}
+
+A reasoning medium is a representational language in which reasoning plans are
+formulated, not merely described. This section demonstrates that NormCode satisfies six
+properties that together constitute a working reasoning medium for AI orchestration.
+The formal language specification is in \cite{anon2025}.
+
+\subsection{Six Properties of a Working Reasoning Medium}
+
+\paragraph{P1 --- Interpretable.}
+A reasoning medium must be legible to humans at multiple roles without programming
+expertise. The \texttt{.ncds} authoring format uses three markers and indentation ---
+syntax that reads like structured natural language. The compiler's Formalization phase
+produces \texttt{.ncn} (NormCode Natural): a plain-prose narrative available before any
+LLM call. A manager, compliance officer, or domain expert reads the \texttt{.ncn} and
+verifies the reasoning structure matches intent (C2). Because concept names are
+natural-language identifiers, plans can be authored in any language the authoring team
+uses: the production PPT Generation plan uses Chinese concept names throughout, and the
+scope rule, compiler, and orchestrator operate identically regardless of the natural
+language used.
+
+\paragraph{P2 --- Enforceable.}
+What is reviewed must be exactly what executes. The compiler verifies plan structure
+before the first run; the orchestrator enforces the scope rule at runtime. The
+\texttt{.ncn} is a deterministic rendering of the actual formal plan --- not a
+paraphrase. The medium has structural teeth.
+
+\paragraph{P3 --- Composable.}
+Three symbols and one scope rule combine into arbitrarily complex workflows: nested
+loops, conditionals, parallel derivation, multi-agent coordination. A 5-node plan and a
+40-node plan are governed by the same grammar.
+
+\paragraph{P4 --- Locally Addressable.}
+Every reasoning step has a dot-separated flow index (1.1, 1.3.2, etc.). The scope rule
+makes every step epistemically self-contained: a developer can examine step 1.3.2
+without understanding steps 1.1--1.3.1, because the scope rule guarantees 1.3.2 depends
+only on what is declared in its own block.
+
+\paragraph{P5 --- Generalizable.}
+The three primitives are domain-agnostic. The same syntax expresses a PPT generation
+plan, a code review pipeline, a BOM matching task, a scientific data analysis, or a
+medical treatment pathway --- without domain-specific extensions.
+
+\paragraph{P6 --- Portable.}
+A NormCode plan is a plain text \texttt{.ncds} file accompanied by
+\texttt{concept\_repo.json} and \texttt{inference\_repo.json}. These artifacts are
+version-controlled, shareable, and executable by any compliant orchestrator.
+
+\subsection{Syntax and the Scope Rule}
+
+Three markers constitute the full syntax:
+\begin{itemize}
+  \item \texttt{<-}\ \ Value Concept: A named value, document, or intermediate result
+    --- data flowing between steps.
+  \item \texttt{<=}\ \ Functional Concept: An operation that derives its parent concept
+    from declared inputs.
+  \item \texttt{<*}\ \ Context Concept: In-loop state: marks the current element during
+    iteration.
+\end{itemize}
+
+\textbf{Indentation defines scope.} The inputs available to any inference are exactly
+the concepts declared in its immediately enclosing indented block. There is no implicit
+sharing. This is the scope rule: structurally enforced, compiler-verified,
+runtime-enforced.
+
+A two-concept example (\texttt{.ncds} authoring format):
+
+\begin{lstlisting}
+<- summary
+    <= summarize the findings
+    <- report
+        <= read the uploaded file
+        <- source_doc
+    <- style_guide
+\end{lstlisting}
+
+Read bottom-up: \texttt{source\_doc} is read to produce \texttt{report};
+\texttt{report} and \texttt{style\_guide} are the declared inputs to the summarization
+inference. The \texttt{style\_guide} at the \texttt{summary} scope is explicit --- not
+inherited.
+
+\textbf{Flow indices} assigned during Formalization give each concept a stable address.
+Following the sibling pattern --- the functional concept is always \texttt{.1} under its
+parent, value inputs are siblings at \texttt{.2}, \texttt{.3}, etc.:
+\texttt{summary} $\rightarrow$ 1, \texttt{report} $\rightarrow$ 1.2,
+\texttt{source\_doc} $\rightarrow$ 1.2.2, \texttt{style\_guide} $\rightarrow$ 1.3.
+Every checkpoint is stored and retrieved by (\texttt{run\_id}, \texttt{flow\_index}).
+
+\textbf{Iteration.} The context concept (\texttt{<*}) marks the current element during
+a loop:
+
+\begin{lstlisting}
+<- all summaries
+    <= for each document in the collection
+    <- summary
+        <= summarize this document
+        <- document
+    <- documents
+    <* document
+\end{lstlisting}
+
+Each iteration of \texttt{summary} receives only its own \texttt{document} instance;
+sibling iterations are invisible to each other.
+
+\subsection{Semantic vs.\ Syntactic Separation}
+
+\textbf{Semantic inferences} invoke LLMs to create new information. \textit{Imperative}
+inferences produce a concept (a named-axis tensor); \textit{Judgement} inferences
+evaluate a truth condition and return a boolean. Both are probabilistic and consume
+tokens.
+
+\textbf{Syntactic inferences} perform deterministic data manipulation without LLM
+involvement using four operator families: \textit{Assigning} (\$) routes data between
+concepts; \textit{Grouping} (\&) collects or concatenates concepts; \textit{Timing}
+(@) gates execution on conditions or sequencing dependencies; \textit{Looping} (*)
+manages iteration with carried state. These are instant, zero-cost, and fully
+deterministic.
+
+In production plans, 60--70\% of nodes are syntactic. The Canvas App renders semantic
+nodes as purple hexagons and syntactic nodes as gray rectangles. Syntactic checkpoints
+are perfectly reproducible cases (same input $\rightarrow$ same output, always);
+semantic checkpoints are bounded-stochastic.
+
+\subsection{The Compilation Pipeline}
+
+A NormCode plan is compiled through four phases:
+\begin{enumerate}
+  \item \textbf{Derivation} (LLM-assisted): extracts concepts, inference operations,
+    dependencies, and hierarchical structure from the \texttt{.ncds} draft.
+  \item \textbf{Formalization} (rule-based): assigns flow indices; determines sequence
+    types; generates the \texttt{.ncn} plain-prose narrative.
+  \item \textbf{Post-Formalization}: assigns paradigm IDs (execution configurations),
+    tool faculties, tensor axis declarations, and agent assignments.
+  \item \textbf{Activation}: extracts \texttt{concept\_repo.json} and
+    \texttt{inference\_repo.json} for the orchestrator.
+\end{enumerate}
+
+The \texttt{.ncn} output of Phase~2 is the pre-execution interpretability artifact
+(C2). For the slide generation plan:
+
+\begin{lstlisting}
+(OUTPUT) collection of written slides
+    (ACTION) is obtained by iterating over slide-outlines, where each iteration:
+        (ACTION) is returning the following as individual output:
+        (VALUE) slide-page-written
+            (ACTION) is to write the following:
+            (VALUE) slide-page
+                (ACTION) is obtained by generating page from
+                (VALUE) topic
+                (VALUE) style_guide
+                (VALUE) current_slide_outline
+    (VALUE) slide-outlines
+    (CONTEXT) for each current_slide_outline in the iteration
+\end{lstlisting}
+
+\subsection{The Reference System and Perceptual Signs}
+
+Concepts' data are stored as \textbf{References} --- $N$-dimensional named-axis tensors
+whose entries can be values, file pointers, or \textit{perceptual signs}: compact
+symbolic pointers of the form \texttt{\%\{norm\_type\}unique\_id(signifier)} that
+identify data without loading content into the prompt. Large inputs pass between steps
+as tokens, preventing token-level context accumulation alongside the structural
+isolation enforced by the scope rule.
+
+When a step requires actual content, the orchestrator \textit{transmutes} the perceptual
+sign at the moment of the LLM call --- never earlier. The Tensor Inspector visualizes
+References in table, list, or JSON view --- making every completed step's exact bounded
+inputs inspectable in O(1) operations (C1).
+
+\textbf{Environmental replication.} A checkpoint whose tensors contain perceptual signs
+is structurally self-contained, but resuming from it requires the referenced external
+resources (files, APIs, databases) to be accessible and consistent. This is a
+precondition for case reuse, distinct from the structural isolation guarantee: the plan
+encodes \textit{what} was used; whether that environment is still available is outside
+the language's control. See Sect.~\ref{sec:discussion}.

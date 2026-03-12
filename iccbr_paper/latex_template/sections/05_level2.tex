@@ -1,0 +1,146 @@
+\section{Two-Level CBR: Level 2 --- Abstract Case Learning}
+\label{sec:level2}
+
+Level~1 CBR (Sect.~\ref{sec:level1}) operates \textit{within} a plan. Level~2 CBR
+operates \textit{across} plans: it treats the plans themselves as cases --- abstract
+reasoning patterns that encode what structure of reasoning reliably solves a class of
+problem.
+
+\subsection{What a Level 2 Case Is}
+
+A Level~2 case is a \textbf{NormCode runtime definition}: an executable plan that
+specifies the reasoning structure for a task type. Plans may be authored manually,
+produced through the compilation pipeline (Sect.~\ref{sec:level2:distillation}), or
+developed through iterative human-AI collaboration --- the defining property is that
+the result is a fully executable \texttt{.ncds} + repositories artifact, not the path
+by which it was produced.
+
+\textbf{Definition.} A \textit{Level~2 case} $P$ is a pair:
+\begin{equation}
+  P = (\mathcal{IR},\; \mathcal{CR}_{\text{schema}})
+\end{equation}
+where $\mathcal{IR}$ is the \textbf{Inference Repository}: the complete inference graph
+for this plan; $\mathcal{CR}_{\text{schema}}$ is the \textbf{Concept Repository
+schema}: the declared tensor axes and shapes for every concept.
+
+\textbf{The case library.} Four production-ready plans --- PPT Generation, Code
+Assistant, NC Compilations, Canvas Assistant --- are Level~2 cases: an initial case
+library of abstract reasoning patterns for AI orchestration tasks.
+
+\subsection{The Level 2 CBR Cycle}
+
+\textbf{Retrieve.} When a new task arrives, the practitioner identifies which Level~2
+case matches the task class. The \texttt{.ncn} artifact makes this tractable --- a
+practitioner reads the plain-prose narrative and determines whether it matches the new
+problem.
+
+\textbf{Reuse.} The retrieved plan is instantiated with new input values and run. All
+four production-ready plans are reused in this sense on every run. Reuse at Level~2
+generates a fresh set of Level~1 cases.
+
+\textbf{Revise.} When the retrieved plan does not perfectly suit the new task, the
+designer modifies the \texttt{.ncds} source and recompiles: new \texttt{.ncd},
+\texttt{.ncn}, and JSON repositories are generated. The \texttt{.ncn} re-review
+verifies the revised abstract case before it generates any concrete cases.
+
+\textbf{Retain.} The revised or newly authored plan joins the case library. The case
+library grows through use.
+
+\begin{table}[t]
+\centering
+\caption{Level~2 CBR operations and their mechanisms.}
+\label{tab:level2cbr}
+\begin{tabular}{@{}p{2.2cm}p{4.8cm}p{3.8cm}@{}}
+\toprule
+\textbf{CBR Operation} & \textbf{Level 2 Mechanism} & \textbf{What Changes} \\
+\midrule
+Retrieve & Plan matching via \texttt{.ncn} review & Identify the right $\mathcal{IR}$ for the task \\[4pt]
+Reuse    & Instantiate plan with new inputs; run & New Level~1 cases generated \\[4pt]
+Revise   & Edit \texttt{.ncds}, recompile, re-review \texttt{.ncn} & New $(\mathcal{IR}, \mathcal{CR}_{\text{schema}})$ \\[4pt]
+Retain   & Revised plan joins the case library & Case library grows \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The Compilation Pipeline as Distillation}
+\label{sec:level2:distillation}
+
+The compilation pipeline (Derivation $\rightarrow$ Formalization $\rightarrow$
+Post-Formalization $\rightarrow$ Activation) is one standardized distillation path that
+produces Level~2 cases from experience and intent:
+\begin{itemize}
+  \item \textit{Derivation} extracts the conceptual structure from natural language.
+  \item \textit{Formalization} assigns precise addresses (flow indices) and determines
+    execution types.
+  \item \textit{Post-Formalization} assigns execution resources.
+  \item \textit{Activation} serializes the abstract case into orchestrator-ready JSON.
+\end{itemize}
+
+This pipeline is itself a Level~2 case (the NC~Compilations plan) --- but it is not a
+universal compiler. What it produces depends on the task's nature and the quality of
+the input specification. For plans that involve rich domain logic, external tooling, or
+complex control flow, manual authoring or human-assisted iteration is the practical
+path.
+
+\subsection{Self-Hosting Compilations}
+
+The most striking consequence of NormCode as a reasoning medium is this: \textbf{the
+compilation pipeline itself is a NormCode plan.}
+
+An initial \texttt{.ncds} sketch of the compilation plan:
+
+\begin{lstlisting}
+<- compilation result
+    <= report compilation status and output paths
+    <- specification analysis
+        <= analyze specification: identify root output,
+           ground inputs, and transformations
+        <- task specification
+        <- project context
+    <- ncds draft
+        <= derive hierarchical concept structure
+           from specification analysis
+        <- specification analysis
+    <- formal ncd
+        <= formalize draft: assign flow indices,
+           sequence types, and value bindings
+        <- ncds draft
+    <- post-formal ncd
+        <= post-formalize: assign paradigms,
+           reference shapes, and provision paths
+        <- formal ncd
+    <- repositories
+        <= activate post-formal plan into executable
+           concept and inference repositories
+        <- post-formal ncd
+    <- task specification
+    <- project context
+\end{lstlisting}
+
+Each \texttt{<=} in this initial sketch is a high-level operation whose execution is
+underspecified. The compilation process itself decomposes these into concrete inferences.
+This progressive decomposition is itself a Level~2 revision cycle --- improving accuracy
+by giving finer inferences more precisely scoped inputs.
+
+The recursive structure has three consequences: (1)~\textbf{Validation} --- the pipeline
+is self-consistent; it can compile itself; (2)~\textbf{Improvement through revision} ---
+improving the compilation pipeline is abstract case revision at the meta-level;
+(3)~\textbf{Recursive retention} --- each improvement joins the case library.
+
+\textbf{Scope and limits of automated compilation.} NC~Compilations is an initial
+demonstration, not a universal solution. For plans with clear, sequential structure ---
+document analysis, report generation, contract review, or compilation steps supported by
+explicit provisions of scripts and prompts --- the pipeline reliably produces executable
+plans within fewer than ten adjustments. Plans with complex domain logic, rich
+environment interaction (e.g., PPT~Generation with its dual-format output loop), or the
+compilation pipeline itself, require human or code-assistant inspection during authoring:
+the structure is too open-ended for automated derivation to produce a correct plan
+without iterative review. The boundary between automated and human-assisted authoring
+is task complexity, not a limitation of the NormCode language.
+
+\subsection{Relation Between the Two Levels}
+
+Level~1 and Level~2 are reciprocally constitutive: every Level~1 run is an instance of
+exactly one Level~2 case; experience accumulated as Level~1 cases informs revision of
+Level~2 cases; the compilation pipeline is itself a Level~2 case instantiated to produce
+new Level~2 cases.

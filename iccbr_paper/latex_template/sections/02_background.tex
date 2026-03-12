@@ -1,0 +1,79 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{The CBR Cycle}
+
+Case-Based Reasoning \cite{aamodt1994,kolodner1993} solves new problems by retrieving
+and adapting solutions from a case base of past experiences. The standard four-stage
+cycle --- \textbf{Retrieve} a similar past case, \textbf{Reuse} its solution as a
+starting point, \textbf{Revise} it to fit the new problem, \textbf{Retain} the result
+as a new case --- provides a principled framework for experience-based problem solving.
+
+The quality of the CBR cycle depends critically on the integrity of cases: a case must
+be a self-contained, reliable record of a past solution state. Cases contaminated with
+irrelevant or implicit context produce unreliable retrieval and incorrect reuse.
+
+\subsection{Process-Oriented CBR}
+
+Traditional CBR treats cases as problem--solution pairs \cite{kolodner1993}.
+Process-Oriented CBR (POCBR) extends this to \textbf{processes as cases} --- the case
+captures a workflow trace: the sequence of operations, their intermediate states, and
+the data that flowed between steps \cite{bergmann2002,minor2014}.
+
+POCBR is valuable for complex multi-step tasks where the path to a solution matters as
+much as the solution itself. Applications include business process management,
+scientific workflow reuse, and clinical pathway adaptation.
+
+Multi-step LLM workflows are a natural POCBR domain: they are complex processes whose
+intermediate states contain valuable information about what worked, what failed, and
+where intervention was needed. The challenge is ensuring that intermediate states are
+suitable CBR cases.
+
+\subsection{The Case Integrity Problem in LLM Workflows}
+
+The fundamental requirement for POCBR is \textbf{case integrity}: each intermediate
+state in a workflow trace must be self-contained --- its stored data must be exactly
+what the next step needs, with no implicit dependency on information that is not stored
+in the case itself.
+
+Most LLM orchestration frameworks do not satisfy this requirement. LangChain,
+LangGraph, and AutoGen execute steps by passing information through accumulated
+conversation histories or prompt templates that silently reference prior outputs. A
+checkpoint captured at step $k$ under these conditions is not a clean case: it is a
+snapshot of the shared state at that moment --- which includes everything from steps
+$1, \ldots, k-1$ that happened to be in scope. Three consequences follow:
+
+\textbf{Unreliable retrieval.} Retrieving such a checkpoint and continuing from it in a
+new execution context produces incorrect behavior: the implicit context the checkpoint
+depended on is no longer present.
+
+\textbf{Non-localizable failures.} When step $k$ fails, the cause may be anywhere in
+the accumulated implicit state. Revision requires locating this cause --- which is not
+possible when the context boundary is implicit.
+
+\textbf{Irreproducible cases.} Two executions that load the same checkpoint may produce
+different outputs because the implicit context that was present during the original
+execution is not present during reuse.
+
+These three failures are structural consequences of the absence of an isolation
+guarantee.
+
+\subsection{Structural Isolation as the Enabling Condition}
+
+POCBR in LLM workflows requires that intermediate execution states are
+case-integrity-preserving --- a property that must be guaranteed at the level of the
+workflow language, not inferred post-hoc from logs.
+
+\textbf{Definition.} A workflow language provides \textit{structural isolation} if:
+(1)~each step can access only data explicitly declared in its own scope block;
+(2)~this constraint is verified by the compiler before execution; (3)~the orchestrator
+constructs each step's input from only its declared references, enforcing the constraint
+at runtime.
+
+If a language provides structural isolation, then for every completed step $k$: the
+stored output tensor contains exactly the data downstream steps will need; any failure
+at step $k+1$ has a cause in the declared inputs of $k+1$; retrieving the checkpoint at
+step $k$ and continuing from it in a new context will produce the same
+data-dependency behavior as the original execution.
+
+NormCode \cite{anon2025} is designed around this enabling condition.

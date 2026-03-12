@@ -1,0 +1,75 @@
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Process-Oriented CBR Foundations}
+
+Bergmann \cite{bergmann2002} established POCBR as the application of CBR principles to
+workflow management. Minor, Montani \& Recio-Garcia \cite{minor2014} characterize POCBR
+as the field where cases capture workflow knowledge. The foundational CBR cycle was
+given its canonical formulation by Aamodt \& Plaza \cite{aamodt1994}.
+
+Within POCBR, Bergmann \& Gil \cite{bergmann2014} address efficient retrieval through
+structural similarity; Muller \& Bergmann \cite{muller2015a} introduce a query language
+where the query itself is a partial workflow. Bottrighi et al.\ \cite{bottrighi2016}
+extend this to business process operational support. Leake \& Kendall-Morwick
+\cite{leake2008} explicitly propose mining workflow provenance traces as CBR cases.
+NormCode's contribution is to strengthen it: by enforcing structural isolation at the
+language level, every captured checkpoint is a reliable, self-contained case.
+
+\subsection{Multi-Level and Hierarchical CBR}
+
+Muller \& Bergmann \cite{muller2015b} introduce generalized workflow cases that cover a
+subspace of the case representation space --- the closest prior work to NormCode's
+Level~2: both treat the abstract pattern as a case object. The difference is generative:
+NormCode's Level~2 cases are executable compiled artifacts, and the distillation process
+is itself expressible as a NormCode plan. Veloso \cite{veloso1997} and Ihrig \&
+Kambhampati \cite{ihrig1997} establish that plan derivations can be stored and retrieved
+as cases.
+
+\subsection{CBR and Large Language Models}
+
+Rubin, Herzig \& Berant \cite{rubin2022} learn to retrieve few-shot prompts; Wilkerson
+\& Leake \cite{wilkerson2024} implement CBR components using LLMs; Lenz, Hoffmann \&
+Bergmann \cite{lenz2025} evaluate LLMs as similarity assessors (LLsiM). These works use
+CBR to improve individual LLM calls, or LLMs to implement CBR functions.
+
+NormCode's direction is orthogonal: it applies a CBR architecture to manage the
+\textit{execution of multi-step LLM workflows}. Guo et al.\ \cite{guo2024} (DS-Agent)
+is the closest prior work: CBR is used to iteratively revise multi-step data-science
+plans. The difference is structural: DS-Agent's case objects are narrative plans without
+enforcement guarantees, whereas NormCode's checkpoints are structurally isolated by
+compiler and runtime.
+
+\subsection{LLM Workflow Tools}
+
+LangGraph provides checkpoint support and time-travel replay. PromptFlow and LangFlow
+provide DAG-based visual workflow authoring. AutoGen \cite{wu2023} enables multi-agent
+conversations. None enforce structural isolation between steps. As established in
+Sect.~\ref{sec:background}, checkpoints captured without isolation guarantees are not
+clean CBR cases.
+
+\subsection{LLM Agents and the ReAct Pattern}
+
+Yao et al.\ \cite{yao2023} propose ReAct --- interleaving chain-of-thought reasoning
+with grounded action execution in a tight loop. ReAct-style agents have since become a
+standard pattern for tool-using LLM systems: observe, reason, act, repeat.
+
+NormCode plans that use Canvas Integration facilities implement the ReAct pattern as
+explicitly compiled plans. The Canvas Assistant's per-iteration loop --- read user
+input $\rightarrow$ classify command $\rightarrow$ execute via \texttt{me.hands} or
+\texttt{me.mind} $\rightarrow$ generate response --- is a ReAct cycle expressed as a
+structured plan with declared scopes. The Code Assistant's pipeline similarly
+reasons over retrieved context and acts via tool calls across seven stages.
+
+The structural difference is fundamental. In standard ReAct, the reason-act chain is
+an implicit continuation; the reasoning trace and runtime state are not separated.
+In NormCode, each step in the agent loop is a node with a declared scope, a flow
+index, and an automatic checkpoint. The agent's execution trace is a Level~1 case
+base: every iteration step is inspectable, revisable, and reusable under C1 and C3.
+
+\subsection{Process Mining}
+
+Process mining \cite{vandermaaist2011} discovers process models from event logs.
+NormCode's Level~2 distillation is related to guided process model discovery. The key
+difference is authorial: process mining performs automated discovery from logs, while
+NormCode's compilation is human-directed and LLM-assisted.

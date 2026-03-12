@@ -1,0 +1,90 @@
+\section{Two-Level CBR: Level 1 --- Concrete Case Management}
+\label{sec:level1}
+
+\subsection{What a Level 1 Case Is}
+
+A Level~1 case is not a data record about a past run. It is a \textbf{suspended
+NormCode runtime} --- the full execution environment at a specific flow index, captured
+and persisted.
+
+\textbf{Definition.} A \textit{Level~1 case} $c$ is a tuple:
+\begin{equation}
+  c = (r,\; f,\; \mathcal{B}_f,\; \mathcal{C}_f,\; \mathcal{E}_f^{\,?})
+\end{equation}
+where $r$ is the run identifier; $f$ is the flow index of the last completed node;
+$\mathcal{B}_f$ is the \textbf{Blackboard snapshot} at $f$: the full node status map
+for all nodes at the moment $f$ completed; $\mathcal{C}_f$ is the \textbf{Concept
+Repository snapshot} at $f$: all tensors for all nodes completed through $f$, indexed
+by flow index; $\mathcal{E}_f^{\,?}$ is an \textbf{optional environment snapshot}:
+present when $\mathcal{C}_f$ contains perceptual signs referencing external resources.
+
+\textbf{Case quality guarantee.} Because the scope rule prevents any node from accessing
+data outside its declared block, $\mathcal{C}_f$ is epistemically clean: every tensor
+it contains is exactly the data that downstream nodes will use --- no hidden dependency
+on accumulated context, no implicit reference to prior conversation history. Retrieving
+$c$ will produce the same data-dependency behavior as the original execution,
+\textit{provided} the external environment referenced by any perceptual signs in
+$\mathcal{C}_f$ is accessible and consistent.
+
+\subsection{The Case Base}
+
+\textbf{Definition.} The \textit{case base} $\mathcal{CB}$ is the set of all Level~1
+cases across all runs:
+\begin{equation}
+  \mathcal{CB} = \{(r, f, \mathcal{B}_f, \mathcal{C}_f, \mathcal{E}_f^{\,?}) \mid
+  r \in \text{Runs},\; f \in \text{FlowIndices}(r)\}
+\end{equation}
+
+The case base is persisted in SQLite. The Checkpoint Panel in the Canvas App is the
+visual interface to $\mathcal{CB}$.
+
+\subsection{Retrieve}
+
+Retrieval selects a past case from $\mathcal{CB}$ as the starting point for a new
+execution. Two triggers: (1)~a run fails at flow index $f^*$; (2)~a new task is similar
+to a past execution. Case inspection via the Tensor Inspector opens $\mathcal{C}_f$ at
+any flow index in table, list, or JSON view. Because $\mathcal{C}_f$ contains exactly
+the bounded inputs of each completed step, this inspection is O(1) --- C1.
+
+\subsection{Reuse}
+
+\textbf{Mechanism --- Fork.} The Fork operation implements reuse: (1)~new run identifier
+$r'$ is created; (2)~orchestrator loads $(\mathcal{B}_f, \mathcal{C}_f)$ from retrieved
+case; (3)~Blackboard marks all nodes at flow indices $\leq f$ as completed;
+(4)~execution proceeds from the first pending node. No upstream re-execution.
+
+\subsection{Revise}
+
+\textbf{Mechanism --- Value Override + Selective Re-run:} (1)~operator retrieves a case
+at flow index $f$; (2)~operator \textbf{overrides} a tensor in $\mathcal{C}_f$ via the
+Tensor Inspector edit mode; (3)~orchestrator marks all downstream nodes as
+\textbf{stale}; (4)~on resume, only stale nodes re-execute; (5)~revised run produces
+new cases at every completed node.
+
+\textbf{Scope-bounded revision (C3).} Because the scope rule guarantees that only nodes
+downstream of $f$ can depend on the tensor at $f$, the stale set is exactly determined
+by the data dependency graph. No manual specification required.
+
+\subsection{Retain}
+
+\textbf{Automatic checkpointing.} Every node completed during a run writes a new case
+to $\mathcal{CB}$. Retention is fully automatic. The case base accumulates all runs'
+Blackboard and Concept Repository snapshots continuously.
+
+\subsection{Summary: The Level 1 CBR Cycle in Canvas}
+
+\begin{table}[t]
+\centering
+\caption{Level~1 CBR operations mapped to Canvas mechanisms.}
+\label{tab:level1cbr}
+\begin{tabular}{@{}p{2.2cm}p{4.8cm}p{4.0cm}@{}}
+\toprule
+\textbf{CBR Operation} & \textbf{Canvas Mechanism} & \textbf{Key Property} \\
+\midrule
+Retrieve & Checkpoint Panel $\rightarrow$ select run/flow index; Tensor Inspector & O(1) inspection (C1) \\[4pt]
+Reuse    & Fork: load $(\mathcal{B}_f, \mathcal{C}_f)$ into new run; no upstream re-execution & Isolated case = safe reuse \\[4pt]
+Revise   & Value Override: edit tensor; selective re-run of stale boundary & Scope-bounded (C3) \\[4pt]
+Retain   & Automatic checkpoint at every completed node $\rightarrow$ SQLite & Always, no operator action \\
+\bottomrule
+\end{tabular}
+\end{table}

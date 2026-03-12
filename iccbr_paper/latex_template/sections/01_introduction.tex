@@ -1,0 +1,114 @@
+\section{Introduction}
+\label{sec:intro}
+
+Multi-step LLM workflows---where each inference step feeds the next---have emerged as a
+standard architecture for deploying language models in real applications. Frameworks such
+as LangChain \cite{chase2022}, LangGraph \cite{langgraph2024}, AutoGen \cite{wu2023},
+and PromptFlow \cite{microsoft2023} have made such workflows easy to build. Production
+systems now routinely orchestrate dozens of LLM calls across stages for coding
+assistance, document analysis, retrieval and verification, and large-scale matching
+tasks.
+
+Despite their practical success, these workflows remain difficult to debug, resume, and
+improve systematically. A central reason is that the state of computation is often only
+partially explicit. Dependencies are carried forward through conversation histories,
+mutable runtime objects, prompt templates, and framework-specific control logic.
+Consequently, an intermediate artifact at step $k$ may not be a complete representation
+of the computation at that point: it may rely on inherited context from earlier steps
+that is not itself captured as part of the checkpoint. When this happens, failure
+recovery becomes brittle, replay is hard to trust, and debugging requires reconstructing
+a large fraction of the prior execution.
+
+Tooling can alleviate parts of this problem through persistence, tracing, and state
+save/load. But the underlying limitation remains: current orchestration stacks generally
+lack a shared representation of reasoning itself. The plan, its intermediate semantics,
+and the conditions for valid continuation are scattered across code, prompts, and runtime
+conventions rather than expressed in a single interpretable form.
+
+\textbf{What is missing is a reasoning medium.} AI systems need a language in which
+multi-step reasoning procedures can be explicitly represented, inspected, verified,
+executed, and refined over time. This medium should play, for reasoning workflows, a
+role analogous to SQL for data access or formal notation for mathematics. Without it,
+reasoning remains opaque to non-developers, difficult to audit, hard to reproduce, and
+resistant to cumulative improvement. A viable reasoning medium must therefore be
+simultaneously human-readable, machine-executable, and structurally enforceable.
+
+\textbf{NormCode is that medium.} NormCode \cite{anon2025} is a semi-formal planning
+language for LLM workflows with six properties that together constitute a working
+reasoning medium: \textit{Interpretable} (readable by multiple roles without programming
+expertise), \textit{Enforceable} (compiler-verified structure that the orchestrator
+executes exactly as reviewed), \textit{Composable} (three symbols and one scope rule,
+unlimited depth), \textit{Locally Addressable} (every step has a precise flow index;
+every step is epistemically self-contained by the scope rule), \textit{Generalizable}
+(domain-agnostic primitives for any workflow), and \textit{Portable} (plain text, any
+compliant orchestrator).
+
+The scope rule is the structural mechanism: each step's inputs are declared explicitly
+in an indented block, and the compiler verifies that no step accesses data outside its
+block. The orchestrator enforces this at runtime. A checkpoint captured under this
+guarantee is a \textbf{self-contained case}: its tensor contains exactly the data
+downstream steps will use, with no implicit context dependency.
+
+\textbf{When a reasoning medium has these six properties, Case-Based Reasoning is what
+you get --- at two levels simultaneously.} This is the central claim of this paper.
+The two levels emerge from the medium's structure, not from additional engineering:
+
+\begin{itemize}
+  \item \textbf{Level~1 (Concrete Case Management):} Every completed execution
+    checkpoint is a \textit{suspended NormCode runtime} --- the full Blackboard (node
+    status map) and Concept Repository (all tensors for all completed nodes) at a
+    specific flow index. The four CBR operations map directly onto Canvas interactions:
+    Retrieve (Tensor Inspector), Reuse (Fork), Revise (Value Override with automatic
+    stale-boundary computation), Retain (automatic checkpointing at every completed
+    node).
+
+  \item \textbf{Level~2 (Abstract Case Learning):} Every compiled NormCode plan is a
+    \textit{runtime definition} --- an abstract case specifying what all executions of
+    that task type are possible. Four production-ready plans serve as an initial case
+    library of abstract reasoning patterns. The compilation pipeline
+    (Derivation $\rightarrow$ Formalization $\rightarrow$ Post-Formalization $\rightarrow$
+    Activation) is the distillation process; it is itself a NormCode plan --- enabling
+    recursive case-based learning.
+\end{itemize}
+
+\textbf{NormCode Canvas (v1.1.3)} is the deployed system that exposes both levels
+through an interface for tools, agents, and plan execution. Three practical properties
+follow from the reasoning medium's design: \textbf{(C1)~constant-effort failure
+localization} --- at any breakpoint, the Tensor Inspector reveals the explicit inputs to
+step $k$ directly, because each step's scope is declared and enforced rather than
+reconstructed from history; \textbf{(C2)~pre-execution structural review} --- the
+compiler's Formalization phase produces a \texttt{.ncn} narrative before any LLM call,
+allowing a domain expert to inspect and reject the plan if its structure does not match
+the intended reasoning (unlike RLHF \cite{ouyang2022} or Constitutional AI \cite{bai2022}, 
+this review operates on the explicit plan before any computation begins);
+and \textbf{(C3)~scope-bounded selective re-execution} --- when a case is revised at
+flow index $f$, only transitively downstream nodes re-execute; unaffected upstream
+results are reused from cache.
+
+\textbf{Relation to the companion language paper \cite{anon2025}.} The companion paper
+is a language specification: it defines NormCode's grammar, symbol set, type system,
+and scope rule, and gives a formal account of the execution architecture. That paper
+answers \textit{what NormCode is}. This paper answers \textit{what NormCode makes
+possible}. In demonstration of its applicability, we present four production-ready
+workflows ranging from PPT generation and code assistance to self-hosted NormCode
+compilation.
+
+\textbf{Contributions:}
+\begin{enumerate}
+  \item Two-level CBR realized by a reasoning medium
+    (Sect.~\ref{sec:level1}--\ref{sec:level2}): Level~1 cases as suspended runtimes;
+    Level~2 cases as runtime definitions; the compilation pipeline as distillation;
+    self-hosting compilations as recursive case-based learning.
+  \item The six properties of a reasoning medium (Sect.~\ref{sec:normcode}):
+    Interpretable, Enforceable, Composable, Locally Addressable, Generalizable, Portable.
+  \item Three measurable properties of the deployed system
+    (Sect.~\ref{sec:canvas}--\ref{sec:casestudies}): C1, C2, C3 demonstrated through
+    the Canvas App and two production case studies.
+  \item Evaluation of a deployed production system (Sect.~\ref{sec:evaluation}): four
+    production-ready workflows, 100\% accuracy on a controlled benchmark, self-hosted
+    compilation as Level~2 CBR validation.
+\end{enumerate}
+
+This paper is submitted under the Deployed Applications category. The NormCode language
+specification is in \cite{anon2025}. Background on POCBR and the case integrity
+requirement is in Sect.~\ref{sec:background}.

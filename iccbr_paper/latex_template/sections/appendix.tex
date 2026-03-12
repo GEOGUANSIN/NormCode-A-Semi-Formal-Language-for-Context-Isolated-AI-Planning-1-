@@ -1,0 +1,143 @@
+%================================================================
+\appendix
+
+\section{NormCode Syntax Reference}
+\label{app:syntax}
+
+This appendix provides a concise reference for the NormCode grammar used throughout the
+paper. The complete formal specification is in \cite{anon2025}.
+
+\subsection*{A.1 Concept Markers}
+
+\begin{table}[h]
+\centering
+\caption{The three NormCode concept markers.}
+\label{tab:markers}
+\begin{tabular}{@{}p{1.4cm}p{2.4cm}p{4.0cm}p{3.4cm}@{}}
+\toprule
+\textbf{Marker} & \textbf{Type} & \textbf{Meaning} & \textbf{CBR role} \\
+\midrule
+\texttt{<-} & Value Concept   & A named value, document, or intermediate result --- data flowing between steps & Stored in Concept Repository; constitutes $\mathcal{C}_f$ \\[4pt]
+\texttt{<=} & Functional Concept & An operation deriving its parent concept from declared inputs; semantic (LLM) or syntactic (deterministic) & Produces checkpoints; maps to flow indices \\[4pt]
+\texttt{<*} & Context Concept & Current iteration element; carries in-loop state without leaking to outer scopes & Scopes loop-local state; prevents cross-iteration contamination \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{A.2 Syntactic Operator Families}
+
+Syntactic inferences (\texttt{<=} with a syntactic sequence type) belong to one of four
+families. All are deterministic and zero LLM cost; their checkpoints are perfectly
+reproducible Level~1 cases.
+
+\begin{table}[h]
+\centering
+\caption{Syntactic operator families.}
+\label{tab:operators}
+\begin{tabular}{@{}p{1.8cm}p{1.2cm}p{4.4cm}p{4.0cm}@{}}
+\toprule
+\textbf{Family} & \textbf{Symbol} & \textbf{Function} & \textbf{Example use} \\
+\midrule
+Assigning & \$  & Routes or binds a value concept to another concept & Pass a ground input into a nested scope \\[4pt]
+Grouping  & \&  & Collects or concatenates a set of concepts into a single reference & Collect loop outputs into \texttt{all slides} \\[4pt]
+Timing    & @   & Gates execution on a condition or sequencing dependency & Wait for parallel branches before proceeding \\[4pt]
+Looping   & *   & Manages iteration over a collection with carried \texttt{<*} state & Per-document summarization; per-slide generation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{A.3 Flow Index Assignment (Sibling Pattern)}
+
+Flow indices are assigned during the Formalization phase. The rule is:
+\begin{itemize}
+  \item The root output concept receives index \texttt{1}.
+  \item The functional concept (\texttt{<=}) under any parent is always \texttt{.1}.
+  \item Value inputs (\texttt{<-}) are siblings at \texttt{.2}, \texttt{.3}, \ldots in
+    declaration order.
+  \item Nesting is recursive: index \texttt{1.2.3} denotes the third declared input of
+    the second declared input of the root.
+\end{itemize}
+
+For the two-concept example in Sect.~\ref{sec:normcode}:
+\texttt{summary} $\rightarrow$ \texttt{1},\quad
+\texttt{<=\ summarize} $\rightarrow$ \texttt{1.1},\quad
+\texttt{report} $\rightarrow$ \texttt{1.2},\quad
+\texttt{<=\ read} $\rightarrow$ \texttt{1.2.1},\quad
+\texttt{source\_doc} $\rightarrow$ \texttt{1.2.2},\quad
+\texttt{style\_guide} $\rightarrow$ \texttt{1.3}.
+
+Every checkpoint in $\mathcal{CB}$ is keyed by (\texttt{run\_id},
+\texttt{flow\_index}), making any past runtime state directly addressable.
+
+\subsection*{A.4 \texttt{.ncn} Translation Tags}
+
+The Formalization phase generates a \texttt{.ncn} plain-prose narrative using four
+translation tags:
+
+\begin{table}[h]
+\centering
+\caption{\texttt{.ncn} translation tags.}
+\label{tab:ncntags}
+\begin{tabular}{@{}p{2.2cm}p{9.0cm}@{}}
+\toprule
+\textbf{Tag} & \textbf{Meaning in the generated narrative} \\
+\midrule
+\texttt{(OUTPUT)}  & Root output concept --- the final product of the plan \\
+\texttt{(ACTION)}  & A functional concept --- what is being done at this step \\
+\texttt{(VALUE)}   & A value concept --- a named data item or intermediate result \\
+\texttt{(CONTEXT)} & A context concept --- the current element in a loop iteration \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%================================================================
+\section{Base-X Addition Benchmark Plan}
+\label{app:basex}
+
+This appendix shows the NormCode plan used for the base-X addition benchmark
+(Sect.~\ref{sec:evaluation}). The plan adds two arbitrary-base numbers digit-by-digit
+with carry-over, structured as three nested loops. It validates both execution
+correctness (100\% accuracy up to 150-digit numbers) and Level~1 CBR (checkpoints at
+each loop iteration are inspectable and revisable via C1 and C3).
+
+\begin{lstlisting}[caption={Base-X addition plan (\texttt{.ncds} format).},
+                   label={lst:basex}]
+<- addition result
+    <= report final sum in target base
+    <- digit sums
+        <= for each number pair in the collection
+        <- digit sum
+            <= add digits with carry-over
+            <- digit pair
+                <= extract unit-place digits
+                <- shifted pair
+                    <= generate shifted number pair
+                    <- number pair
+                <- base
+            <- carry
+        <- number pairs
+        <* number pair
+    <- number pairs
+        <= for each input number
+        <- number pair
+            <= pair numbers at current position
+            <- number_a
+            <- number_b
+        <- numbers
+        <* current_number
+    <- numbers
+    <- base
+\end{lstlisting}
+
+The three nested loops correspond to: (1)~outer loop over digit positions across all
+number pairs; (2)~inner loop extracting unit-place digits from shifted pairs; (3)~carry
+propagation loop resolving digit-by-digit addition. The \texttt{base} concept is
+declared as a ground input at the outermost scope and passed explicitly into each nested
+scope --- the scope rule prevents any loop body from accessing base implicitly through
+accumulated state.
+
+\textbf{Level~1 validation.} Mid-computation checkpoints can be inspected at any loop
+iteration: the Tensor Inspector shows the current digit, carry value, and accumulated
+sum at that flow index. Overriding a carry value at flow index \texttt{1.1.3.2} (for
+example) and resuming triggers selective re-execution of only the downstream digit
+addition steps --- C3 with exactly the minimum necessary re-execution.
