@@ -3,28 +3,30 @@
 
 \subsection{Process-Oriented CBR Foundations}
 
-Bergmann \cite{bergmann2002} established POCBR as the application of CBR principles to
-workflow management. Minor, Montani \& Recio-Garcia \cite{minor2014} characterize POCBR
-as the field where cases capture workflow knowledge. The foundational CBR cycle was
-given its canonical formulation by Aamodt \& Plaza \cite{aamodt1994}.
+The foundational CBR cycle was given its canonical formulation by Aamodt \& Plaza
+\cite{aamodt1994}. Bergmann \cite{bergmann2002} provides foundational work on applying
+CBR principles to workflow and experience management; Minor, Montani \& Recio-Garcia
+\cite{minor2014} characterize POCBR as the field in which cases capture workflow
+knowledge.
 
 Within POCBR, Bergmann \& Gil \cite{bergmann2014} address efficient retrieval through
 structural similarity; Muller \& Bergmann \cite{muller2015a} introduce a query language
 where the query itself is a partial workflow. Bottrighi et al.\ \cite{bottrighi2016}
 extend this to business process operational support. Leake \& Kendall-Morwick
 \cite{leake2008} explicitly propose mining workflow provenance traces as CBR cases.
-NormCode's contribution is to strengthen it: by enforcing structural isolation at the
-language level, every captured checkpoint is a reliable, self-contained case.
+NormCode's contribution to this line of work is to provide a structural guarantee: by
+enforcing scope isolation at the language level, every captured checkpoint is a
+reliable, self-contained case rather than a trace that may embed implicit shared state.
 
 \subsection{Multi-Level and Hierarchical CBR}
 
 Muller \& Bergmann \cite{muller2015b} introduce generalized workflow cases that cover a
-subspace of the case representation space --- the closest prior work to NormCode's
-Level~2: both treat the abstract pattern as a case object. The difference is generative:
-NormCode's Level~2 cases are executable compiled artifacts, and the distillation process
-is itself expressible as a NormCode plan. Veloso \cite{veloso1997} and Ihrig \&
-Kambhampati \cite{ihrig1997} establish that plan derivations can be stored and retrieved
-as cases.
+subspace of the case representation space --- the closest antecedent we are aware of to
+NormCode's Level~2: both treat the abstract workflow pattern as a case object. The
+generative difference is that NormCode's Level~2 cases are fully executable compiled
+artifacts and the distillation process is itself expressible as a NormCode plan. Veloso
+\cite{veloso1997} and Ihrig \& Kambhampati \cite{ihrig1997} establish that plan
+derivations can be stored and retrieved as cases.
 
 \subsection{CBR and Large Language Models}
 
@@ -33,43 +35,73 @@ Rubin, Herzig \& Berant \cite{rubin2022} learn to retrieve few-shot prompts; Wil
 Bergmann \cite{lenz2025} evaluate LLMs as similarity assessors (LLsiM). These works use
 CBR to improve individual LLM calls, or LLMs to implement CBR functions.
 
-NormCode's direction is orthogonal: it applies a CBR architecture to manage the
-\textit{execution of multi-step LLM workflows}. Guo et al.\ \cite{guo2024} (DS-Agent)
-is the closest prior work: CBR is used to iteratively revise multi-step data-science
-plans. The difference is structural: DS-Agent's case objects are narrative plans without
-enforcement guarantees, whereas NormCode's checkpoints are structurally isolated by
-compiler and runtime.
+NormCode addresses a distinct problem: applying a CBR architecture to manage the
+\textit{execution of multi-step LLM workflows}. Among prior work, Guo et al.\
+\cite{guo2024} (DS-Agent) is the most directly related: CBR is used to iteratively
+revise multi-step data-science plans. The structural difference is that DS-Agent's case
+objects are narrative plans without enforcement guarantees, whereas NormCode's
+checkpoints are structurally isolated by compiler and runtime --- which is the
+precondition for reliable CBR retrieval and revision (Sect.~\ref{sec:background}).
 
 \subsection{LLM Workflow Tools}
 
 LangGraph provides checkpoint support and time-travel replay. PromptFlow and LangFlow
-provide DAG-based visual workflow authoring. AutoGen \cite{wu2023} enables multi-agent
-conversations. None enforce structural isolation between steps. As established in
-Sect.~\ref{sec:background}, checkpoints captured without isolation guarantees are not
-clean CBR cases.
+provide graph-based visual workflow authoring. AutoGen \cite{wu2023} supports
+conversational multi-agent orchestration. These frameworks execute steps by passing
+information through accumulated conversation histories or prompt templates that
+implicitly reference prior outputs. Relative to NormCode's scope rule, none provides
+explicit structural isolation guarantees at the language level: checkpoints may embed
+implicit shared state from earlier steps. As a consequence, retrieving and replaying
+such a checkpoint in a new execution context may produce incorrect behavior, failures
+are non-localizable, and case reuse is not guaranteed to reproduce the original
+data-dependency behavior --- the three conditions identified in
+Sect.~\ref{sec:background} as preconditions for reliable CBR operations.
 
 \subsection{LLM Agents and the ReAct Pattern}
 
-Yao et al.\ \cite{yao2023} propose ReAct --- interleaving chain-of-thought reasoning
-with grounded action execution in a tight loop. ReAct-style agents have since become a
-standard pattern for tool-using LLM systems: observe, reason, act, repeat.
+Yao et al.\ \cite{yao2023} propose ReAct --- interleaving reasoning traces with
+grounded action execution in a tight loop. The observe-reason-act pattern has since
+become a standard building block for tool-using LLM systems. Reflexion
+\cite{shinn2023} extends it with verbal reinforcement: agents verbalize failure
+feedback into episodic memory and retry, improving without weight updates. MetaGPT
+\cite{hong2024} encodes software-engineering standard operating procedures as prompt
+sequences for multi-role agent collaboration; SWE-agent \cite{yang2024} introduces an
+agent-computer interface for autonomous software engineering. AutoGen \cite{wu2023}
+generalizes the pattern to conversational multi-agent coordination.
 
 NormCode plans that use Canvas Integration facilities implement the ReAct pattern as
 explicitly compiled plans. The Canvas Assistant's per-iteration loop --- read user
 input $\rightarrow$ classify command $\rightarrow$ execute via \texttt{me.hands} or
 \texttt{me.mind} $\rightarrow$ generate response --- is a ReAct cycle expressed as a
-structured plan with declared scopes. The Code Assistant's pipeline similarly
-reasons over retrieved context and acts via tool calls across seven stages.
+structured plan with declared scopes. The Code Assistant's pipeline similarly reasons
+over retrieved context and acts via tool calls across seven stages.
 
-The structural difference is fundamental. In standard ReAct, the reason-act chain is
-an implicit continuation; the reasoning trace and runtime state are not separated.
-In NormCode, each step in the agent loop is a node with a declared scope, a flow
-index, and an automatic checkpoint. The agent's execution trace is a Level~1 case
-base: every iteration step is inspectable, revisable, and reusable under C1 and C3.
+Deployed agentic coding tools --- Cursor \cite{cursor2024}, Claude Code
+\cite{claudecode2026}, and OpenClaw \cite{openclaw2026} --- demonstrate this pattern
+at production scale: each implements a persistent observe-reason-act loop over
+codebases, terminals, and file systems. The core workflow of such tools --- triage the
+task, explore context, generate and apply changes, verify --- is structurally similar
+to the Code Assistant NormCode plan. Expressed as a NormCode Level~2 case, this
+workflow gains auditable structure, pre-execution review (C2), and a Level~1 case base
+at every agent step. The NormCode framing is therefore not specific to the four plans
+presented here; it applies to the class of deployed agentic tools at large.
+
+The structural difference is that in standard ReAct and its derivatives, the
+reasoning-action chain is an implicit continuation; the reasoning trace and runtime
+state are not formally separated. In NormCode, each step in the agent loop is a node
+with a declared scope, a flow index, and an automatic checkpoint. The agent's execution
+trace is a Level~1 case base: every iteration step is inspectable, revisable, and
+reusable under the CBR operations C1 and C3. The absence of this property in existing
+frameworks is independently confirmed by recent work: AgentStepper \cite{agentstepper2026}
+introduces post-hoc interactive debugging (breakpoints, step-through, online prompt
+editing) for software development agents precisely because the underlying frameworks
+provide no structural transparency. NormCode makes these properties structural rather
+than retrofitted.
 
 \subsection{Process Mining}
 
 Process mining \cite{vandermaaist2011} discovers process models from event logs.
-NormCode's Level~2 distillation is related to guided process model discovery. The key
-difference is authorial: process mining performs automated discovery from logs, while
-NormCode's compilation is human-directed and LLM-assisted.
+NormCode's Level~2 distillation is related in spirit to guided process model discovery.
+The key difference is authorial intent: process mining performs automated discovery from
+logs, while NormCode's compilation is human-directed and LLM-assisted, producing
+executable artifacts rather than descriptive models.

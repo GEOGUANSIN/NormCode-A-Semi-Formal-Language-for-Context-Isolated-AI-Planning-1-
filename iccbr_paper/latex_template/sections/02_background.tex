@@ -36,12 +36,11 @@ state in a workflow trace must be self-contained --- its stored data must be exa
 what the next step needs, with no implicit dependency on information that is not stored
 in the case itself.
 
-Most LLM orchestration frameworks do not satisfy this requirement. LangChain,
-LangGraph, and AutoGen execute steps by passing information through accumulated
-conversation histories or prompt templates that silently reference prior outputs. A
-checkpoint captured at step $k$ under these conditions is not a clean case: it is a
-snapshot of the shared state at that moment --- which includes everything from steps
-$1, \ldots, k-1$ that happened to be in scope. Three consequences follow:
+Most LLM orchestration frameworks do not satisfy this requirement by default. A
+checkpoint captured at step $k$ in a typical orchestration framework is not a clean
+case: it is a snapshot of shared state at that moment, which may embed accumulated
+conversation history or prompt context from steps $1, \ldots, k-1$. Three consequences
+follow:
 
 \textbf{Unreliable retrieval.} Retrieving such a checkpoint and continuing from it in a
 new execution context produces incorrect behavior: the implicit context the checkpoint

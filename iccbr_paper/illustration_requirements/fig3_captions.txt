@@ -1,0 +1,55 @@
+Graph Canvas (center)
+
+Interactive node graph. Displays the plan as a hierarchical tree of concepts {}, lists [], and functions ::(). Nodes show execution status (pending / running / completed / failed). Supports zoom, pan, collapse/expand, branch highlighting, and node selection.
+
+Control Panel (top bar, above canvas)
+
+Execution controls: Run, Step, Pause, Stop, Restart. Shows progress (completed/total), run mode (slow/fast), and current inference node. Checkpoint toggle for save/resume.
+
+Detail Panel (right side)
+
+Inspects the selected node: type, label, parents, children, execution status, concept value, and reference data. Supports fullscreen mode.
+
+Chat Panel (far right)
+
+Conversational interface for AI-assisted plan interaction. Handles user input requests (human-in-the-loop), status notifications, and agent responses.
+
+Log Panel (bottom)
+
+Real-time execution logs filtered by node. Shows inference sequence names, timestamps, cycle numbers, and error traces.
+
+Agent Panel (left side, togglable)
+
+Configures LLM agents: model selection, agent-to-node mapping rules, and tool call monitoring.
+
+Workers Panel (left side, togglable)
+
+Manages execution workers — local and remote. Binds workers to panels for parallel or distributed execution.
+
+Checkpoint Panel (modal overlay)
+
+Browse past runs and their checkpoints. Resume, fork, or export checkpoint state as inputs. Shows per-cycle blackboard snapshots.
+
+Settings Panel (modal)
+
+Project configuration: LLM model, paradigm directory, max cycles, base directory, agent config paths.
+
+Deployment Panel (modal)
+
+Package and deploy plans as portable executables or server endpoints.
+
+Data Trace Panel (modal)
+
+Traces data flow for a concept — shows where a value originated, which nodes consumed it, and the transformation chain.
+
+Project Panel (modal)
+
+Open, create, or switch between projects. Shows recent projects and multi-tab workspace.
+
+Terminal CLI (.\nc)
+
+One-shot or interactive REPL for programmatic canvas control. me.hands for UI actions, me.vision for queries, you.* for backend tools. All commands reflected live on the frontend via WebSocket.
+
+Status Bar (bottom edge)
+
+WebSocket connection indicator, active project name, execution status.
