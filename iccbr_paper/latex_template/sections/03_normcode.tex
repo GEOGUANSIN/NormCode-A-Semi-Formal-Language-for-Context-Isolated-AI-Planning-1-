@@ -25,38 +25,24 @@ version-controlled, shareable, and executable by any compliant orchestrator.
 
 \subsection{Syntax and the Scope Rule}
 
-Three markers constitute the full syntax: \texttt{<-}~Value Concept --- a named value,
-document, or intermediate result (data flowing between steps); \texttt{<=}~Functional
-Concept --- an operation that derives its parent concept from declared inputs;
-\texttt{<*}~Context Concept --- in-loop state, marking the current element during
-iteration.
+Three markers constitute the full syntax (formal specification in \cite{anon2025}):
+\texttt{<-}~Value, \texttt{<=}~Functional, \texttt{<*}~Context (loop-current element).
+\textbf{Indentation defines scope}: each inference's inputs are exactly the concepts
+declared in its immediately enclosing block --- no implicit sharing. The compiler
+determines scope at formalization; the orchestrator enforces it at runtime.
+Plans are read top-to-bottom (root concept first) and execute inside-out (deepest
+dependencies resolved first). Flow indices (\texttt{run\_id}, \texttt{flow\_index})
+give every checkpoint a stable address. \textbf{Semantic inferences} invoke LLMs
+(probabilistic, token-consuming); \textbf{syntactic inferences} perform deterministic
+data manipulation (routing, grouping, timing, looping) at zero LLM cost --- 60--70\%
+of nodes in production plans. Syntactic checkpoints are perfectly reproducible;
+semantic checkpoints are bounded-stochastic. Concept data are stored as
+\textbf{References} (named-axis tensors); large inputs pass as \textit{perceptual
+signs} --- compact pointers transmuted to content only at the moment of an LLM call,
+preventing context accumulation. The Detail Panel exposes every completed step's exact
+bounded inputs in O(1) operations (failure localization, C1).
 
-\textbf{Indentation defines scope.} The inputs available to any inference are exactly
-the concepts declared in its immediately enclosing indented block. There is no implicit
-sharing. This is the scope rule: the compiler determines each step's scope during
-formalization; the orchestrator enforces it at runtime by constructing each step's
-input from only its declared references. If an inference requires data not present in
-its scope, execution proceeds with the available inputs --- the remedy is to revise the
-plan to declare the missing dependency explicitly.
-
-A two-concept example (\texttt{.ncds} authoring format):
-
-\begin{lstlisting}
-<- summary
-    <= summarize the findings
-    <- report
-        <= read the uploaded file
-        <- source_doc
-    <- style_guide
-\end{lstlisting}
-
-Read top-to-bottom: \texttt{summary} is the output, depending on \texttt{report} and
-\texttt{style\_guide}; \texttt{report} depends on \texttt{source\_doc}. Execution
-proceeds inside-out: \texttt{source\_doc} (ground input) is resolved first, then
-\texttt{report}, then \texttt{summary}. The \texttt{style\_guide} at the
-\texttt{summary} scope is explicit --- not inherited.
-
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig2_scope_rule_isolation.png}
   \caption{NormCode syntax and scope rule (left: annotated \texttt{.ncds} example;
@@ -64,84 +50,3 @@ proceeds inside-out: \texttt{source\_doc} (ground input) is resolved first, then
     self-contained object --- no hidden context dependency.}
   \label{fig:scope}
 \end{figure}
-
-\textbf{Flow indices} assigned during Formalization give each concept a stable address.
-Following the sibling pattern --- the functional concept is always \texttt{.1} under its
-parent, value inputs are siblings at \texttt{.2}, \texttt{.3}, etc.:
-\texttt{summary} $\rightarrow$ 1, \texttt{report} $\rightarrow$ 1.2,
-\texttt{source\_doc} $\rightarrow$ 1.2.2, \texttt{style\_guide} $\rightarrow$ 1.3.
-Every checkpoint is stored and retrieved by (\texttt{run\_id}, \texttt{flow\_index}).
-
-\textbf{Iteration.} The context concept (\texttt{<*}) marks the current element during
-a loop:
-
-\begin{lstlisting}
-<- all summaries
-    <= for each document in the collection
-    <- summary
-        <= summarize this document
-        <- document
-    <- documents
-    <* document
-\end{lstlisting}
-
-Each iteration of \texttt{summary} receives only its own \texttt{document} instance;
-sibling iterations are invisible to each other.
-
-\subsection{Semantic vs.\ Syntactic Separation}
-
-\textbf{Semantic inferences} invoke LLMs to create new information. \textit{Imperative}
-inferences produce a concept (a named-axis tensor); \textit{Judgement} inferences
-evaluate a truth condition and return a boolean. Both are probabilistic and consume
-tokens.
-
-\textbf{Syntactic inferences} perform deterministic data manipulation without LLM
-involvement using four operator families: \textit{Assigning} (\$) routes data between
-concepts; \textit{Grouping} (\&) collects or concatenates concepts; \textit{Timing}
-(@) gates execution on conditions or sequencing dependencies; \textit{Looping} (*)
-manages iteration with carried state. These are instant, zero-cost, and fully
-deterministic.
-
-In production plans, 60--70\% of nodes are syntactic. The Canvas App renders semantic
-nodes as purple hexagons and syntactic nodes as gray rectangles. Syntactic checkpoints
-are perfectly reproducible cases (same input $\rightarrow$ same output, always);
-semantic checkpoints are bounded-stochastic.
-
-The \texttt{.ncn} variant of normcode can be provided in the pre-execution interpretability
- artifact (pre-execution review, C2). For the slide generation plan:
-
-\begin{lstlisting}
-(OUTPUT) collection of written slides
-    (ACTION) is obtained by iterating over slide-outlines, where each iteration:
-        (ACTION) is returning the following as individual output:
-        (VALUE) slide-page-written
-            (ACTION) is to write the following:
-            (VALUE) slide-page
-                (ACTION) is obtained by generating page from
-                (VALUE) topic
-                (VALUE) style_guide
-                (VALUE) current_slide_outline
-    (VALUE) slide-outlines
-    (CONTEXT) for each current_slide_outline in the iteration
-\end{lstlisting}
-
-\subsection{The Reference System and Perceptual Signs}
-
-Concepts' data are stored as \textbf{References} --- $N$-dimensional named-axis tensors
-whose entries can be values, file pointers, or \textit{perceptual signs}: compact
-symbolic pointers of the form \texttt{\%\{norm\_type\}unique\_id(signifier)} that
-identify data without loading content into the prompt. Large inputs pass between steps
-as tokens, preventing token-level context accumulation alongside the structural
-isolation enforced by the scope rule.
-
-When a step requires actual content, the orchestrator \textit{transmutes} the perceptual
-sign at the moment of the LLM call --- never earlier. The Tensor Inspector visualizes
-References in table, list, or JSON view --- making every completed step's exact bounded
-inputs inspectable in O(1) operations (failure localization, C1).
-
-\textbf{Environmental replication.} A checkpoint whose tensors contain perceptual signs
-is structurally self-contained, but resuming from it requires the referenced external
-resources (files, APIs, databases) to be accessible and consistent. This is a
-precondition for case reuse, distinct from the structural isolation guarantee: the plan
-encodes \textit{what} was used; whether that environment is still available is outside
-the language's control. See Sect.~\ref{sec:discussion}.

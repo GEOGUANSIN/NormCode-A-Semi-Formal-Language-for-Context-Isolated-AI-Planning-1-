@@ -15,13 +15,19 @@ developed through iterative human-AI collaboration --- the defining property is 
 the result is a fully executable \texttt{.ncds} + repositories artifact, not the path
 by which it was produced.
 
-\textbf{Definition.} A \textit{Level~2 case} $P$ is a pair:
+\textbf{Definition.} A \textit{Level~2 case} $P$ is a triple:
 \begin{equation}
-  P = (\mathcal{IR},\; \mathcal{CR}_{\text{schema}})
+  P = (\mathcal{IR},\; \mathcal{CR},\; \mathcal{V})
 \end{equation}
 where $\mathcal{IR}$ is the \textbf{Inference Repository}: the complete inference graph
-for this plan; $\mathcal{CR}_{\text{schema}}$ is the \textbf{Concept Repository
-schema}: the declared tensor axes and shapes for every concept.
+with execution configurations (paradigm assignments, body faculties, perception norms);
+$\mathcal{CR}$ is the \textbf{Concept Repository}: concept definitions with tensor axes,
+shapes, and ground references (perceptual signs pointing to input resources);
+$\mathcal{V}$ is the \textbf{Provision set}: the invariant vertical resources --- prompt
+templates, scripts, paradigm files, and configuration parameters --- bound at
+compilation time and referenced as ground inputs across all runs of this plan. $\mathcal{V}$
+is what distinguishes an abstract case from a bare inference graph: it encodes
+\textit{how} operations execute, not merely their structure.
 
 \subsection{The Level 2 CBR Cycle}
 
@@ -52,57 +58,18 @@ the input specification. For plans that involve rich domain logic, external tool
 complex control flow, manual authoring or human-assisted iteration is the practical
 path.
 
-An initial \texttt{.ncds} sketch of the compilation plan:
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.62\textwidth]{figures/nc_compilations_ncs.png}
+  \caption{NC~Compilations plan (\texttt{.ncds} sketch): five top-level inferences map
+    directly onto the four pipeline stages plus output reporting.
+    \textcolor{blue}{\texttt{<-}} Value; \textcolor{violet}{\texttt{<=}} Functional.}
+  \label{fig:nccompile}
+\end{figure}
 
-\begin{lstlisting}
-<- compilation result
-    <= report compilation status and output paths
-    <- task specification
-    <- project context
-    <- specification analysis
-        <= analyze specification: identify root output,
-           ground inputs, and transformations
-        <- ....
-    <- ncds draft
-        <= derive hierarchical concept structure
-           from specification analysis
-        <- ....
-    <- formal ncd
-        <= formalize draft: assign flow indices,
-           sequence types, and value bindings
-        <- ....
-    <- post-formal ncd
-        <= post-formalize: assign paradigms,
-           reference shapes, and provision paths
-        <- ....
-    <- repositories
-        <= activate post-formal plan into executable
-           concept and inference repositories
-        <- ....
-\end{lstlisting}
-
-Each \texttt{<=} in this initial sketch is a high-level operation whose execution is
-underspecified. The compilation process itself decomposes these into concrete inferences.
-This progressive decomposition is itself a Level~2 revision cycle --- improving accuracy
-by giving finer inferences more precisely scoped inputs.
 
 The recursive structure has three consequences: (1)~\textbf{Validation} --- the pipeline
-is self-consistent; it can compile itself; (2)~\textbf{Improvement through revision} ---
+is self-consistent; it can run the compilation of itself; (2)~\textbf{Improvement through revision} ---
 improving the compilation pipeline is abstract case revision at the meta-level;
-(3)~\textbf{Recursive retention} --- each improvement joins the case library.
-
-\textbf{Scope and limits of automated compilation.} NC~Compilations is an initial
-demonstration, not a universal solution. For plans with clear, sequential structure ---
-document analysis, report generation, contract review, or compilation steps supported by
-explicit provisions of scripts and prompts --- the pipeline reliably produces executable
-plans within fewer than ten adjustments. Plans with complex domain logic, rich
-environment interaction (e.g., PPT~Generation with its dual-format output loop), or the
-compilation pipeline itself, require human or code-assistant inspection during authoring:
-the structure is too open-ended for automated derivation to produce a correct plan
-without iterative review. The boundary between automated and human-assisted authoring
-is task complexity, not a limitation of the NormCode language.
-
-Level~1 and Level~2 are reciprocally constitutive: every Level~1 run is an instance of
-exactly one Level~2 case; experience accumulated as Level~1 cases informs revision of
-Level~2 cases; the compilation pipeline is itself a Level~2 case instantiated to produce
-new Level~2 cases.
+(3)~\textbf{Recursive retention} --- each improvement enriches the case library. Scope and limits of automated compilation are discussed in
+Sect.~\ref{sec:discussion}.

@@ -1,159 +1,57 @@
 \section{Case Studies}
 \label{sec:casestudies}
 
-Two case studies illustrate how the two-level CBR architecture operates in practice.
-The first traces Level~2 case reuse and Level~1 case accumulation in the PPT Agent ---
-one of the four production-ready workflows currently running. The second traces a Code
-Assistant debugging session, showing a Level~1 retrieve--revise cycle with failure
-localization (C1) and selective re-execution (C3) in concrete operational terms.
+Four production-ready NormCode plans are mentioned in the paper, each encoding a distinct
+orchestration class as a Level~2 case: \textbf{PPT Generation} (${\sim}30$ inferences;
+nested loop, 6 layouts, 14 component types), \textbf{Code Assistant} (${\sim}40$;
+ReAct outer loop with parallel Explore), \textbf{NC~Compilations} (${\sim}25$;
+self-hosting Level~2 validation --- the compiler is itself a NormCode plan), and
+\textbf{Canvas Assistant} (${\sim}20$; built-in chat controller with natural-language
+command dispatch). Syntactic nodes constitute 60--70\% of total inferences across all
+plans. NC~Compilations has been successfully executed end-to-end with
+qwen-plus, producing correct repositories for plans such as report writing and contract reviewing.
+The other two of the four plans are traced in detail below.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/ppt_and_code_ncs.png}
+  \caption{PPT Generation (left) and Code Assistant (right) as Level~2 cases
+    (\texttt{.ncds}, abbreviated).
+    Left: nested dual-output loop (HTML + PPTX per slide).
+    Right: ReAct outer loop \cite{yao2023} with inner explore, plan, edit, and verify stages.
+    \textcolor{blue}{\texttt{<-}} Value; \textcolor{violet}{\texttt{<=}} Functional;
+    \textcolor{orange}{\texttt{<*}} Context.}
+  \label{fig:plans}
+\end{figure}
 
 \subsection{Case Study 1: PPT Agent --- Level 2 Reuse and Level 1 Accumulation}
 
-\subsubsection{The Plan as a Level 2 Case.}
+\texttt{ppt\_generation.ncds} (Fig.~\ref{fig:plans}, left) is a Level~2 case encoding
+a parallel dual-output pipeline: HTML and PPTX slides are generated from the same
+componentized content JSON per slide. The most expensive semantic nodes are
+\texttt{generate componentized content} and \texttt{generate diagram code};
+the remainder run with negligible cost and a total latency around 5 minutes with
+visible intermediate steps. The production plan uses Chinese concept names throughout
+(Fig.~\ref{fig:ppt}); the compiler and orchestrator are agnostic to natural language.
+Reusing a checkpoint requires the referenced files or APIs to remain accessible ---
+the case encodes \textit{what} was used, not its content.
 
-\texttt{ppt\_generation.ncds} is a Level~2 case. Its Inference Repository encodes the
-conceptual dependencies:
-
-\begin{lstlisting}
-<- presentation_bundle
-    <= report final outputs: pptx_presentation
-    <- [content_refs]
-        <= for each content_ref_metadata
-            <= load content referenced by content_ref_metadata
-            <- current_content_ref_metadata 
-        <- [content_ref_metadata]
-        <* current_content_ref_metadata
-    <- [template_refs]
-        <= ...
-    <- [slide_specs]
-        <= run extract_slide_specs script
-        <- outline
-            <= generate slide-by-slide outline
-            <- analysis
-                <= analyze requirements /: ground input
-                <- topic /: ground input
-                <- target_audience /: ground input
-                <- [content_refs] 
-            <- [content_refs]
-    <- [all_rendered_slides]
-        <= for each slide_spec in [slide_specs]
-            <- selected_html_template
-                <= select HTML template
-                <- slide_content
-                <- [template_refs]
-            <- html_slide
-                <= render HTML from template
-                <- mermaid_content
-                    <= generate diagram code
-                        <- slide_content
-                            <= generate componentized content
-                            <- slide_content_context
-                                <= retrieve relevant content
-                                <- current_slide_spec
-                                <- [content_refs]
-                            <- ...    
-                <- slide_content
-                <- selected_html_template
-            <- slide_render_result
-                <= bundle HTML and PPTX outputs
-                <- html_slide
-                <- pptx_slide_spec
-        <- [slide_specs]
-        <* current_slide_spec
-    <- pptx_presentation
-        <= render PPTX from html specs
-            <- html_presentation
-            <= assemble HTML slideshow
-            <- [all_rendered_slides]
-\end{lstlisting}
-
-\begin{figure}[t]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=\textwidth]{figures/fig4.png}
-  \caption{Six slides produced by the PPT Generation plan for the topic
-    ``NormCode: A Language for More Reliable AI Agent Workflows'' (Chinese-language
-    run). Each slide is a Level~1 checkpoint; the Canvas Assistant plan
-    generated the full deck in a single execution with visible intermediate steps.}
+  \caption{Six slides produced by the PPT Generation plan (Chinese-language run).
+    Each slide is a Level~1 checkpoint accumulated during execution.}
   \label{fig:ppt}
 \end{figure}
 
-The plan encodes a parallel dual-output pipeline: HTML and then PPTX slides are generated from the
-same componentized content JSON per slide. The most expensive semantic node is
-\texttt{generate componentized content} and \texttt{generate diagram code} 
- --- a single inference producing the full slide structure from the
-topic, where qwen-plus is used on commercial api, while the rest can be runned 
-with qwen-turbo on comemrcial api, with negligible cost and a total latency around 5 mins 
-with visible intermediate steps. It is out-performing the quality/cost ratio of most
- commercial ppt agents at the time of writing. 
+\subsection{Case Study 2: Code Assistant --- A ReAct Plan as a Level~2 Case}
 
-\textit{Note on language.} The production plan uses Chinese concept names throughout,
-as does the final PPT product (Fig.~\ref{fig:ppt}).
-The compiler and orchestrator are agnostic to natural language; the scope rule operates
-on identifier structure, not semantics.
-
-\subsection{Case Study 2: Code Assistant --- A ReAct Plan and Level 1 CBR}
-
-\subsubsection{The Plan as a Level 2 Case.}
-
-\texttt{code\_assistant.ncds} is a Level~2 case encoding a ReAct-loop software
-engineering workflow. An outer loop iterates over ReAct cycles; each cycle contains
-inner loops for file reading, editing, and verification:
-
-\begin{lstlisting}
-<- task_result
-    <= report completion with git diff summary
-    <- user_request
-        <= receive task via canvas integration
-    <- project_context
-        <= retrieve project state (git status, file tree)
-    <- cycle helper
-        <= initiate as 0th cycle
-    <- [results or verifications of cycles]
-        <= for each ReAct cycle
-            <= return the edit results or verification
-            <- [exploration_results]
-                <= explore: grep, file reads, git log
-                <- ....
-                <- user_request
-                <- task_tier
-            <- [change_plan]
-                <= generate detailed step-by-step change plan
-                <- user_request
-                <- all exploration_results
-                    <= collect all exploration results
-                    <- [exploration_results]
-            <- [edit_results]
-                <= for each change in change_plan
-                    <- edit_result
-                        <= apply surgical edit
-                        <- current_change
-                    <- lint_result
-                        <= run linter; fix errors if any
-                        <- edit_result
-                <- [change_plan]
-                <* current_change
-            <- verification
-                <= run tests, build, typecheck in parallel
-                <- [edit_results]
-            <- quit react loop?
-                <= task complete or in a dead-end?
-            <- cycle helper
-                <= continue cycles by incrementing cycle helper count
-                    <= if it does not quit ReAct loop.
-        <- cycle helper 
-        <* this cycle's count 
-    <- all editing results or verifications
-        <= collect all results or verifications of cycles
-        <- [results or verifications of cycles]
-
-\end{lstlisting}
-
-The plan is a structured ReAct loop \cite{yao2023}: each cycle, Explore
+\texttt{code\_assistant.ncds} (Fig.~\ref{fig:plans}, right) is a Level~2 case encoding
+a ReAct-loop software engineering workflow \cite{yao2023}. Each cycle, Explore
 \textit{observes} (parallel file reads, zero LLM cost), Plan \textit{reasons} (one LLM
 call over scoped exploration results), Implement \textit{acts} (surgical edits with an
-inner lint-fix loop), and Verify checks results. The outer loop continues until the task
-is complete or a dead-end is reached. Each stage receives only its declared inputs ---
-Implement receives the change plan, not the raw file contents from Explore. Expressed
-as a NormCode Level~2 case, every run generates a Level~1 case base: every stage is a
-checkpoint, inspectable and revisable under failure localization (C1), pre-execution
-review (C2), and selective re-execution (C3) (Sect.~\ref{sec:canvas}).
+inner lint-fix loop), and Verify checks results. Implement receives the change plan,
+not the raw file contents from Explore --- scope isolation in action. Every run
+generates a Level~1 case base: every stage is a checkpoint, and the Canvas App
+makes each one inspectable and revisable (Sect.~\ref{sec:canvas}).
+

@@ -8,6 +8,16 @@
 \usepackage{booktabs}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[section]{placeins}
+
+% Tighter float spacing
+\setlength{\textfloatsep}{8pt plus 2pt minus 4pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 4pt}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.70}
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.65}
 
 % Listings style for NormCode snippets
 \lstset{
@@ -36,44 +46,25 @@
 
 %----------------------------------------------------------------
 \begin{abstract}
-Case-Based Reasoning provides a proven framework for managing complex multi-step
-problem-solving: capture execution states as cases, retrieve the closest match for
-a new problem, adapt it, and retain the result. Applied to multi-step LLM
-workflows --- an increasingly prevalent architecture for AI deployment --- CBR
-suggests a natural operational model in which execution checkpoints are cases, fork
-is retrieve-and-reuse, and value override is revision. This model depends on a
-precondition: checkpoints must be genuinely self-contained. When reasoning steps
-share implicit accumulated state, a checkpoint at step $k$ embeds not just that
-step's output but all the prior state that leaked into it, making retrieval
-unreliable and revision non-localizable.
+We present \textbf{NormCode Canvas} (v1.1.3), a deployed system realizing
+Case-Based Reasoning at two levels for multi-step LLM workflows. The foundation
+is NormCode \cite{anon2025}, a semi-formal planning language whose compiler-verified
+scope rule ensures every execution checkpoint is a genuinely self-contained case ---
+eliminating the implicit shared state that makes retrieval unreliable and failure
+non-localizable in standard orchestration frameworks.
+\textbf{Level~1} treats each checkpoint as a concrete case (suspended runtime:
+Blackboard + Concept Repository snapshot); Fork implements retrieve-and-reuse, Value
+Override implements revision with automatic stale-boundary propagation.
+\textbf{Level~2} treats each compiled plan as an abstract case; four production-ready
+plans demonstrate domain generality, and the compiler is itself a NormCode plan
+enabling recursive case learning.
+Three structural properties follow: \textbf{(C1)} failure localization in O(1)
+operations; \textbf{(C2)} pre-execution review via compiler-generated narrative;
+\textbf{(C3)} scope-bounded selective re-execution.
+Two case studies illustrate both levels in practice.
 
-We present \textbf{NormCode Canvas} (v1.1.3), a deployed system that realizes CBR at
-two levels. Building on NormCode \cite{anon2025} --- a semi-formal planning language
-whose scope rule is verified by the compiler and enforced by the orchestrator ---
-the system delivers: \textbf{(Level~1) Concrete case CBR within each run}: every
-execution checkpoint is a self-contained suspended runtime (Blackboard + Concept
-Repository snapshot); the four CBR operations map onto Canvas interactions
-(Retrieve via Tensor Inspector, Reuse via Fork, Revise via Value Override with
-automatic stale-boundary computation, Retain via continuous checkpointing).
-\textbf{(Level~2) Abstract case CBR across plans}: each compiled NormCode plan is an
-abstract case --- a runtime definition from which all executions of that task type
-are instantiated. Four production-ready plans serve as an example of this
-case library in practice; the compiler itself is a NormCode plan, enabling
-recursive case-based learning. Three measurable properties follow structurally:
-\textbf{(C1) Failure localization in O(1) operations}; \textbf{(C2) Zero-cost
-pre-execution verification} via compiler-generated plan narrative; \textbf{(C3)
-Scope-bounded selective re-run} preserving all upstream-cached nodes.
-
-Two case studies illustrate the architecture in use: PPT Agent executions
-accumulating a concrete case library under Level~2 plan reuse, and a Code
-Assistant session localizing a failure via breakpoint inspection and
-fork-and-compare (C1 and C3 with exact counts). Correctness is validated
-through 100\% accuracy on base-X addition (up to 150 digits) and self-hosted
-execution of NormCode's own four-phase compiler pipeline.
-
-\keywords{case-based reasoning \and process-oriented CBR \and LLM workflows
-\and workflow management \and visual debugging \and structural isolation
-\and deployed systems}
+\keywords{case-based reasoning \and LLM workflows \and AI workflow development
+\and workflow management \and agents \and LLM reasoning \and agent DSL}
 \end{abstract}
 
 %================================================================
@@ -98,24 +89,15 @@ execution of NormCode's own four-phase compiler pipeline.
 \input{sections/07_casestudies}
 
 %================================================================
-\input{sections/08_evaluation}
-
-%================================================================
 \input{sections/09_discussion}
 
 %================================================================
 \input{sections/10_related}
 
-%================================================================
-\input{sections/11_conclusion}
-
-%================================================================
-\input{sections/appendix}
-
 %----------------------------------------------------------------
 \newpage
 \begin{credits}
-\subsubsection{\ackname} [To be completed by authors.]
+\subsubsection{\ackname} Acknowledgements will be added in the camera-ready version after blind review.
 
 \subsubsection{Declaration on Generative AI}
 During the preparation of this work, the author(s) used AI-assisted writing tools for

@@ -13,44 +13,22 @@ Process-Oriented CBR (POCBR) \cite{bergmann2002,minor2014} extends this to
 states and data flow. Multi-step LLM workflows are a natural POCBR domain; the
 challenge is ensuring their intermediate states are suitable, self-contained cases.
 
-\subsection{The Case Integrity Problem in LLM Workflows}
+\subsection{Case Integrity and Structural Isolation}
 
-The fundamental requirement for POCBR is \textbf{case integrity}: each intermediate
-state in a workflow trace must be self-contained --- its stored data must be exactly
-what the next step needs, with no implicit dependency on information that is not stored
-in the case itself.
+Most LLM orchestration frameworks do not satisfy case integrity by default: a
+checkpoint at step $k$ may embed accumulated conversation history or prompt context
+from steps $1, \ldots, k-1$, making it a snapshot of shared state rather than a
+self-contained case. Three consequences follow: \textbf{unreliable retrieval} ---
+continuing from such a checkpoint in a new context produces incorrect behavior;
+\textbf{non-localizable failures} --- the cause of a failure at step $k$ may be
+anywhere in accumulated implicit state; \textbf{irreproducible cases} --- two
+executions loading the same checkpoint may produce different outputs.
 
-Most LLM orchestration frameworks do not satisfy this requirement by default. A
-checkpoint captured at step $k$ in a typical orchestration framework is not a clean
-case: it is a snapshot of shared state at that moment, which may embed accumulated
-conversation history or prompt context from steps $1, \ldots, k-1$. Three consequences
-follow: \textbf{Unreliable retrieval.} Retrieving such a checkpoint and continuing from it in a
-new execution context produces incorrect behavior: the implicit context the checkpoint
-depended on is no longer present. \textbf{Non-localizable failures.} When step $k$ fails, the cause may be anywhere in
-the accumulated implicit state. Revision requires locating this cause --- which is not
-possible when the context boundary is implicit. \textbf{Irreproducible cases.} Two executions that load the same checkpoint may produce
-different outputs because the implicit context that was present during the original
-execution is not present during reuse.
-
-These three failures are structural consequences of the absence of an isolation
-guarantee.
-
-\subsection{Structural Isolation as the Enabling Condition}
-
-POCBR in LLM workflows requires that intermediate execution states are
-case-integrity-preserving --- a property that must be guaranteed at the level of the
-workflow language, not inferred post-hoc from logs.
-
-\textbf{Definition.} A workflow language provides \textit{structural isolation} if each
-step can access only data explicitly declared in its own scope block; the compiler
-determines each step's scope during formalization; and the orchestrator constructs each
-step's input from only its declared references --- a step simply never receives
-undeclared data.
-
-If a language provides structural isolation, then for every completed step $k$: the
-stored output tensor contains exactly the data downstream steps will need; any failure
-at step $k+1$ has a cause in the declared inputs of $k+1$; retrieving the checkpoint at
-step $k$ and continuing from it in a new context will produce the same
-data-dependency behavior as the original execution.
-
-NormCode \cite{anon2025} is designed around this enabling condition.
+These failures are eliminated by \textbf{structural isolation}: a workflow language
+provides structural isolation if each step can access only data explicitly declared in
+its own scope block, the compiler determines each step's scope at formalization, and the
+orchestrator constructs each step's input from only its declared references. Under this
+guarantee, the stored output at step $k$ contains exactly what downstream steps need;
+failures are localizable to the declared inputs of the failing step; and checkpoint
+reuse reproduces the original data-dependency behavior. NormCode \cite{anon2025} is
+designed around this enabling condition.

@@ -1,38 +1,26 @@
 \section{Discussion}
 \label{sec:discussion}
 
-\textbf{Language as the substrate.} Failure localization (C1), pre-execution review
-(C2), and selective re-execution (C3) are not design choices about the Canvas App. They
-are structural consequences: (1)~C1 follows from Local Addressability --- every step
-has an exact flow index; its inputs are exactly its declared scope. (2)~C2 follows from
-Interpretability + Enforceability --- the \texttt{.ncn} is human-readable, and what the
-reviewer reads is exactly what executes. (3)~C3 follows from Local Addressability +
-Enforceability --- the scope rule determines which downstream nodes depend on any step;
-the orchestrator enforces this boundary. Existing LLM orchestration tools can add
-checkpoint UI features; they cannot produce these properties (C1--C3) structurally
-without first providing a reasoning medium that satisfies these six properties.
-
-\textbf{Sustainable improvement through two-level CBR.} (1)~\textit{Level~1
-accumulation}: every run deposits concrete cases; past checkpoints are available for
-retrieval, reuse, and revision without operator intervention. (2)~\textit{Level~2
-refinement}: each domain that warrants a new plan extends the abstract case library;
-plans are revised as task patterns evolve and retained. (3)~\textit{Recursive
-improvement}: the compilation pipeline --- itself a Level~2 case --- improves through
-the same revision cycle, producing better plans, better Level~1 cases, and better
-Level~2 revisions in turn. This distinguishes NormCode from a logging tool: it
-accumulates experience in a form that can be retrieved, reused, and improved
-\cite{bergmann2002,muller2015b}.
-
-\textbf{What CBR gains from a reasoning medium.} The scope rule, determined at compile
-time and enforced at runtime, guarantees that every checkpoint is a self-contained case.
-The Level~1 case definition extends POCBR's case representation
-\cite{leake2008,bottrighi2016} to resumable execution environments: a trace records
-what happened; a suspended runtime is a state from which execution can be continued
-with exactly the same data-dependency behavior, providing a guarantee that trace
-retrieval does not. Finally, this paper concretely deploys the two-level structure
-introduced by Muller \& Bergmann \cite{muller2015b}: four abstract reasoning patterns
-(Level~2) each generating concrete cases on every run (Level~1), with the compilation
-pipeline itself a Level~2 case.
+\textbf{Language as the substrate for sustainable improvement.}
+C1, C2, and C3 are structural consequences of the reasoning medium, not design
+choices about the Canvas App --- and each directly enables a dimension of cumulative
+improvement. C1~(failure localization) follows from Local Addressability: every step
+has an exact flow index and exactly declared inputs, so every run deposits concrete
+Level~1 cases that are immediately addressable for retrieval, reuse, and revision
+without operator intervention. C2~(pre-execution review) follows from Interpretability
++ Enforceability: the \texttt{.ncn} is human-readable and \textit{exactly} what
+executes, enabling Level~2 case revision to be reviewed before it generates any new
+Level~1 cases. C3~(selective re-execution) follows from Local Addressability +
+Enforceability: the scope rule determines which downstream nodes depend on any revised
+step, and the orchestrator enforces that boundary --- so a Level~2 case revision
+propagates precisely, and a Level~1 fork re-executes only what is necessary.
+Together, C1--C3 realize the CBR cycle at both levels: every run accumulates
+experience (Level~1), every domain revision extends the abstract case library
+(Level~2), and the compilation pipeline --- itself a Level~2 case --- improves through
+the same cycle recursively \cite{bergmann2002,muller2015b}. Existing LLM orchestration
+tools can add checkpoint UI features; they cannot produce C1--C3 structurally without
+first providing a reasoning medium that satisfies the six properties of
+Sect.~\ref{sec:normcode}.
 
 \subsection{Limitations}
 
@@ -45,17 +33,18 @@ signs are structurally self-contained, but reuse requires the referenced externa
 resources to be accessible; the case encodes \textit{what was referenced}, not its
 content.
 
-\textbf{Methodological limitations.} The Derivation phase uses an LLM to extract
-conceptual structure from natural language, introducing non-determinism in plan
-generation; a more formal derivation procedure is a direction for future work.
+\textbf{Compilation scope.} NC~Compilations reliably produces executable plans for
+tasks with clear sequential structure (document analysis, report generation, contract
+review). Plans with complex domain logic or rich environment interaction (e.g.,
+PPT~Generation's dual-format output loop) require human or code-assistant authoring;
+the boundary is task complexity, not a language limitation.
 
 \textbf{Evaluation scope.} Comprehensive quality evaluation would require a
-combinatorial test matrix ($|L_2| \times |L_1|$ cells), where outcome quality also
-depends on LLM model, input domain, and subjective judgment. The evaluation in
-Sect.~\ref{sec:evaluation} therefore argues for Level~2 generalizability --- that the
-structural properties hold across the four production plans and that C1--C3 (failure
-localization, pre-execution review, selective re-execution) are realized --- rather than
-for absolute output quality, which varies with domain, model
-choice, and subjective criteria.
+combinatorial test matrix ($|L_2| \times |L_1|$ cells) where outcome quality also
+depends on LLM model, input domain, and subjective judgment. The case studies
+(Sect.~\ref{sec:casestudies}) argue for Level~2 generalizability --- that structural
+properties hold across the four production plans and that C1--C3 (failure localization,
+pre-execution review, selective re-execution) are realized --- rather than for absolute
+output quality, which varies with domain, model choice, and subjective criteria.
 
 
