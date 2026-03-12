@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NormCode Examples - Real-world patterns and code samples for structured AI workflows.">
+    <link rel="icon" type="image/png" href="../assets/images/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <title>Examples - NormCode 规范码</title>
+</head>
+<body>
+    <!-- Navigation will be loaded by load-nav.js -->
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <h1 data-i18n="page.title">Examples</h1>
+        <p data-i18n="page.subtitle">Real-world patterns showing common NormCode use cases.</p>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main" class="docs-layout">
+        <!-- Sidebar -->
+        <aside class="docs-sidebar">
+            <h4 data-i18n="sidebar.title">Documentation</h4>
+            <ul>
+                <li><a href="index.html" data-i18n="nav.overview">Overview</a></li>
+                <li><a href="syntax.html" data-i18n="nav.syntax">Syntax Reference</a></li>
+                <li><a href="execution.html" data-i18n="nav.execution">Execution Model</a></li>
+                <li><a href="compilation.html" data-i18n="nav.compilation">Compilation</a></li>
+                <li><a href="examples.html" class="active" data-i18n="nav.examples">Examples</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <div class="docs-content">
+
+        <!-- Quick Jump -->
+        <section>
+            <h2 data-i18n="section.patterns">Pattern Library</h2>
+            <div class="card-grid">
+                <a href="#linear" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">📄</span>
+                        <h3 data-i18n="pattern.linear">Linear Flow</h3>
+                        <p data-i18n="pattern.linearDesc">Sequential processing with dependencies.</p>
+                    </div>
+                </a>
+                <a href="#multi-input" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">🔀</span>
+                        <h3 data-i18n="pattern.multiInput">Multi-Input</h3>
+                        <p data-i18n="pattern.multiInputDesc">Actions with multiple data sources.</p>
+                    </div>
+                </a>
+                <a href="#iteration" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">🔁</span>
+                        <h3 data-i18n="pattern.iteration">Iteration</h3>
+                        <p data-i18n="pattern.iterationDesc">Process collections of items.</p>
+                    </div>
+                </a>
+                <a href="#conditional" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">🔀</span>
+                        <h3 data-i18n="pattern.conditional">Conditional</h3>
+                        <p data-i18n="pattern.conditionalDesc">Execute based on conditions.</p>
+                    </div>
+                </a>
+                <a href="#collection" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">📦</span>
+                        <h3 data-i18n="pattern.collection">Collection</h3>
+                        <p data-i18n="pattern.collectionDesc">Gather and group data.</p>
+                    </div>
+                </a>
+                <a href="#real-world" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">🌍</span>
+                        <h3 data-i18n="pattern.realWorld">Real-World</h3>
+                        <p data-i18n="pattern.realWorldDesc">Complete application examples.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Linear Flow -->
+        <section id="linear">
+            <h2 data-i18n="ex.linearTitle">Linear Flow</h2>
+            <p data-i18n="ex.linearDesc">The simplest pattern—sequential steps with clear dependencies.</p>
+            
+            <h3 data-i18n="ex.docSummary">Document Summarization</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.docSummary">
+&lt;- document summary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= summarize this text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- clean text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract main content, removing headers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw document
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.docSummaryCalls">2 (extract, summarize)</span></p>
+
+            <h3 data-i18n="ex.riskAssessment">Legal Risk Assessment</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.riskAssessment">
+&lt;- risk assessment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= evaluate legal exposure based on the extracted clauses<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- relevant clauses<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract clauses related to liability and indemnification<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- classified sections<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify and classify document sections<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- full contract
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.riskCalls">3 (classify, extract, assess)</span></p>
+            
+            <div class="info-box">
+                <p data-i18n="ex.riskNote"><strong>Key:</strong> The risk assessment <em>never sees the full contract</em>. Only the extracted clauses. This eliminates hallucination of clause numbers.</p>
+            </div>
+        </section>
+
+        <!-- Multi-Input -->
+        <section id="multi-input">
+            <h2 data-i18n="ex.multiInputTitle">Multi-Input Operations</h2>
+            <p data-i18n="ex.multiInputDesc">Actions that need multiple data sources—they see all listed inputs, but nothing else.</p>
+            
+            <h3 data-i18n="ex.sentiment">Sentiment Analysis with Context</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.sentiment">
+&lt;- user sentiment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= determine sentiment level based on user experience<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- support ticket<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- conversation history
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.sentimentCalls">1 (determine sentiment)</span></p>
+
+            <h3 data-i18n="ex.quarterlyReport">Quarterly Report Generation</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.quarterlyReport">
+&lt;- quarterly report<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= compile findings into executive summary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- analyzed data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify trends and anomalies<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw metrics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- previous quarter report
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.quarterlyCalls">2 (identify trends, compile)</span></p>
+        </section>
+
+        <!-- Iteration -->
+        <section id="iteration">
+            <h2 data-i18n="ex.iterationTitle">Iteration Over Collections</h2>
+            <p data-i18n="ex.iterationDesc">Process each item in a collection and aggregate results.</p>
+            
+            <h3 data-i18n="ex.batchSummary">Batch Document Summarization</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.batchSummary">
+&lt;- all summaries<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= for every document in the list return the document summary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select document summary to return<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- document summary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= summarize this document<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- document to process now<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- documents<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;* document to process now
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.batchCalls">N (one per document)</span></p>
+
+            <div class="info-box">
+                <p data-i18n="ex.iterationNote"><strong>Key components:</strong>
+                <br>• <code class="inline-code">&lt;- documents</code> — Base collection (value concept)
+                <br>• <code class="inline-code">&lt;* document to process now</code> — Current element marker (context concept)
+                <br>• <code class="inline-code">&lt;= select document summary to return</code> — Selects output per iteration</p>
+            </div>
+
+            <h3 data-i18n="ex.researchSynthesis">Research Paper Synthesis</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.researchSynthesis">
+&lt;- final synthesis<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= synthesize insights across all themes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- major themes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify common themes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- all findings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= for every paper return the key findings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select key findings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- key findings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract main findings<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- current paper<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- research papers<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* current paper
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.synthesisCalls">N + 2 (N papers + theme identification + synthesis)</span></p>
+        </section>
+
+        <!-- Conditional -->
+        <section id="conditional">
+            <h2 data-i18n="ex.conditionalTitle">Conditional Execution</h2>
+            <p data-i18n="ex.conditionalDesc">Execute steps only when conditions are met.</p>
+            
+            <h3 data-i18n="ex.reviewWorkflow">Review Workflow</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.reviewWorkflow">
+&lt;- final output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select reviewed output if available otherwise use draft<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft needs review?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check if draft requires review<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- reviewed output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= perform human review and corrections<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= if draft needs review<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* draft needs review?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.reviewCalls">1-2 (check + optional review)</span></p>
+
+            <h3 data-i18n="ex.errorRecovery">Error Recovery with Fallback</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.errorRecovery">
+&lt;- final answer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select the first valid result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- complex reasoning failed?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check if primary answer is valid<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- primary answer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- fallback answer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= use simple approach as fallback<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= if complex reasoning failed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* complex reasoning failed?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- input data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- primary answer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= attempt complex reasoning<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- input data
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.fallbackCalls">2-3 (primary + check + optional fallback)</span></p>
+        </section>
+
+        <!-- Collection -->
+        <section id="collection">
+            <h2 data-i18n="ex.collectionTitle">Data Collection</h2>
+            <p data-i18n="ex.collectionDesc">Gather and group data from multiple sources.</p>
+            
+            <h3 data-i18n="ex.simpleCollect">Simple Collection (Free)</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.simpleCollect">
+&lt;- all inputs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= collect these items together as one group<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- user query<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- system context<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- retrieved documents
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.collectCalls">0 (syntactic grouping)</span></p>
+
+            <h3 data-i18n="ex.parallelAnalysis">Parallel Analysis Collection</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.parallelAnalysis">
+&lt;- analysis results<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= gather results from all analyses as one info unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- sentiment analysis<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= analyze sentiment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- entity extraction<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract entities<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- topic classification<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= classify topics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text
+                </code>
+            </div>
+            <p><strong data-i18n="ex.llmCalls">LLM calls:</strong> <span data-i18n="ex.parallelCalls">3 (can run in parallel)</span></p>
+            
+            <div class="info-box">
+                <p data-i18n="ex.parallelNote"><strong>Parallel execution:</strong> Since all three analyses use the same input and don't depend on each other, they can run simultaneously.</p>
+            </div>
+        </section>
+
+        <!-- Real-World -->
+        <section id="real-world">
+            <h2 data-i18n="ex.realWorldTitle">Real-World Applications</h2>
+            <p data-i18n="ex.realWorldDesc">Complete examples from production use cases.</p>
+            
+            <h3 data-i18n="ex.emailTriage">Email Triage System</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.emailTriage">
+&lt;- triage decision<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= assign priority and route to appropriate team<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- email metadata<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract sender, subject, keywords<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw email<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- urgency assessment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= determine urgency level<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- email content<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract body text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw email<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- historical context<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= look up previous conversations<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- sender info
+                </code>
+            </div>
+
+            <h3 data-i18n="ex.codeReview">Code Review Assistant</h3>
+            <div class="code-example">
+                <code data-i18n-html="code.codeReview">
+&lt;- review summary<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;= generate comprehensive review report<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code issues<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify bugs and anti-patterns<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- security concerns<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check for security vulnerabilities<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;- style suggestions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= evaluate code style and readability<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff
+                </code>
+            </div>
+        </section>
+
+        <!-- Best Practices -->
+        <section>
+            <h2 data-i18n="ex.bestPractices">Best Practices</h2>
+            
+            <div class="card-grid">
+                <div class="card">
+                    <span class="card-icon">1️⃣</span>
+                    <h3 data-i18n="tips.startSimple">Start Simple</h3>
+                    <p data-i18n="tips.startSimpleDesc">Begin with linear flows. Add complexity only when needed.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🎯</span>
+                    <h3 data-i18n="tips.oneAction">One Action Per Inference</h3>
+                    <p data-i18n="tips.oneActionDesc">Each inference has exactly one <= line. Nest for multiple steps.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🔗</span>
+                    <h3 data-i18n="tips.explicitDeps">Explicit Dependencies</h3>
+                    <p data-i18n="tips.explicitDepsDesc">Make data flow obvious. Show what each step receives.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">📝</span>
+                    <h3 data-i18n="tips.descriptive">Descriptive Names</h3>
+                    <p data-i18n="tips.descriptiveDesc">Use clear names like "risk assessment" instead of "result".</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">💰</span>
+                    <h3 data-i18n="tips.isolateExpensive">Isolate Expensive Ops</h3>
+                    <p data-i18n="tips.isolateExpensiveDesc">Group free syntactic operations, isolate costly LLM calls.</p>
+                </div>
+                <div class="card">
+                    <span class="card-icon">🧪</span>
+                    <h3 data-i18n="tips.testIncremental">Test Incrementally</h3>
+                    <p data-i18n="tips.testIncrementalDesc">Use breakpoints to test each step before adding more.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+            <div class="card-grid">
+                <a href="syntax.html" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">📝</span>
+                        <h3 data-i18n="prev.syntax">Previous: Syntax Reference</h3>
+                        <p data-i18n="prev.syntaxDesc">Learn the markers, concept types, and operators.</p>
+                    </div>
+                </a>
+                <a href="execution.html" class="card-link">
+                    <div class="card">
+                        <span class="card-icon">⚙️</span>
+                        <h3 data-i18n="nav.execution">Back to Start</h3>
+                        <p data-i18n="prev.executionDesc">How plans run at runtime.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <a href="index.html" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span data-i18n="nav.backDocs">Back to Documentation</span>
+        </a>
+        </div>
+    </main>
+
+    <script src="../js/i18n.js"></script>
+    <script src="../js/nav.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/docs-common.js"></script>
+    <script>
+        initDocsPage({
+            en: {
+                page: {
+                    title: 'Examples',
+                    subtitle: 'Real-world patterns showing common NormCode use cases.'
+                },
+                section: {
+                    patterns: 'Pattern Library'
+                },
+                pattern: {
+                    linear: 'Linear Flow',
+                    linearDesc: 'Sequential processing with dependencies.',
+                    multiInput: 'Multi-Input',
+                    multiInputDesc: 'Actions with multiple data sources.',
+                    iteration: 'Iteration',
+                    iterationDesc: 'Process collections of items.',
+                    conditional: 'Conditional',
+                    conditionalDesc: 'Execute based on conditions.',
+                    collection: 'Collection',
+                    collectionDesc: 'Gather and group data.',
+                    realWorld: 'Real-World',
+                    realWorldDesc: 'Complete application examples.'
+                },
+                ex: {
+                    linearTitle: 'Linear Flow',
+                    linearDesc: 'The simplest pattern—sequential steps with clear dependencies.',
+                    docSummary: 'Document Summarization',
+                    llmCalls: 'LLM calls:',
+                    docSummaryCalls: '2 (extract, summarize)',
+                    riskAssessment: 'Legal Risk Assessment',
+                    riskCalls: '3 (classify, extract, assess)',
+                    riskNote: '<strong>Key:</strong> The risk assessment <em>never sees the full contract</em>. Only the extracted clauses. This eliminates hallucination of clause numbers.',
+                    multiInputTitle: 'Multi-Input Operations',
+                    multiInputDesc: 'Actions that need multiple data sources—they see all listed inputs, but nothing else.',
+                    sentiment: 'Sentiment Analysis with Context',
+                    sentimentCalls: '1 (determine sentiment)',
+                    quarterlyReport: 'Quarterly Report Generation',
+                    quarterlyCalls: '2 (identify trends, compile)',
+                    iterationTitle: 'Iteration Over Collections',
+                    iterationDesc: 'Process each item in a collection and aggregate results.',
+                    batchSummary: 'Batch Document Summarization',
+                    batchCalls: 'N (one per document)',
+                    iterationNote: '<strong>Key components:</strong><br>• <code class="inline-code">&lt;- documents</code> — Base collection (value concept)<br>• <code class="inline-code">&lt;* document to process now</code> — Current element marker (context concept)<br>• <code class="inline-code">&lt;= select document summary to return</code> — Selects output per iteration',
+                    researchSynthesis: 'Research Paper Synthesis',
+                    synthesisCalls: 'N + 2 (N papers + theme identification + synthesis)',
+                    conditionalTitle: 'Conditional Execution',
+                    conditionalDesc: 'Execute steps only when conditions are met.',
+                    reviewWorkflow: 'Review Workflow',
+                    reviewCalls: '1-2 (check + optional review)',
+                    errorRecovery: 'Error Recovery with Fallback',
+                    fallbackCalls: '2-3 (primary + check + optional fallback)',
+                    collectionTitle: 'Data Collection',
+                    collectionDesc: 'Gather and group data from multiple sources.',
+                    simpleCollect: 'Simple Collection (Free)',
+                    collectCalls: '0 (syntactic grouping)',
+                    parallelAnalysis: 'Parallel Analysis Collection',
+                    parallelCalls: '3 (can run in parallel)',
+                    parallelNote: '<strong>Parallel execution:</strong> Since all three analyses use the same input and don\'t depend on each other, they can run simultaneously.',
+                    realWorldTitle: 'Real-World Applications',
+                    realWorldDesc: 'Complete examples from production use cases.',
+                    emailTriage: 'Email Triage System',
+                    codeReview: 'Code Review Assistant',
+                    bestPractices: 'Best Practices'
+                },
+                tips: {
+                    startSimple: 'Start Simple',
+                    startSimpleDesc: 'Begin with linear flows. Add complexity only when needed.',
+                    oneAction: 'One Action Per Inference',
+                    oneActionDesc: 'Each inference has exactly one <= line. Nest for multiple steps.',
+                    explicitDeps: 'Explicit Dependencies',
+                    explicitDepsDesc: 'Make data flow obvious. Show what each step receives.',
+                    descriptive: 'Descriptive Names',
+                    descriptiveDesc: 'Use clear names like "risk assessment" instead of "result".',
+                    isolateExpensive: 'Isolate Expensive Ops',
+                    isolateExpensiveDesc: 'Group free syntactic operations, isolate costly LLM calls.',
+                    testIncremental: 'Test Incrementally',
+                    testIncrementalDesc: 'Use breakpoints to test each step before adding more.'
+                },
+                code: {
+                    docSummary: '&lt;- document summary<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= summarize this text<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- clean text<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract main content, removing headers<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw document',
+                    riskAssessment: '&lt;- risk assessment<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= evaluate legal exposure based on the extracted clauses<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- relevant clauses<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract clauses related to liability and indemnification<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- classified sections<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify and classify document sections<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- full contract',
+                    sentiment: '&lt;- user sentiment<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= determine sentiment level based on user experience<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- support ticket<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- conversation history',
+                    quarterlyReport: '&lt;- quarterly report<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= compile findings into executive summary<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- analyzed data<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify trends and anomalies<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw metrics<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- previous quarter report',
+                    batchSummary: '&lt;- all summaries<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= for every document in the list return the document summary<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select document summary to return<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- document summary<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= summarize this document<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- document to process now<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- documents<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;* document to process now',
+                    researchSynthesis: '&lt;- final synthesis<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= synthesize insights across all themes<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- major themes<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify common themes<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- all findings<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= for every paper return the key findings<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select key findings<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- key findings<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract main findings<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- current paper<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- research papers<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* current paper',
+                    reviewWorkflow: '&lt;- final output<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select reviewed output if available otherwise use draft<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft needs review?<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check if draft requires review<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- reviewed output<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= perform human review and corrections<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= if draft needs review<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* draft needs review?<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- draft output',
+                    errorRecovery: '&lt;- final answer<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= select the first valid result<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- complex reasoning failed?<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check if primary answer is valid<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- primary answer<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- fallback answer<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= use simple approach as fallback<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= if complex reasoning failed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* complex reasoning failed?<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- input data<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- primary answer<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= attempt complex reasoning<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- input data',
+                    simpleCollect: '&lt;- all inputs<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= collect these items together as one group<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- user query<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- system context<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- retrieved documents',
+                    parallelAnalysis: '&lt;- analysis results<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= gather results from all analyses as one info unit<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- sentiment analysis<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= analyze sentiment<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- entity extraction<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract entities<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- topic classification<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= classify topics<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- text',
+                    emailTriage: '&lt;- triage decision<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= assign priority and route to appropriate team<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- email metadata<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract sender, subject, keywords<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw email<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- urgency assessment<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= determine urgency level<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- email content<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= extract body text<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- raw email<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- historical context<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= look up previous conversations<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- sender info',
+                    codeReview: '&lt;- review summary<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= generate comprehensive review report<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code issues<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= identify bugs and anti-patterns<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- security concerns<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= check for security vulnerabilities<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- style suggestions<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= evaluate code style and readability<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- code diff'
+                },
+                prev: {
+                    syntax: 'Previous: Syntax Reference',
+                    syntaxDesc: 'Learn the markers, concept types, and operators.',
+                    executionDesc: 'How plans run at runtime.'
+                },
+            },
+            zh: {
+                page: {
+                    title: '示例',
+                    subtitle: '展示常见NormCode用例的真实世界模式。'
+                },
+                section: {
+                    patterns: '模式库'
+                },
+                pattern: {
+                    linear: '线性流程',
+                    linearDesc: '具有依赖关系的顺序处理。',
+                    multiInput: '多输入',
+                    multiInputDesc: '具有多个数据源的操作。',
+                    iteration: '迭代',
+                    iterationDesc: '处理项目集合。',
+                    conditional: '条件',
+                    conditionalDesc: '基于条件执行。',
+                    collection: '收集',
+                    collectionDesc: '收集和分组数据。',
+                    realWorld: '真实世界',
+                    realWorldDesc: '完整的应用程序示例。'
+                },
+                ex: {
+                    linearTitle: '线性流程',
+                    linearDesc: '最简单的模式——具有明确依赖关系的顺序步骤。',
+                    docSummary: '文档摘要',
+                    llmCalls: 'LLM调用：',
+                    docSummaryCalls: '2次（提取、摘要）',
+                    riskAssessment: '法律风险评估',
+                    riskCalls: '3次（分类、提取、评估）',
+                    riskNote: '<strong>关键：</strong>风险评估<em>永远看不到完整合同</em>。只能看到提取的条款。这消除了条款编号的幻觉。',
+                    multiInputTitle: '多输入操作',
+                    multiInputDesc: '需要多个数据源的操作——它们看到所有列出的输入，但仅此而已。',
+                    sentiment: '带上下文的情感分析',
+                    sentimentCalls: '1次（判断情感）',
+                    quarterlyReport: '季度报告生成',
+                    quarterlyCalls: '2次（识别趋势、编译）',
+                    iterationTitle: '集合迭代',
+                    iterationDesc: '处理集合中的每个项目并汇总结果。',
+                    batchSummary: '批量文档摘要',
+                    batchCalls: 'N次（每个文档一次）',
+                    iterationNote: '<strong>关键组件：</strong><br>• <code class="inline-code">&lt;- 文档列表</code> — 基础集合（值概念）<br>• <code class="inline-code">&lt;* 当前处理的文档</code> — 当前元素标记（上下文概念）<br>• <code class="inline-code">&lt;= 选择要返回的文档摘要</code> — 选择每次迭代的输出',
+                    researchSynthesis: '研究论文综合',
+                    synthesisCalls: 'N + 2次（N篇论文 + 主题识别 + 综合）',
+                    conditionalTitle: '条件执行',
+                    conditionalDesc: '仅在满足条件时执行步骤。',
+                    reviewWorkflow: '审查工作流',
+                    reviewCalls: '1-2次（检查 + 可选审查）',
+                    errorRecovery: '带回退的错误恢复',
+                    fallbackCalls: '2-3次（主要 + 检查 + 可选回退）',
+                    collectionTitle: '数据收集',
+                    collectionDesc: '从多个来源收集和分组数据。',
+                    simpleCollect: '简单收集（免费）',
+                    collectCalls: '0次（语法分组）',
+                    parallelAnalysis: '并行分析收集',
+                    parallelCalls: '3次（可并行运行）',
+                    parallelNote: '<strong>并行执行：</strong>由于所有三个分析使用相同的输入且不相互依赖，它们可以同时运行。',
+                    realWorldTitle: '真实世界应用',
+                    realWorldDesc: '来自生产用例的完整示例。',
+                    emailTriage: '邮件分类系统',
+                    codeReview: '代码审查助手',
+                    bestPractices: '最佳实践'
+                },
+                tips: {
+                    startSimple: '从简单开始',
+                    startSimpleDesc: '从线性流程开始。只在需要时增加复杂性。',
+                    oneAction: '每个推理一个动作',
+                    oneActionDesc: '每个推理只有一个<=行。多步骤时使用嵌套。',
+                    explicitDeps: '显式依赖',
+                    explicitDepsDesc: '使数据流程明显。显示每个步骤接收的内容。',
+                    descriptive: '描述性名称',
+                    descriptiveDesc: '使用清晰的名称如"风险评估"而不是"结果"。',
+                    isolateExpensive: '隔离昂贵操作',
+                    isolateExpensiveDesc: '分组免费的语法操作，隔离昂贵的LLM调用。',
+                    testIncremental: '增量测试',
+                    testIncrementalDesc: '使用断点测试每个步骤，然后再添加更多。'
+                },
+                code: {
+                    docSummary: '&lt;- 文档摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 总结此文本<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 清理后的文本<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取主要内容，移除标题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 原始文档',
+                    riskAssessment: '&lt;- 风险评估<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 根据提取的条款评估法律风险<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 相关条款<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取与责任和赔偿相关的条款<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 分类章节<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 识别并分类文档章节<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 完整合同',
+                    sentiment: '&lt;- 用户情绪<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 根据用户体验判断情绪水平<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 工单<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 对话历史',
+                    quarterlyReport: '&lt;- 季度报告<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 将发现编译成执行摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 分析数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 识别趋势和异常<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 原始指标<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 上季度报告',
+                    batchSummary: '&lt;- 所有摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 对列表中的每个文档返回文档摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 选择要返回的文档摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 文档摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 总结此文档<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 当前处理的文档<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 文档列表<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;* 当前处理的文档',
+                    researchSynthesis: '&lt;- 最终综合<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 综合所有主题的见解<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 主要主题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 识别共同主题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 所有发现<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 对每篇论文返回关键发现<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 选择关键发现<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 关键发现<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取主要发现<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 当前论文<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 研究论文<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* 当前论文',
+                    reviewWorkflow: '&lt;- 最终输出<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 如果有审核输出则选择审核输出，否则使用草稿<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 草稿需要审核？<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 检查草稿是否需要审核<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 草稿输出<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 审核后的输出<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 执行人工审核和修正<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 如果草稿需要审核<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* 草稿需要审核？<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 草稿输出<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 草稿输出',
+                    errorRecovery: '&lt;- 最终答案<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 选择第一个有效结果<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 复杂推理失败？<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 检查主要答案是否有效<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 主要答案<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 回退答案<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 使用简单方法作为回退<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 如果复杂推理失败<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;* 复杂推理失败？<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 输入数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 主要答案<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 尝试复杂推理<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 输入数据',
+                    simpleCollect: '&lt;- 所有输入<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 将这些项目作为一组收集在一起<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 用户查询<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 系统上下文<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 检索到的文档',
+                    parallelAnalysis: '&lt;- 分析结果<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 将所有分析结果作为一个信息单元收集<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 情感分析<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 分析情感<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 文本<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 实体提取<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取实体<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 文本<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 主题分类<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 分类主题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 文本',
+                    emailTriage: '&lt;- 分类决策<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 分配优先级并路由到适当的团队<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 邮件元数据<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取发件人、主题、关键词<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 原始邮件<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 紧急程度评估<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 确定紧急程度<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 邮件内容<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 提取正文<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 原始邮件<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 历史上下文<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 查找之前的对话<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 发件人信息',
+                    codeReview: '&lt;- 审查摘要<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 生成综合审查报告<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 代码问题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 识别错误和反模式<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 代码差异<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 安全问题<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 检查安全漏洞<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 代码差异<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 风格建议<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;= 评估代码风格和可读性<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;- 代码差异'
+                },
+                prev: {
+                    syntax: '上一步：语法参考',
+                    syntaxDesc: '学习标记、概念类型和操作符。',
+                    executionDesc: '计划如何在运行时执行。'
+                },
+            }
+        });
+    </script>
+</body>
+</html>
+

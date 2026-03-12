@@ -1,0 +1,58 @@
+\section{Two-Level CBR: Level 1 --- Concrete Case Management}
+\label{sec:level1}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/fig1_v2.png}
+  \caption{Two-level CBR architecture. Level~2 (top): abstract cases (plans);
+    Level~1 (bottom): concrete cases (suspended runtimes). Route~A distills
+    experience into plans; Route~B instantiates plans to generate Level~1 cases.}
+  \label{fig:architecture}
+\end{figure}
+
+\subsection{Level 1 Case Definition and Case Base}
+
+A Level~1 case is a \textbf{suspended NormCode runtime} --- the full execution
+environment at a specific flow index, captured and persisted. Formally, a Level~1 case
+$c = (r,\; f,\; \mathcal{B}_f,\; \mathcal{C}_f,\; \mathcal{E}_f^{\,?})$, where $r$ is
+the run identifier; $f$ is the flow index of the last completed node; $\mathcal{B}_f$
+is the \textbf{Blackboard snapshot}: the full node status map at the moment $f$
+completed; $\mathcal{C}_f$ is the \textbf{Concept Repository snapshot}: all tensors for
+all nodes completed through $f$; $\mathcal{E}_f^{\,?}$ is an optional environment
+snapshot, present when $\mathcal{C}_f$ contains perceptual signs. Because the scope
+rule prevents any node from accessing data outside its declared block, $\mathcal{C}_f$
+is self-contained --- there is no hidden context dependency. The \textit{case base}
+$\mathcal{CB}$ is the set of all Level~1 cases across all runs:
+\begin{equation}
+  \mathcal{CB} = \{(r, f, \mathcal{B}_f, \mathcal{C}_f, \mathcal{E}_f^{\,?}) \mid
+  r \in \text{Runs},\; f \in \text{FlowIndices}(r)\}
+\end{equation}
+$\mathcal{CB}$ is persisted in a per-project SQLite database; the Checkpoint Panel is
+its visual interface.
+
+\textbf{Retrieve.} Retrieval selects a past case from $\mathcal{CB}$ as the starting
+point for a new execution. Two triggers: (1)~a run fails at flow index $f^*$;
+(2)~a new task is similar to a past execution. Case inspection via the Tensor Inspector
+opens $\mathcal{C}_f$ at any flow index in table, list, or JSON view. Because
+$\mathcal{C}_f$ contains exactly the bounded inputs of each completed step, this
+inspection is direct and constant-effort --- failure localization (C1).
+
+\textbf{Reuse --- Fork.} The Fork operation implements reuse: (1)~new run identifier
+$r'$ is created; (2)~orchestrator loads $(\mathcal{B}_f, \mathcal{C}_f)$ from retrieved
+case; (3)~Blackboard marks all nodes at flow indices $\leq f$ as completed;
+(4)~execution proceeds from the first pending node. No upstream re-execution.
+
+\textbf{Revise --- Value Override + Selective Re-run.} (1)~Operator retrieves a case at
+flow index $f$; (2)~overrides a tensor in $\mathcal{C}_f$ via the Tensor Inspector edit
+mode; (3)~orchestrator marks all downstream nodes as stale; (4)~on resume, only stale
+nodes re-execute; (5)~revised run produces new cases at every completed node. Because
+the scope rule guarantees that only nodes downstream of $f$ can depend on the tensor at
+$f$, the stale set is exactly determined by the data dependency graph --- selective
+re-execution (C3). No manual specification required.
+
+\textbf{Retain.} Every node completed during a run writes a new case to $\mathcal{CB}$
+automatically. The case base accumulates all runs' Blackboard and Concept Repository
+snapshots continuously.
+
+
+

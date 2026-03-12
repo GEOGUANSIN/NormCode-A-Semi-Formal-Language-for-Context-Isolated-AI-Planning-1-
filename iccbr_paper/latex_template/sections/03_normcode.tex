@@ -1,0 +1,53 @@
+\section{NormCode as a Workflow Language}
+\label{sec:normcode}
+
+NormCode is a representational language in which reasoning plans are formulated, not
+merely described. This section argues that NormCode satisfies six properties needed of a
+practical workflow language for AI orchestration. The formal language specification is
+in \cite{anon2025}.
+
+\subsection{Six Properties of a Practical Workflow Language}
+
+(P1)~\textbf{Interpretable}: the \texttt{.ncds} format reads like structured natural
+language; Formalization produces \texttt{.ncn}, a plain-prose narrative for
+pre-execution review (C2); concept names are natural-language identifiers, so plans can
+be authored in any language. (P2)~\textbf{Enforceable}: the compiler determines each
+step's scope before the first run; the \texttt{.ncn} is a deterministic rendering of
+the actual formal plan, not a paraphrase. (P3)~\textbf{Composable}: three symbols and
+one scope rule express nested loops, conditionals, parallel derivation, and multi-agent
+coordination at any plan scale. (P4)~\textbf{Locally Addressable}: every step has a
+dot-separated flow index; each step is self-contained, so any checkpoint can be
+examined, revised, or reused without reconstructing preceding steps.
+(P5)~\textbf{Generalizable}: the same three primitives support multiple workflow classes
+in our deployed examples, including PPT generation, code assistance, self-hosted
+compilation, and interactive canvas control, without domain-specific syntax.
+(P6)~\textbf{Portable}: a NormCode plan is a plain-text
+\texttt{.ncds} with \texttt{concept\_repo.json} and \texttt{inference\_repo.json} ---
+version-controlled, shareable, and executable by any compliant orchestrator.
+
+\subsection{Syntax and the Scope Rule}
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.88\textwidth]{figures/fig2_scope_rule_isolation.png}
+  \caption{NormCode syntax and scope rule. Left: annotated \texttt{.ncds}; right:
+    isolation boundary at runtime. Each node's tensor is self-contained (C1).}
+  \label{fig:scope}
+\end{figure}
+
+Three markers constitute the full syntax (formal specification in \cite{anon2025}):
+\texttt{<-}~Value, \texttt{<=}~Functional, \texttt{<*}~Context (loop-current element).
+\textbf{Indentation defines scope}: each inference's inputs are exactly the concepts
+declared in its immediately enclosing block --- no implicit sharing. The compiler
+determines scope at formalization; the orchestrator enforces it at runtime.
+Plans are read top-to-bottom (root concept first) and execute inside-out (deepest
+dependencies resolved first). Flow indices (\texttt{run\_id}, \texttt{flow\_index})
+give every checkpoint a stable address. \textbf{Semantic inferences} invoke LLMs
+(probabilistic, token-consuming); \textbf{syntactic inferences} perform deterministic
+data manipulation (routing, grouping, timing, looping) at zero LLM cost --- 60--70\%
+of nodes in production plans. Syntactic checkpoints are perfectly reproducible;
+semantic checkpoints are bounded-stochastic. Concept data are stored as
+\textbf{References} (named-axis tensors); large inputs pass as \textit{perceptual
+signs} --- compact pointers transmuted to content only at the moment of an LLM call,
+preventing context accumulation. The Detail Panel exposes every completed step's exact
+bounded inputs with constant-effort direct inspection (failure localization, C1).

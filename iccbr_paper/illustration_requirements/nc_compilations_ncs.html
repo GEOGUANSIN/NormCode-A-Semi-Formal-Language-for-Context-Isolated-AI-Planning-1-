@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NC Compilations NormCode Snippet</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f0f0;
+    padding: 40px;
+    display: inline-block;
+  }
+
+  .nc-card {
+    background: #ffffff;
+    border: 1.5px solid #d0d0d0;
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    width: 420px;
+  }
+
+  .nc-card-title {
+    background: #f7f7f7;
+    border-bottom: 1.5px solid #d0d0d0;
+    padding: 6px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #444;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nc-card-title .nc-filename {
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    font-size: 11px;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .nc-code {
+    padding: 12px 16px;
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    white-space: pre;
+    color: #222;
+  }
+
+  .v  { color: #1565c0; font-weight: 600; }
+  .f  { color: #6a1b9a; font-weight: 600; }
+  .c  { color: #e65100; font-weight: 600; }
+  .n  { color: #222; }
+  .a  { color: #555; font-style: italic; }
+  .el { color: #aaa; }
+
+  .nc-legend {
+    display: flex;
+    gap: 20px;
+    padding: 7px 14px;
+    border-top: 1px solid #e8e8e8;
+    background: #fafafa;
+    font-size: 10.5px;
+    color: #555;
+  }
+
+  .nc-legend span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+  .dot-v { background: #1565c0; }
+  .dot-f { background: #6a1b9a; }
+  .dot-c { background: #e65100; }
+</style>
+</head>
+<body>
+
+<div class="nc-card">
+  <div class="nc-card-title">
+    NC Compilations
+    <span class="nc-filename">nc_compilations.ncds</span>
+  </div>
+  <div class="nc-code"><span class="v">&lt;-</span> <span class="n">compilation_result</span>
+    <span class="f">&lt;=</span> <span class="a">report compilation status and output paths</span>
+    <span class="v">&lt;-</span> <span class="n">task_specification</span>
+    <span class="v">&lt;-</span> <span class="n">project_context</span>
+    <span class="v">&lt;-</span> <span class="n">specification_analysis</span>
+        <span class="f">&lt;=</span> <span class="a">analyze specification: identify root output,</span>
+           <span class="a">ground inputs, and transformations</span>
+        <span class="v">&lt;-</span> <span class="el">…</span>
+    <span class="v">&lt;-</span> <span class="n">ncds_draft</span>
+        <span class="f">&lt;=</span> <span class="a">derive hierarchical concept structure</span>
+           <span class="a">from specification analysis</span>
+        <span class="v">&lt;-</span> <span class="el">…</span>
+    <span class="v">&lt;-</span> <span class="n">formal_ncd</span>
+        <span class="f">&lt;=</span> <span class="a">formalize draft: assign flow indices,</span>
+           <span class="a">sequence types, and value bindings</span>
+        <span class="v">&lt;-</span> <span class="el">…</span>
+    <span class="v">&lt;-</span> <span class="n">post_formal_ncd</span>
+        <span class="f">&lt;=</span> <span class="a">post-formalize: assign paradigms,</span>
+           <span class="a">reference shapes, and provision paths</span>
+        <span class="v">&lt;-</span> <span class="el">…</span>
+    <span class="v">&lt;-</span> <span class="n">repositories</span>
+        <span class="f">&lt;=</span> <span class="a">activate post-formal plan into executable</span>
+           <span class="a">concept and inference repositories</span>
+        <span class="v">&lt;-</span> <span class="el">…</span></div>
+  <div class="nc-legend">
+    <span><span class="dot dot-v"></span><code>&lt;-</code> Value</span>
+    <span><span class="dot dot-f"></span><code>&lt;=</code> Functional</span>
+    <span><span class="dot dot-c"></span><code>&lt;*</code> Context</span>
+  </div>
+</div>
+
+</body>
+</html>

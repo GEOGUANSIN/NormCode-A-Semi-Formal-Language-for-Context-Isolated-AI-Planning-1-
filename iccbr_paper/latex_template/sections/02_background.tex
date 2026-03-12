@@ -1,0 +1,34 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{CBR and Process-Oriented CBR}
+
+Case-Based Reasoning \cite{aamodt1994,kolodner1993} solves new problems by retrieving
+and adapting past cases. The four-stage cycle --- \textbf{Retrieve}, \textbf{Reuse},
+\textbf{Revise}, \textbf{Retain} --- depends critically on case integrity: each case
+must be a self-contained record of a past solution state, free of implicit context.
+
+Process-Oriented CBR (POCBR) \cite{bergmann2002,minor2014} extends this to
+\textbf{processes as cases}: the case captures a workflow trace including intermediate
+states and data flow. Multi-step LLM workflows are a natural POCBR domain; the
+challenge is ensuring their intermediate states are suitable, self-contained cases.
+
+\subsection{Case Integrity and Structural Isolation}
+
+Most LLM orchestration frameworks do not satisfy case integrity by default: a
+checkpoint at step $k$ may embed accumulated conversation history or prompt context
+from steps $1, \ldots, k-1$, making it a snapshot of shared state rather than a
+self-contained case. Three consequences follow: \textbf{unreliable retrieval} ---
+continuing from such a checkpoint in a new context produces incorrect behavior;
+\textbf{non-localizable failures} --- the cause of a failure at step $k$ may be
+anywhere in accumulated implicit state; \textbf{irreproducible cases} --- two
+executions loading the same checkpoint may produce different outputs.
+
+These failures are eliminated by \textbf{structural isolation}: a workflow language
+provides structural isolation if each step can access only data explicitly declared in
+its own scope block, the compiler determines each step's scope at formalization, and the
+orchestrator constructs each step's input from only its declared references. Under this
+guarantee, the stored output at step $k$ contains exactly what downstream steps need;
+failures are localizable to the declared inputs of the failing step; and checkpoint
+reuse reproduces the original data-dependency behavior. NormCode \cite{anon2025} is
+designed around this enabling condition.

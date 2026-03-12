@@ -1,0 +1,55 @@
+\section{Introduction}
+\label{sec:intro}
+
+Multi-step LLM workflows---where each inference step feeds the next---have emerged as a
+standard architecture for deploying language models in real applications. Frameworks such
+as LangChain \cite{chase2022}, LangGraph \cite{langgraph2024}, AutoGen \cite{wu2023},
+and PromptFlow \cite{microsoft2023} have made such workflows easy to build. Yet they
+remain difficult to debug, resume, and improve systematically: state is carried forward
+through conversation histories, mutable objects, and framework-specific control logic,
+so an intermediate checkpoint at step $k$ may silently depend on earlier context not
+captured in the checkpoint itself. Failure recovery becomes brittle, replay hard to
+trust, and debugging requires reconstructing large portions of prior execution.
+
+Tooling can add persistence and tracing, but the underlying limitation remains: the
+plan, its intermediate semantics, and the conditions for valid continuation are scattered
+across code and prompts rather than expressed in a single interpretable form.
+
+\textbf{What is missing is a workflow language} in which multi-step reasoning can be
+explicitly represented, inspected, verified, executed, and revised --- simultaneously
+human-readable, machine-executable, and structurally enforceable.
+
+\textbf{NormCode} \cite{anon2025} is a semi-formal planning language designed for that
+role. Its scope rule guarantees that every execution checkpoint is a
+\textbf{self-contained case} with no implicit context dependency
+(Sect.~\ref{sec:normcode}). Three practical capabilities follow from this guarantee:
+direct inspection of the exact scoped inputs at any flow index~(C1), pre-execution
+structural review of the compiled plan~(C2), and scope-bounded selective
+re-execution~(C3). \textbf{NormCode Canvas~(v1.1.3)} is the deployed system that
+realizes C1--C3 and exposes a two-level CBR architecture: Level~1 manages concrete
+cases (suspended runtimes at each checkpoint); Level~2 manages abstract cases
+(executable plans that encode reusable workflow patterns). We do \textit{not} claim
+universal superiority in end-task quality; our claims concern inspectability,
+revisability, and bounded re-execution of multi-step LLM workflows.
+
+\textbf{Relation to the companion paper.} The companion paper \cite{anon2025} is a
+language specification: it defines NormCode's grammar, type system, and scope rule.
+That paper answers \textit{what NormCode is}. This paper answers \textit{what NormCode
+makes possible in practice}, grounded in four deployed workflows ranging from PPT
+generation and code assistance to self-hosted compilation and interactive canvas
+control.
+
+\textbf{Contributions.}
+(1)~A two-level CBR account of LLM workflow development
+(Sect.~\ref{sec:level1}--\ref{sec:level2}): Level~1 cases as suspended runtimes,
+Level~2 cases as executable plans, and a compilation pipeline that is itself a
+Level~2 case.
+(2)~A scoped workflow language satisfying six properties
+(Sect.~\ref{sec:normcode}): Interpretable, Enforceable, Composable, Locally
+Addressable, Generalizable, and Portable.
+(3)~A deployed system realizing three structural capabilities
+(Sect.~\ref{sec:canvas}--\ref{sec:casestudies}): direct checkpoint inspection~(C1),
+pre-execution review~(C2), and selective re-execution~(C3).
+(4)~Structured evidence from four production workflows
+(Sect.~\ref{sec:casestudies}), including an ecosystem where plans produce, debug,
+and refine one another.

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Three NormCode Plans — Side by Side</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #f0f0f0;
+    padding: 30px;
+    display: inline-block;
+  }
+
+  .nc-trio {
+    display: flex;
+    gap: 0;
+    background: #ffffff;
+    border: 1.5px solid #d0d0d0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .nc-trio .nc-pane {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nc-trio .nc-pane + .nc-pane {
+    border-left: 1.5px solid #d0d0d0;
+  }
+
+  .nc-trio .nc-pane:nth-child(1) { flex: 0 0 290px; }
+  .nc-trio .nc-pane:nth-child(2) { flex: 0 0 380px; }
+  .nc-trio .nc-pane:nth-child(3) { flex: 0 0 380px; }
+
+  .nc-card-title {
+    background: #f7f7f7;
+    border-bottom: 1.5px solid #d0d0d0;
+    border-radius: 0;
+    padding: 5px 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #444;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nc-card-title .nc-filename {
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    font-size: 9.5px;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .nc-code {
+    flex: 1;
+    padding: 8px 10px;
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+    font-size: 10px;
+    line-height: 1.55;
+    white-space: pre;
+    color: #222;
+  }
+
+  .v  { color: #1565c0; font-weight: 600; }
+  .f  { color: #6a1b9a; font-weight: 600; }
+  .c  { color: #e65100; font-weight: 600; }
+  .n  { color: #222; }
+  .a  { color: #555; font-style: italic; }
+  .el { color: #aaa; }
+
+  .nc-legend {
+    display: flex;
+    gap: 16px;
+    padding: 5px 12px;
+    border-top: 1px solid #e8e8e8;
+    background: #fafafa;
+    font-size: 9px;
+    color: #555;
+  }
+
+  .nc-legend span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+  .dot-v { background: #1565c0; }
+  .dot-f { background: #6a1b9a; }
+  .dot-c { background: #e65100; }
+</style>
+</head>
+<body>
+
+<div class="nc-trio">
+
+  <!-- LEFT: NC Compilations -->
+  <div class="nc-pane">
+    <div class="nc-card-title">
+      NC Compilations
+      <span class="nc-filename">nc_compilations.ncds</span>
+    </div>
+    <div class="nc-code"><span class="v">&lt;-</span> <span class="n">compilation_result</span>
+  <span class="f">&lt;=</span> <span class="a">report compilation status</span>
+     <span class="a">and output paths</span>
+  <span class="v">&lt;-</span> <span class="n">task_specification</span>
+  <span class="v">&lt;-</span> <span class="n">project_context</span>
+  <span class="v">&lt;-</span> <span class="n">specification_analysis</span>
+      <span class="f">&lt;=</span> <span class="a">analyze specification:</span>
+         <span class="a">identify root output,</span>
+         <span class="a">ground inputs, transforms</span>
+      <span class="v">&lt;-</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">ncds_draft</span>
+      <span class="f">&lt;=</span> <span class="a">derive hierarchical</span>
+         <span class="a">concept structure</span>
+      <span class="v">&lt;-</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">formal_ncd</span>
+      <span class="f">&lt;=</span> <span class="a">formalize: assign flow</span>
+         <span class="a">indices, types, bindings</span>
+      <span class="v">&lt;-</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">post_formal_ncd</span>
+      <span class="f">&lt;=</span> <span class="a">post-formalize: paradigms,</span>
+         <span class="a">shapes, provision paths</span>
+      <span class="v">&lt;-</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">repositories</span>
+      <span class="f">&lt;=</span> <span class="a">activate into executable</span>
+         <span class="a">concept + inference repos</span>
+      <span class="v">&lt;-</span> <span class="el">…</span></div>
+    <div class="nc-legend">
+      <span><span class="dot dot-v"></span><code>&lt;-</code> Value</span>
+      <span><span class="dot dot-f"></span><code>&lt;=</code> Functional</span>
+      <span><span class="dot dot-c"></span><code>&lt;*</code> Context</span>
+    </div>
+  </div>
+
+  <!-- CENTER: PPT Generation -->
+  <div class="nc-pane">
+    <div class="nc-card-title">
+      PPT Generation
+      <span class="nc-filename">ppt_generation.ncds</span>
+    </div>
+    <div class="nc-code"><span class="v">&lt;-</span> <span class="n">presentation_bundle</span>
+  <span class="f">&lt;=</span> <span class="a">report final outputs</span>
+  <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
+      <span class="f">&lt;=</span> <span class="a">for each content_ref_metadata</span>
+          <span class="f">&lt;=</span> <span class="a">load content</span>
+          <span class="v">&lt;-</span> <span class="n">current_content_ref_metadata</span>
+      <span class="v">&lt;-</span> <span class="n">[content_ref_metadata]</span>
+      <span class="c">&lt;*</span> <span class="n">current_content_ref_metadata</span>
+  <span class="v">&lt;-</span> <span class="n">[template_refs]</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">[slide_specs]</span>
+      <span class="f">&lt;=</span> <span class="a">run extract_slide_specs</span>
+      <span class="v">&lt;-</span> <span class="n">outline</span>
+          <span class="f">&lt;=</span> <span class="a">generate slide outline</span>
+          <span class="v">&lt;-</span> <span class="n">analysis</span>
+              <span class="f">&lt;=</span> <span class="a">analyze requirements</span>
+              <span class="v">&lt;-</span> <span class="n">topic</span>
+              <span class="v">&lt;-</span> <span class="n">target_audience</span>
+              <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
+          <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
+  <span class="v">&lt;-</span> <span class="n">[all_rendered_slides]</span>
+      <span class="f">&lt;=</span> <span class="a">for each slide_spec</span>
+          <span class="v">&lt;-</span> <span class="n">selected_html_template</span> <span class="el">…</span>
+          <span class="v">&lt;-</span> <span class="n">html_slide</span>
+              <span class="f">&lt;=</span> <span class="a">render HTML from template</span>
+              <span class="v">&lt;-</span> <span class="n">mermaid_content</span> <span class="el">…</span>
+              <span class="v">&lt;-</span> <span class="n">slide_content</span> <span class="el">…</span>
+          <span class="v">&lt;-</span> <span class="n">slide_render_result</span> <span class="el">…</span>
+      <span class="v">&lt;-</span> <span class="n">[slide_specs]</span>
+      <span class="c">&lt;*</span> <span class="n">current_slide_spec</span>
+  <span class="v">&lt;-</span> <span class="n">pptx_presentation</span>
+      <span class="f">&lt;=</span> <span class="a">render PPTX from html specs</span>
+      <span class="f">&lt;=</span> <span class="a">assemble HTML slideshow</span>
+      <span class="v">&lt;-</span> <span class="n">[all_rendered_slides]</span></div>
+    <div class="nc-legend">
+      <span><span class="dot dot-v"></span><code>&lt;-</code> Value</span>
+      <span><span class="dot dot-f"></span><code>&lt;=</code> Functional</span>
+      <span><span class="dot dot-c"></span><code>&lt;*</code> Context</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: Code Assistant -->
+  <div class="nc-pane">
+    <div class="nc-card-title">
+      Code Assistant
+      <span class="nc-filename">code_assistant.ncds</span>
+    </div>
+    <div class="nc-code"><span class="v">&lt;-</span> <span class="n">task_result</span>
+  <span class="f">&lt;=</span> <span class="a">report completion</span>
+  <span class="v">&lt;-</span> <span class="n">user_request</span>
+      <span class="f">&lt;=</span> <span class="a">receive task</span>
+  <span class="v">&lt;-</span> <span class="n">project_context</span>
+      <span class="f">&lt;=</span> <span class="a">retrieve project state</span>
+  <span class="v">&lt;-</span> <span class="n">cycle_helper</span>
+      <span class="f">&lt;=</span> <span class="a">initiate as 0th cycle</span>
+  <span class="v">&lt;-</span> <span class="n">[cycle_results]</span>
+      <span class="f">&lt;=</span> <span class="a">for each ReAct cycle</span>
+          <span class="f">&lt;=</span> <span class="a">return edit results</span>
+          <span class="v">&lt;-</span> <span class="n">[exploration_results]</span>
+              <span class="f">&lt;=</span> <span class="a">explore: grep, reads</span>
+              <span class="v">&lt;-</span> <span class="n">user_request</span>
+          <span class="v">&lt;-</span> <span class="n">[change_plan]</span>
+              <span class="f">&lt;=</span> <span class="a">generate change plan</span>
+              <span class="v">&lt;-</span> <span class="n">all exploration_results</span>
+          <span class="v">&lt;-</span> <span class="n">[edit_results]</span>
+              <span class="f">&lt;=</span> <span class="a">for each change</span>
+                  <span class="v">&lt;-</span> <span class="n">edit_result</span> <span class="el">…</span>
+                  <span class="v">&lt;-</span> <span class="n">lint_result</span> <span class="el">…</span>
+              <span class="v">&lt;-</span> <span class="n">[change_plan]</span>
+              <span class="c">&lt;*</span> <span class="n">current_change</span>
+          <span class="v">&lt;-</span> <span class="n">verification</span>
+              <span class="f">&lt;=</span> <span class="a">run tests, build</span>
+          <span class="v">&lt;-</span> <span class="n">quit_react_loop?</span>
+          <span class="v">&lt;-</span> <span class="n">cycle_helper</span> <span class="el">…</span>
+      <span class="v">&lt;-</span> <span class="n">cycle_helper</span>
+      <span class="c">&lt;*</span> <span class="n">this_cycle_count</span>
+  <span class="v">&lt;-</span> <span class="n">all_editing_results</span>
+      <span class="f">&lt;=</span> <span class="a">collect all results</span>
+      <span class="v">&lt;-</span> <span class="n">[cycle_results]</span></div>
+    <div class="nc-legend">
+      <span><span class="dot dot-v"></span><code>&lt;-</code> Value</span>
+      <span><span class="dot dot-f"></span><code>&lt;=</code> Functional</span>
+      <span><span class="dot dot-c"></span><code>&lt;*</code> Context</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

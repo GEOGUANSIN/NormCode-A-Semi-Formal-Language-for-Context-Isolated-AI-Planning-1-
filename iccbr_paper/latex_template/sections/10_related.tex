@@ -1,0 +1,39 @@
+\section{Related Work}
+\label{sec:related}
+
+\textbf{CBR and LLMs.} Aamodt \& Plaza \cite{aamodt1994} give the canonical CBR cycle; Bergmann \cite{bergmann2002}
+and Minor et al.\ \cite{minor2014} establish POCBR as the field where cases capture
+workflow knowledge. Within POCBR, Bergmann \& Gil \cite{bergmann2014} address retrieval
+via structural similarity; Muller \& Bergmann \cite{muller2015a} introduce partial-workflow
+query languages; Bottrighi et al.\ \cite{bottrighi2016} extend this to business process
+support; Leake \& Kendall-Morwick \cite{leake2008} propose mining workflow provenance
+traces as cases. Muller \& Bergmann \cite{muller2015b} treat abstract workflow patterns as case objects
+--- the closest antecedent to NormCode's Level~2. Rubin et al.\ \cite{rubin2022} retrieve few-shot prompts; Wilkerson \& Leake
+\cite{wilkerson2024} implement CBR components with LLMs; Lenz et al.\ \cite{lenz2025}
+evaluate LLMs as similarity assessors. These works use CBR to improve individual LLM
+calls. Guo et al.\ \cite{guo2024} (DS-Agent) is the most directly related: CBR
+iteratively revises multi-step data-science plans. DS-Agent's cases are narrative plans
+without enforcement guarantees; NormCode's checkpoints are structurally isolated by
+compiler and runtime --- the precondition for reliable retrieval and revision
+(Sect.~\ref{sec:background}).
+
+\textbf{LLM Workflow Tools.} LangGraph, PromptFlow, and LangFlow provide checkpointing and graph-based authoring;
+AutoGen \cite{wu2023} supports multi-agent orchestration. All pass state through
+accumulated conversation histories or prompt templates, providing no structural
+isolation guarantee. As a consequence, checkpoints embed implicit shared state, failures
+are non-localizable, and case reuse may not reproduce the original data-dependency
+behavior --- the three conditions in Sect.~\ref{sec:background}.
+
+\textbf{LLM Agents and ReAct.} Yao et al.\ \cite{yao2023} propose ReAct (observe--reason--act); Reflexion
+\cite{shinn2023} adds verbal reinforcement; MetaGPT \cite{hong2024} encodes
+software-engineering SOPs as prompt sequences; SWE-agent \cite{yang2024} introduces an
+agent-computer interface. Deployed agentic coding tools --- Cursor \cite{cursor2024},
+Claude Code \cite{claudecode2026}, and OpenClaw \cite{openclaw2026} --- implement
+persistent observe-reason-act loops at production scale. NormCode expresses these
+patterns as compiled plans: each loop iteration is a scoped node with a flow index and
+automatic checkpoint. In standard ReAct the reasoning-action chain is an implicit
+continuation with no structural transparency; AgentStepper \cite{agentstepper2026}
+retrofits interactive debugging for this reason. NormCode aims to make these properties
+structural from the start: every agent step is a Level~1 case, inspectable under
+failure localization (C1) and revisable under selective re-execution (C3).
+

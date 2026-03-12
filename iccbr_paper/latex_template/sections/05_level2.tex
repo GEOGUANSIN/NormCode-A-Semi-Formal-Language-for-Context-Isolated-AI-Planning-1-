@@ -1,0 +1,67 @@
+\section{Two-Level CBR: Level 2 --- Abstract Case Learning}
+\label{sec:level2}
+
+Level~1 CBR (Sect.~\ref{sec:level1}) operates \textit{within} a plan. Level~2 CBR
+operates \textit{across} plans: it treats the plans themselves as cases --- abstract
+workflow patterns that encode a reusable solution structure for a class of problems.
+
+\subsection{What a Level 2 Case Is}
+
+A Level~2 case is a \textbf{NormCode runtime definition}: an executable plan that
+specifies the reasoning structure for a task type. Plans may be authored manually,
+produced through the compilation pipeline (Sect.~\ref{sec:level2:distillation}), or
+developed through iterative human-AI collaboration --- the defining property is that
+the result is a fully executable \texttt{.ncds} + repositories artifact, not the path
+by which it was produced.
+
+\textbf{Definition.} A \textit{Level~2 case} $P$ is a triple:
+\begin{equation}
+  P = (\mathcal{IR},\; \mathcal{CR},\; \mathcal{V})
+\end{equation}
+where $\mathcal{IR}$ is the \textbf{Inference Repository}: the complete inference graph
+with execution configurations (paradigm assignments, body faculties, perception norms);
+$\mathcal{CR}$ is the \textbf{Concept Repository}: concept definitions with tensor axes,
+shapes, and ground references (perceptual signs pointing to input resources);
+$\mathcal{V}$ is the \textbf{Provision set}: the invariant vertical resources --- prompt
+templates, scripts, paradigm files, and configuration parameters --- bound at
+compilation time and referenced as ground inputs across all runs of this plan. $\mathcal{V}$
+is what distinguishes an abstract case from a bare inference graph: it encodes
+\textit{how} operations execute, not merely their structure.
+
+\subsection{The Level 2 CBR Cycle}
+
+\textbf{Retrieve}: a practitioner reads the \texttt{.ncn} narrative and determines
+whether an existing plan (or part of it) matches the new task class.
+\textbf{Reuse}: the retrieved plan is instantiated with new input values and run; all
+four production-ready plans are reused in this sense on every run, each generating a
+fresh set of Level~1 cases. \textbf{Revise}: when the plan does not suit the new task,
+the designer modifies the \texttt{.ncds} source and recompiles; the \texttt{.ncn}
+re-review verifies the revised abstract case before it generates any concrete cases.
+\textbf{Retain}: the revised or newly authored plan joins the case library, which grows
+through use.
+
+\subsection{The Compilation Pipeline for NormCode Production}
+\label{sec:level2:distillation}
+
+The compilation pipeline (Derivation $\rightarrow$ Formalization $\rightarrow$
+Post-Formalization $\rightarrow$ Activation) is one standardized distillation path that
+produces Level~2 cases from experience and intent: \textit{Derivation} extracts
+conceptual structure from natural language; \textit{Formalization} assigns flow indices
+and determines execution types; \textit{Post-Formalization} assigns execution resources;
+\textit{Activation} serializes the abstract case into orchestrator-ready JSON.
+
+A notable consequence of NormCode as a workflow language is that \textbf{the
+compilation pipeline itself is a NormCode plan.} This pipeline is a Level~2 case
+(the NC~Compilations plan), but it is not a universal compiler. What it produces
+depends on the task's structure and on the quality of the input specification. For
+plans with clear sequential structure, the pipeline can reliably produce executable
+plans. For plans with richer domain logic, heavier tool interaction, or more open-ended
+control flow, manual authoring or human-assisted iteration remains the practical path.
+The NC~Compilations \texttt{.ncds} is shown alongside the other production plans in
+Fig.~\ref{fig:plans}.
+
+The recursive structure has three consequences: (1)~\textbf{Validation} --- the pipeline
+is self-consistent and can compile itself; (2)~\textbf{Improvement through revision} ---
+improving the compilation pipeline is abstract case revision at the meta-level;
+(3)~\textbf{Recursive retention} --- each improvement enriches the case library. Scope
+and limits of automated compilation are discussed in Sect.~\ref{sec:discussion}.
