@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trace Figure Composite</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fff;
+    padding: 6px;
+    display: inline-block;
+  }
+
+  .trace-composite {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #fafafa;
+    padding: 5px;
+    align-items: stretch;
+  }
+
+  .trace-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .trace-cell {
+    position: relative;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fff;
+    flex: 1;
+  }
+
+  .trace-cell img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+  }
+
+  .trace-label {
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    background: rgba(0,0,0,0.76);
+    color: #fff;
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 1.5px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.02em;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .col-title {
+    font-size: 8.5px;
+    font-weight: 700;
+    color: #555;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 1px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="trace-composite" style="width: 1400px; height: 480px;">
+
+  <!-- Col 1: Agent Trace -->
+  <div class="trace-panel" style="flex: 0 0 33%;">
+    <div class="col-title">Agent-Centric</div>
+    <div class="trace-cell">
+      <span class="trace-label">(a) LLM call detail</span>
+      <img src="agent_trace_see.png">
+    </div>
+  </div>
+
+  <!-- Col 2: Graph-Centric Data Trace -->
+  <div class="trace-panel" style="flex: 0 0 33%;">
+    <div class="col-title">Graph-Centric (Data)</div>
+    <div class="trace-cell">
+      <span class="trace-label">(b) Checkpoint data range</span>
+      <img src="reference_trace_panel.png">
+    </div>
+  </div>
+
+  <!-- Col 3: Orchestration Trace -->
+  <div class="trace-panel" style="flex: 0 0 33%;">
+    <div class="col-title">Orchestration-Centric</div>
+    <div class="trace-cell">
+      <span class="trace-label">(c) Execution log</span>
+      <img src="orchestration_trace.png">
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

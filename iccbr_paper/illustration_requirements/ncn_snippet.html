@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NCN Snippet</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #fff;
+    padding: 8px;
+    display: inline-block;
+  }
+
+  .ncn-fig {
+    display: flex;
+    gap: 0;
+    border: 1.5px solid #d0d0d0;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .ncn-pane {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ncn-pane + .ncn-pane {
+    border-left: 1.5px solid #d0d0d0;
+  }
+
+  .ncn-pane:first-child { flex: 0 0 310px; }
+  .ncn-pane:last-child  { flex: 0 0 460px; }
+
+  .pane-title {
+    background: #f7f7f7;
+    border-bottom: 1.5px solid #d0d0d0;
+    padding: 5px 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pane-title .filename {
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 9.5px;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    font-size: 18px;
+    color: #999;
+    background: #fafafa;
+    border-left: 1.5px solid #d0d0d0;
+    border-right: 1.5px solid #d0d0d0;
+    min-width: 32px;
+  }
+
+  .code {
+    flex: 1;
+    padding: 8px 10px;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 10.5px;
+    line-height: 1.6;
+    white-space: pre;
+    color: #222;
+  }
+
+  .v  { color: #1565c0; font-weight: 600; }
+  .f  { color: #6a1b9a; font-weight: 600; }
+  .tag { color: #0d47a1; font-weight: 700; font-size: 9.5px; }
+  .act { color: #6a1b9a; }
+  .n  { color: #333; }
+  .cm { color: #999; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="ncn-fig">
+
+  <div class="ncn-pane">
+    <div class="pane-title">
+      Source
+      <span class="filename">.ncds</span>
+    </div>
+    <div class="code"><span class="v">&lt;-</span> <span class="n">{document summary}</span>
+    <span class="f">&lt;=</span> <span class="cm">summarize the text</span>
+    <span class="v">&lt;-</span> <span class="n">{clean text}</span>
+        <span class="f">&lt;=</span> <span class="cm">extract main content,</span>
+           <span class="cm">removing headers</span>
+        <span class="v">&lt;-</span> <span class="n">{raw document}</span></div>
+  </div>
+
+  <div class="arrow-col">→</div>
+
+  <div class="ncn-pane">
+    <div class="pane-title">
+      Compiled Narrative
+      <span class="filename">.ncn</span>
+    </div>
+    <div class="code"><span class="tag">(OUTPUT)</span> <span class="n">document summary</span>
+    <span class="tag">(ACTION)</span> <span class="act">is obtained by summarizing the following:</span>
+    <span class="tag">(VALUE)</span>  <span class="n">clean text</span>
+        <span class="tag">(ACTION)</span> <span class="act">is obtained by extracting main content</span>
+               <span class="act">(removing headers) from the following:</span>
+        <span class="tag">(VALUE)</span>  <span class="n">raw document</span>
+            <span class="tag">(ACTION)</span> <span class="act">is provided as external input</span></div>
+  </div>
+
+</div>
+
+</body>
+</html>

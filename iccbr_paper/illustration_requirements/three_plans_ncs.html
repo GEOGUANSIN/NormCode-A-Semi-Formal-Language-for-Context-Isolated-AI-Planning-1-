@@ -143,45 +143,45 @@
     </div>
   </div>
 
-  <!-- CENTER: PPT Generation -->
+  <!-- CENTER: PPT Generation (Chinese) -->
   <div class="nc-pane">
     <div class="nc-card-title">
       PPT Generation
       <span class="nc-filename">ppt_generation.ncds</span>
     </div>
-    <div class="nc-code"><span class="v">&lt;-</span> <span class="n">presentation_bundle</span>
-  <span class="f">&lt;=</span> <span class="a">report final outputs</span>
-  <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
-      <span class="f">&lt;=</span> <span class="a">for each content_ref_metadata</span>
-          <span class="f">&lt;=</span> <span class="a">load content</span>
-          <span class="v">&lt;-</span> <span class="n">current_content_ref_metadata</span>
-      <span class="v">&lt;-</span> <span class="n">[content_ref_metadata]</span>
-      <span class="c">&lt;*</span> <span class="n">current_content_ref_metadata</span>
-  <span class="v">&lt;-</span> <span class="n">[template_refs]</span> <span class="el">…</span>
-  <span class="v">&lt;-</span> <span class="n">[slide_specs]</span>
-      <span class="f">&lt;=</span> <span class="a">run extract_slide_specs</span>
-      <span class="v">&lt;-</span> <span class="n">outline</span>
-          <span class="f">&lt;=</span> <span class="a">generate slide outline</span>
-          <span class="v">&lt;-</span> <span class="n">analysis</span>
-              <span class="f">&lt;=</span> <span class="a">analyze requirements</span>
-              <span class="v">&lt;-</span> <span class="n">topic</span>
-              <span class="v">&lt;-</span> <span class="n">target_audience</span>
-              <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
-          <span class="v">&lt;-</span> <span class="n">[content_refs]</span>
-  <span class="v">&lt;-</span> <span class="n">[all_rendered_slides]</span>
-      <span class="f">&lt;=</span> <span class="a">for each slide_spec</span>
-          <span class="v">&lt;-</span> <span class="n">selected_html_template</span> <span class="el">…</span>
-          <span class="v">&lt;-</span> <span class="n">html_slide</span>
-              <span class="f">&lt;=</span> <span class="a">render HTML from template</span>
-              <span class="v">&lt;-</span> <span class="n">mermaid_content</span> <span class="el">…</span>
-              <span class="v">&lt;-</span> <span class="n">slide_content</span> <span class="el">…</span>
-          <span class="v">&lt;-</span> <span class="n">slide_render_result</span> <span class="el">…</span>
-      <span class="v">&lt;-</span> <span class="n">[slide_specs]</span>
-      <span class="c">&lt;*</span> <span class="n">current_slide_spec</span>
-  <span class="v">&lt;-</span> <span class="n">pptx_presentation</span>
-      <span class="f">&lt;=</span> <span class="a">render PPTX from html specs</span>
-      <span class="f">&lt;=</span> <span class="a">assemble HTML slideshow</span>
-      <span class="v">&lt;-</span> <span class="n">[all_rendered_slides]</span></div>
+    <div class="nc-code"><span class="v">&lt;-</span> <span class="n">{演示文稿包}</span>
+  <span class="f">&lt;=</span> <span class="a">完成演示文稿报告</span>
+  <span class="v">&lt;-</span> <span class="n">[内容参考]</span>
+      <span class="f">&lt;=</span> <span class="a">对于内容参考元数据中的每个元数据</span>
+          <span class="f">&lt;=</span> <span class="a">从文件路径加载内容</span>
+          <span class="v">&lt;-</span> <span class="n">{当前内容元数据}</span>
+      <span class="v">&lt;-</span> <span class="n">[内容参考元数据]</span>
+      <span class="c">&lt;*</span> <span class="n">{当前内容元数据}</span>
+  <span class="v">&lt;-</span> <span class="n">[模板参考]</span> <span class="el">…</span>
+  <span class="v">&lt;-</span> <span class="n">[幻灯片规格]</span>
+      <span class="f">&lt;=</span> <span class="a">运行extract_slide_specs脚本</span>
+      <span class="v">&lt;-</span> <span class="n">{大纲}</span>
+          <span class="f">&lt;=</span> <span class="a">创建带幻灯片规格的大纲</span>
+          <span class="v">&lt;-</span> <span class="n">{分析}</span>
+              <span class="f">&lt;=</span> <span class="a">分析演示文稿需求</span>
+              <span class="v">&lt;-</span> <span class="n">{演示主题}</span>
+              <span class="v">&lt;-</span> <span class="n">{目标受众}</span>
+              <span class="v">&lt;-</span> <span class="n">[内容参考]</span>
+          <span class="v">&lt;-</span> <span class="n">[内容参考]</span>
+  <span class="v">&lt;-</span> <span class="n">[所有已渲染的幻灯片]</span>
+      <span class="f">&lt;=</span> <span class="a">对于幻灯片规格中的每个幻灯片规格</span>
+          <span class="v">&lt;-</span> <span class="n">{选定的html模板}</span> <span class="el">…</span>
+          <span class="v">&lt;-</span> <span class="n">{html幻灯片}</span>
+              <span class="f">&lt;=</span> <span class="a">通过用内容填充模板来渲染</span>
+              <span class="v">&lt;-</span> <span class="n">{增强后的幻灯片内容}</span> <span class="el">…</span>
+              <span class="v">&lt;-</span> <span class="n">{幻灯片内容}</span> <span class="el">…</span>
+          <span class="v">&lt;-</span> <span class="n">{幻灯片渲染结果}</span> <span class="el">…</span>
+      <span class="v">&lt;-</span> <span class="n">[幻灯片规格]</span>
+      <span class="c">&lt;*</span> <span class="n">{当前幻灯片规格}</span>
+  <span class="v">&lt;-</span> <span class="n">{pptx演示文稿}</span>
+      <span class="f">&lt;=</span> <span class="a">从幻灯片规格组装pptx</span>
+      <span class="f">&lt;=</span> <span class="a">组装带导航的html幻灯片</span>
+      <span class="v">&lt;-</span> <span class="n">[所有已渲染的幻灯片]</span></div>
     <div class="nc-legend">
       <span><span class="dot dot-v"></span><code>&lt;-</code> Value</span>
       <span><span class="dot dot-f"></span><code>&lt;=</code> Functional</span>

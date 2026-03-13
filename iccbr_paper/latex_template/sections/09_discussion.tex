@@ -9,8 +9,8 @@ has an exact flow index and exactly declared inputs, so every run deposits concr
 Level~1 cases that are immediately addressable for retrieval, reuse, and revision
 without operator intervention. C2~(pre-execution review) follows from Interpretability
 + Enforceability: the \texttt{.ncn} is human-readable and \textit{exactly} what
-executes, enabling Level~2 case revision to be reviewed before it generates any new
-Level~1 cases. C3~(selective re-execution) follows from Local Addressability +
+executes (Fig.~\ref{fig:ncn}), enabling Level~2 case revision to be reviewed before
+it generates any new Level~1 cases. C3~(selective re-execution) follows from Local Addressability +
 Enforceability: the scope rule determines which downstream nodes depend on any revised
 step, and the orchestrator enforces that boundary --- so a Level~2 case revision
 propagates precisely, and a Level~1 fork re-executes only what is necessary.
@@ -25,6 +25,16 @@ intermediate representation satisfying the properties of Sect.~\ref{sec:normcode
 Accordingly, our claims concern inspectability, revisability, and bounded
 re-execution in multi-step LLM workflows, not universal superiority of final-task
 quality.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/ncn_snippet.png}
+  \caption{The \texttt{.ncn} narrative compiled from a \texttt{.ncds} source.
+    Left: three-marker source. Right: deterministic plain-prose rendering used
+    for pre-execution review~(C2). A domain expert reads the narrative to verify
+    that the plan's logic matches intent before any LLM call.}
+  \label{fig:ncn}
+\end{figure}
 
 \subsection{Limitations}
 

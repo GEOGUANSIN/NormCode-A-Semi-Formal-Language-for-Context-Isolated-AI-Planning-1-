@@ -2,8 +2,8 @@
 \label{sec:canvas}
 
 NormCode Canvas (v1.1.3) is the deployed system that makes both levels of CBR
-accessible in one environment. Three practical properties follow structurally from the
-underlying workflow language and are realized by Canvas:
+accessible in one environment (Fig.~\ref{fig:canvas}). Three practical properties
+follow structurally from the underlying workflow language and are realized by Canvas:
 (1)~\textbf{(C1) Direct checkpoint inspection.} At any breakpoint, the exact bounded
 inputs to step $k$ are directly inspectable --- not reconstructed from logs --- because
 the scope rule enforced them at runtime. (2)~\textbf{(C2) Pre-execution
@@ -53,6 +53,36 @@ resumes; only downstream stale nodes re-execute --- selective re-execution (C3).
 loads $(\mathcal{B}_f, \mathcal{C}_f)$ into a new run $r'$, marks upstream nodes
 completed, and executes downstream fresh --- supporting failure recovery, A/B testing,
 and iterative refinement.
+
+\subsection{Trace and Debugging Interface}
+
+Canvas exposes three complementary trace views (Fig.~\ref{fig:traces}).
+The \textbf{agent-centric trace} records every tool call and its outcome ---
+perception, prompt assembly, composition, and the LLM call --- with timestamps,
+flow indices, and durations; expanding an entry reveals the full prompt input and
+the model's structured output (Fig.~\ref{fig:traces}\,a).
+The \textbf{graph-centric data trace} selects a range of nodes by flow index and
+displays the scoped reference data that flowed between them
+(Fig.~\ref{fig:traces}\,b). Because the scope rule guarantees self-contained
+inputs, this view is a direct realisation of checkpoint inspection~(C1): the
+operator sees exact tensor content without reconstructing it from logs.
+The \textbf{orchestration-centric trace} logs every scheduling decision, readiness
+check, error chain, and cycle-level breakdown (Fig.~\ref{fig:traces}\,c) ---
+the view operators turn to for syntactical or structural failures that originate
+inside the orchestrator rather than in the model's output.
+In practice, the agent and data traces are checked first as they resolve the most
+common failures; the orchestration trace is consulted when finer-grained evidence
+is needed.
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/trace_composite.png}
+  \caption{Three trace views in NormCode Canvas. (a)~Agent-centric: LLM call detail
+    with prompt input and structured output. (b)~Graph-centric: scoped reference data
+    between selected node indices~(C1). (c)~Orchestration-centric: execution log with
+    error chain and cycle-level breakdown.}
+  \label{fig:traces}
+\end{figure}
 
 \subsection{Architecture}
 
