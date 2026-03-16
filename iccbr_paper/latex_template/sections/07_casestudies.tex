@@ -5,7 +5,7 @@ We use four deployed NormCode plans as \textbf{structured evidence} for the pape
 claims, not as a benchmark of universal output quality. Together they cover distinct
 workflow classes and show that C1--C3 hold across different control-flow patterns,
 human review points, and revision boundaries. Syntactic nodes constitute 60--70\% of
-total inferences across these plans. NC~Compilations has been executed end-to-end with
+total inferences across these plans. NormCode~Compilations has been executed end-to-end with
 \texttt{qwen-plus}, producing correct repositories for plans such as report writing and
 contract review. Two of the four plans are then traced in more detail below.
 
@@ -14,7 +14,7 @@ contract review. Two of the four plans are then traced in more detail below.
   \includegraphics[width=\textwidth]{figures/three_plans_ncs.png}
   \caption{Core excerpts from three production NormCode plans as Level~2 cases
     (\texttt{.ncds}); actual production plans are larger and more complex.
-    Left: NC~Compilations --- sequential compilation pipeline
+    Left: NormCode~Compilations --- sequential compilation pipeline
     (Sect.~\ref{sec:level2:distillation}). Center: PPT Generation --- nested
     dual-output loop (HTML + PPTX per slide). Right: Code Assistant --- ReAct
     outer loop \cite{yao2023} with inner explore, plan, edit, and verify stages.
@@ -24,7 +24,7 @@ contract review. Two of the four plans are then traced in more detail below.
   \label{fig:plans}
 \end{figure}
 
-\subsection{Case Study 1: PPT Agent --- Level 2 Reuse and Level 1 Accumulation}
+\subsection{Case Study 1: PPT Agent}
 
 \texttt{ppt\_generation.ncds} (Fig.~\ref{fig:plans}, center) is a Level~2 case encoding
 a five-phase pipeline: (0)~load reference files, (1)~analyse requirements and generate
@@ -55,7 +55,7 @@ in under 0.2\,s --- confirming that 60--70\% of nodes are syntactic across all p
   \label{fig:ppt}
 \end{figure}
 
-\subsection{Case Study 2: Code Assistant --- A ReAct Plan as a Level~2 Case}
+\subsection{Case Study 2: ReAct-style Code Assistant}
 
 \texttt{code\_assistant.ncds} (Fig.~\ref{fig:plans}, right) is a Level~2 case encoding
 a ReAct-loop software-engineering workflow \cite{yao2023}. Each cycle, Explore
@@ -85,7 +85,7 @@ at the time of writing.
     \midrule
     PPT Generation & Slide-deck generation; ${\sim}30$ inferences; 6 layouts, 14 component types & Nested dual-output loop (HTML + PPTX per slide) & Runs on \texttt{qwen-turbo}/\texttt{qwen-plus} commercial APIs with negligible cost; produces a full presentation at ${\sim}40$\,s per slide. \\
     Code Assistant & Software-engineering workflow; ${\sim}40$ inferences & ReAct outer loop with parallel Explore & Executes up to 10-step reasoning cycles to carry out complex code editing tasks with scoped explore, plan, implement, and verify stages. \\
-    NC~Compilations & Self-hosted compilation; ${\sim}25$ inferences & Sequential pipeline (Derivation $\rightarrow$ Activation) & With \texttt{qwen-plus}/\texttt{GLM-4.7}, produces within ${\sim}15$ steps executable plans for report writing, paper drafting, and contract review that run directly as new NormCode plans. \\
+    NormCode~Compilations & Self-hosted compilation; ${\sim}25$ inferences & Sequential pipeline (Derivation $\rightarrow$ Activation) & With \texttt{qwen-plus}/\texttt{GLM-4.7}, produces within ${\sim}15$ steps executable plans for report writing, paper drafting, and contract review that run directly as new NormCode plans. \\
     Canvas Assistant & Built-in chat controller; ${\sim}20$ inferences & Interactive command-dispatch loop & Handles a wide range of canvas tasks; when connected to an AI code editor (Cursor, Claude Code), enables automated plan debugging by overtaking the canvas interface on the user's behalf. \\
     \bottomrule
   \end{tabular}
@@ -96,7 +96,7 @@ at the time of writing.
 In CBR, individual case quality improves as the case base grows. The same dynamic
 applies at both levels of NormCode: every run deposits new Level~1 cases, and each
 Level~2 plan fills a complementary role that reinforces the others.
-NC~Compilations acts as the ecosystem's \textit{plan producer}, converting
+NormCode~Compilations acts as the ecosystem's \textit{plan producer}, converting
 natural-language task descriptions into executable plans within ${\sim}15$ steps.
 The Code Assistant serves as an \textit{agentic explorer}, carrying out multi-step
 software-engineering tasks with scoped explore, plan, implement, and verify stages;
@@ -106,7 +106,7 @@ editor such as Cursor \cite{cursor2024} or Claude Code \cite{claudecode2026}, it
 overtakes the canvas to inspect checkpoints, diagnose failures, and apply fixes ---
 automating the Level~1 CBR cycle for any plan.
 
-These roles form a closed loop: NC~Compilations produces plans; those plans
+These roles form a closed loop: NormCode~Compilations produces plans; those plans
 accumulate Level~1 cases as they run; the Canvas Assistant debugs failing runs;
 the Code Assistant extends the platform. Each plan's quality grows with the
 ecosystem's accumulated experience, realizing cumulative learning at system scale.

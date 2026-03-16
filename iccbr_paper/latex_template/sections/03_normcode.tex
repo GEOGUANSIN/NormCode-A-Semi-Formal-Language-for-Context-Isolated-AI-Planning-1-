@@ -45,8 +45,8 @@ The language is \textbf{semi-formal}: concept names and descriptions are free-fo
 natural-language strings (e.g.\ \texttt{\{document summary\}} or
 \texttt{\{}\begin{CJK}{UTF8}{gbsn}分析\end{CJK}\texttt{\}}) while the three
 markers and indentation are rigidly enforced, making plans simultaneously readable
-by domain experts, compilable by the orchestrator, and
-\textbf{fully language-agnostic} (Sect.~\ref{sec:casestudies}). Each inference's inputs are exactly the concepts
+by domain experts, executable by the orchestrator, and
+\textbf{fully language-agnostic} \cite{guan2026normcodesemiformallanguageauditable} (Sect.~\ref{sec:casestudies}). Each inference's inputs are exactly the concepts
 declared in its immediately enclosing block --- no implicit sharing. The compiler
 determines scope at formalization; the orchestrator enforces it at runtime.
 Plans are read top-to-bottom (root concept first) and execute inside-out (deepest
