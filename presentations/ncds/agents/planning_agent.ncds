@@ -19,17 +19,17 @@
 /:
 /:   uav_mission.ncds
 /:     <= triage validated intent into required mission components
-/:     <= assess whether navigation work is required by the approved plan
-/:     <= assess whether error check work is required by the approved plan
+/:     <= assess whether navigation work is required by the approved plan  /: -> is navigation required?
+/:     <= assess whether error check work is required by the approved plan /: -> is error check required?
 /:     <= compile results from all completed mission components
 /:     <= deliver mission summary to caller
 /:
+/:   uav_error_check.ncds
+/:     <= assess whether criteria discussion is warranted for this mission /: -> is criteria discussion required?
+/:     <= compile error check report from all image analyses
+/:
 /:   uav_navigation.ncds
 /:     <= compile flight log from all waypoint records
-/:     <= record outcome for this waypoint
-/:
-/:   uav_error_check.ncds
-/:     <= compile error check report from all image analyses
-/:     <= assess whether criteria discussion is warranted for this mission
+/:     <= bundle position, sensor reading, and outcome together
 /:
 /: Shared across: uav_mission.ncds, uav_navigation.ncds, uav_error_check.ncds

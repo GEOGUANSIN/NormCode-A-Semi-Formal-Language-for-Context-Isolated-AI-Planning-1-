@@ -15,19 +15,18 @@
 /:
 /:   uav_user_assistant.ncds
 /:     <= interpret operator message within conversation context
-/:     <= assess whether operator intent describes a mission request
-/:     <= assess whether operator intent is a direct question
-/:     <= assess whether operator intent is unclear or underspecified
+/:     <= assess whether operator intent describes a mission request   /: -> is mission request?
+/:     <= assess whether operator intent is a direct question          /: -> is direct question?
+/:     <= assess whether operator intent is unclear or underspecified  /: -> is ambiguous?
 /:     <= send response to operator
+/:     <= validate that mission intent is actionable
 /:     <= answer operator question from fleet context and knowledge
 /:     <= generate targeted clarification question for operator
-/:     <= validate that mission intent is actionable
-/:     <= judge if the operator wants to end the session
+/:     <= judge if the operator wants to end the session               /: -> is session end?
 /:
 /:   uav_analysis_criteria.ncds
-/:     <= read operator input
+/:     <= present current criteria and read operator response
 /:     <= extract requested modifications from operator message
-/:     <= present current criteria to operator and await input
-/:     <= judge if operator has approved the criteria
+/:     <= judge if operator has approved the criteria                  /: -> is criteria approved?
 /:
 /: Shared across: uav_user_assistant.ncds, uav_analysis_criteria.ncds

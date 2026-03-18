@@ -7,10 +7,21 @@
 /: criteria before analysis begins. Returns finalised criteria.
 /:
 /: Execution order (inside-out, top-down):
-/:   default criteria     — load rule-based defaults for mission type  (depends on approved plan)
-/:   on-going discussion  — self-seed empty                            (no deps)
-/:   all discussion turns — ReAct loop: present + refine with operator (depends on defaults)
-/:   finalised criteria   — confirmed by operator                      (root)
+/:   default criteria      — load rule-based defaults for mission type  (depends on approved plan)
+/:   on-going discussion   — self-seed empty                            (no deps)
+/:   all discussion turns  — ReAct loop: present criteria, read input,
+/:                           apply modifications, check approval        (depends on defaults)
+/:   finalised criteria    — return operator-approved criteria          (root)
+/:
+/: Loop pattern (inside each iteration, top-down):
+/:   operator message  — present current state and read operator response (runs first)
+/:   updated criteria  — apply operator modifications                     (depends on message)
+/:   is criteria approved? — judge if operator has approved              (depends on both above)
+/:   on-going discussion   — conditional append gate                      (runs last)
+/:
+/: Agents:
+/:   user_agent     — presents criteria, reads operator input, judges approval.
+/:   analysis_agent — applies operator modifications to criteria.
 
 <- finalised criteria
     <= confirm and return operator-approved criteria
@@ -28,32 +39,34 @@
             <= return the discussion turn per iteration
 
             <- discussion turn
-                <= bundle criteria state and operator response together
+                <= bundle operator message and updated criteria together
 
-                <- current criteria
+                <- operator message
+                    /: [user_agent]
+                    <= present current criteria and read operator response
+                    <- on-going discussion
+
+                <- updated criteria
+                    /: [analysis_agent]
                     <= apply operator modifications to current criteria
                     <- operator modifications
+                        /: [user_agent]
                         <= extract requested modifications from operator message
                         <- operator message
-                        <- current criteria
-                    <- current criteria
                     <- default criteria
+                    <- on-going discussion
 
-                <- response sent
-                    <= present current criteria to operator and await input
-                    <- operator message
-                        <= read operator input
-
-            <- <criteria approved>
+            <- is criteria approved?
+                /: [user_agent]
                 <= judge if operator has approved the criteria
                 <- operator message
-                <- current criteria
+                <- updated criteria
 
             <- on-going discussion
-                <= append current message to discussion
+                <= append discussion turn to on-going discussion
                     <= if criteria NOT yet approved
-                    <* <criteria approved>
-                <- operator message
+                    <* is criteria approved?
+                <- discussion turn
                 <- on-going discussion
 
         <- on-going discussion

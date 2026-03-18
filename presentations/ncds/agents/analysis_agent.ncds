@@ -20,6 +20,5 @@
 /:
 /:   uav_analysis_criteria.ncds
 /:     <= apply operator modifications to current criteria
-/:     <= load default analysis criteria for this mission type
 /:
 /: Shared across: uav_error_check.ncds, uav_analysis_criteria.ncds

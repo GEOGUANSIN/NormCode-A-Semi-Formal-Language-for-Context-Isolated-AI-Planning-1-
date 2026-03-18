@@ -2,40 +2,44 @@
 /: UAV Error Check — capture images and analyse in a loop
 /:
 /: Dispatched from uav_mission.ncds via Distribute.
-/: Takes inspection pictures at designated points, then analyses each
+/: Captures inspection pictures at designated points, then analyses each
 /: image in a loop to detect defects and anomalies. Produces a report.
 /:
-/: Agents:
-/:   drone_agent — dedicated to UAV hardware interaction only.
-/:               Independent context: sees only this step's scoped inputs.
-/:               Shared with uav_navigation.ncds.
-/:
 /: Execution order (inside-out, top-down):
-/:   <criteria discussion required>  — worker assesses if discussion is warranted
-/:   refined criteria                — only if discussion required (Distribute)
-/:   default criteria                — only if discussion not required
-/:   analysis criteria               — select whichever was produced
-/:   inspection points               — extract from approved plan
-/:   captured images                 — fly to each point and take picture
-/:   image analyses                  — analyse each image in a loop
-/:   error check report              — compile findings (root)
+/:   is criteria discussion required? — worker assesses if discussion is warranted
+/:   refined criteria                 — only if discussion required (Distribute)
+/:   default criteria                 — only if discussion NOT required
+/:   analysis criteria                — select whichever criteria was produced
+/:   inspection points                — extract from approved plan (syntactic)
+/:   captured images                  — fly to each point and capture image
+/:   image analyses                   — analyse each image in a loop
+/:   error check report               — compile findings (root)
+/:
+/: Agents:
+/:   planning_agent — assesses criteria need, compiles final report.
+/:   drone_agent    — captures images at inspection points.
+/:   analysis_agent — analyses each image against criteria.
 
 <- error check report
+    /: [planning_agent]
     <= compile error check report from all image analyses
 
-    <- <criteria discussion required>
+    <- is criteria discussion required?
+        /: [planning_agent]
         <= assess whether criteria discussion is warranted for this mission
         <- approved plan
 
     <- refined criteria
         /: Distribute -> uav_analysis_criteria.ncds
         <= load and refine analysis criteria with operator
-            @:' <criteria discussion required>
+            <= if criteria discussion required
+            <* is criteria discussion required?
         <- approved plan
 
     <- default criteria
         <= load default analysis criteria for this mission type
-            @:! <criteria discussion required>
+            <= if criteria discussion NOT required
+            <* is criteria discussion required?
         <- approved plan
 
     <- analysis criteria

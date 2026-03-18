@@ -1,20 +1,20 @@
 /: uav_user_assistant.ncds
-/: UAV Operator Assistant — ReAct loop with intent routing
+/: UAV Operator Assistant — self-seeding ReAct loop with intent routing
 /:
 /: Self-seeding ReAct loop. Starts with an empty conversation.
 /: Each iteration (inside-out, top-down):
-/:   operator message  — read operator input                  (no deps, runs first)
-/:   fleet status      — retrieve UAV state                   (depends on session)
-/:   operator intent   — interpret message in context         (depends on message, fleet, history)
-/:   intent classes    — classify intent into propositions    (depend on operator intent)
-/:   response sent     — route and respond                    (depends on all above, runs last)
+/:   operator message     — read operator input                    (no deps, runs first)
+/:   fleet status         — retrieve UAV state                     (depends on session)
+/:   operator intent      — interpret message in context           (depends on message, fleet, history)
+/:   intent propositions  — classify intent                        (depend on operator intent)
+/:   response sent        — route and respond                      (depends on all above, runs last)
 /:
 /: At the loop level, after session turn resolves:
-/:   <is session end>  — judge termination                    (reads from session turn outputs)
-/:   on-going messages — conditional append gate              (depends on <is session end>)
+/:   is session end?      — judge termination                      (reads from session turn outputs)
+/:   on-going messages    — conditional append gate                (depends on is session end?)
 /:
 /: Loop terminates when operator signals end of session.
-/: uav_mission.ncds is called from the mission response branch (work outsourcing).
+/: uav_mission.ncds is called from the mission response branch via Distribute.
 /:
 /: Agents:
 /:   user_agent — dedicated to operator-facing interaction only.
@@ -49,15 +49,18 @@
                     <- on-going messages
                     <- fleet status
 
-                <- <is mission request>
+                <- is mission request?
+                    /: [user_agent]
                     <= assess whether operator intent describes a mission request
                     <- operator intent
 
-                <- <is direct question>
+                <- is direct question?
+                    /: [user_agent]
                     <= assess whether operator intent is a direct question
                     <- operator intent
 
-                <- <is ambiguous>
+                <- is ambiguous?
+                    /: [user_agent]
                     <= assess whether operator intent is unclear or underspecified
                     <- operator intent
 
@@ -69,23 +72,30 @@
                         <- mission response
                             /: Distribute -> uav_mission.ncds
                             <= triage and execute mission
+                                <= if mission request
+                                <* is mission request?
                             <- validated intent
                                 <= validate that mission intent is actionable
                                 <- operator intent
                                 <- fleet status
                         <- direct answer
+                            /: [user_agent]
                             <= answer operator question from fleet context and knowledge
-                                @:' <is direct question>
+                                <= if direct question
+                                <* is direct question?
                             <- operator intent
                             <- fleet status
                             <- on-going messages
                         <- clarification prompt
+                            /: [user_agent]
                             <= generate targeted clarification question for operator
-                                @:' <is ambiguous>
+                                <= if ambiguous
+                                <* is ambiguous?
                             <- operator intent
                             <- on-going messages
 
-            <- <is session end>
+            <- is session end?
+                /: [user_agent]
                 <= judge if the operator wants to end the session
                 <- operator message
                 <- operator intent
@@ -93,7 +103,7 @@
             <- on-going messages
                 <= append current message to on-going messages
                     <= if session should NOT end
-                    <* <is session end>
+                    <* is session end?
                 <- operator message
                 <- on-going messages
 
