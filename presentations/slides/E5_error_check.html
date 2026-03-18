@@ -13,18 +13,19 @@
       background: #F5F8FF;
       border: 1px solid #D8E2F0;
       border-radius: 8px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      flex: 1;
+      gap: 7px;
+      min-height: 0;
+      overflow: hidden;
     }
     .panel-title {
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 2px;
+      flex-shrink: 0;
     }
     .mini-code {
       background: #F0F4F8;
@@ -32,19 +33,24 @@
       border-radius: 5px;
       padding: 8px 10px;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      line-height: 1.6;
+      font-size: 10px;
+      line-height: 1.4;
       color: #2D3748;
+      white-space: pre;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
     }
     .tok-l { color: #1E9FE0; font-weight: 600; }
     .tok-e { color: #9B6FD4; font-weight: 600; }
     .tok-c { color: #A8B4C8; font-style: italic; }
     .tok-cond { color: #D97706; }
     .panel-note {
-      font-size: 11.5px;
+      font-size: 11px;
       color: #6B7A99;
-      line-height: 1.45;
+      line-height: 1.4;
       font-style: italic;
+      flex-shrink: 0;
     }
     .agent-tag {
       display: inline-flex;
@@ -75,14 +81,31 @@
   </div>
 
   <!-- Three panels -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;flex:1;min-height:0">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr;gap:14px;flex:1;min-height:0;overflow:hidden">
 
     <!-- Panel 1: Criteria decision -->
     <div class="panel">
       <div class="panel-title text-purple">1 — Criteria decision</div>
       <span class="agent-tag tag-planning">planning_agent</span>
 
-      <div class="mini-code"><span class="tok-l">&lt;-</span> &lt;criteria discussion<br>      required&gt;<br>  <span class="tok-e">&lt;=</span> <span class="tok-c">assess if warranted</span><br>  <span class="tok-l">&lt;-</span> approved plan<br><br><span class="tok-l">&lt;-</span> refined criteria<br>  <span class="tok-c">/: Distribute -&gt;</span><br>  <span class="tok-c">   uav_analysis_criteria</span><br>  <span class="tok-e">&lt;=</span> refine with operator<br>      <span class="tok-cond">@:' &lt;required&gt;</span><br><br><span class="tok-l">&lt;-</span> default criteria<br>  <span class="tok-e">&lt;=</span> load defaults<br>      <span class="tok-cond">@:! &lt;required&gt;</span><br><br><span class="tok-l">&lt;-</span> analysis criteria<br>  <span class="tok-e">&lt;=</span> select criteria</div>
+      <div class="mini-code"><span class="tok-l">&lt;-</span> is criteria required?
+  <span class="tok-e">&lt;=</span> <span class="tok-c">assess if warranted</span>
+  <span class="tok-l">&lt;-</span> approved plan
+<span class="tok-l">&lt;-</span> refined criteria
+  <span class="tok-c">/: Distribute -&gt; uav_analysis_criteria</span>
+  <span class="tok-e">&lt;=</span> refine with operator
+    <span class="tok-e tok-c">&lt;=</span> <span class="tok-c">if criteria required</span>
+    <span class="tok-cond">&lt;*</span> <span class="tok-c">is criteria required?</span>
+  <span class="tok-l">&lt;-</span> approved plan
+<span class="tok-l">&lt;-</span> default criteria
+  <span class="tok-e">&lt;=</span> load defaults
+    <span class="tok-e tok-c">&lt;=</span> <span class="tok-c">if NOT required</span>
+    <span class="tok-cond">&lt;*</span> <span class="tok-c">is criteria required?</span>
+  <span class="tok-l">&lt;-</span> approved plan
+<span class="tok-l">&lt;-</span> analysis criteria
+  <span class="tok-e">&lt;=</span> select criteria
+  <span class="tok-l">&lt;-</span> refined criteria
+  <span class="tok-l">&lt;-</span> default criteria</div>
 
       <div class="panel-note">
         If the mission warrants it, the operator can discuss and refine
@@ -96,9 +119,17 @@
       <div class="panel-title text-green">2 — Image capture loop</div>
       <span class="agent-tag tag-drone">drone_agent</span>
 
-      <div class="mini-code"><span class="tok-l">&lt;-</span> inspection points<br>  <span class="tok-e">&lt;=</span> extract from plan<br>  <span class="tok-l">&lt;-</span> approved plan<br><br><span class="tok-l">&lt;-</span> captured images<br>  <span class="tok-e">&lt;=</span> capture images at<br>      all inspection points<br>  <span class="tok-l">&lt;-</span> inspection points<br>  <span class="tok-l">&lt;-</span> approved plan</div>
+      <div class="mini-code"><span class="tok-l">&lt;-</span> inspection points
+  <span class="tok-e">&lt;=</span> extract from plan
+  <span class="tok-l">&lt;-</span> approved plan
 
-      <div style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);border-radius:5px;padding:9px;margin-top:auto">
+<span class="tok-l">&lt;-</span> captured images
+  <span class="tok-e">&lt;=</span> capture images at
+      inspection points
+  <span class="tok-l">&lt;-</span> inspection points
+  <span class="tok-l">&lt;-</span> approved plan</div>
+
+      <div style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);border-radius:5px;padding:9px;margin-top:auto;flex-shrink:0">
         <div style="font-size:10.5px;font-weight:700;color:#1DA067;margin-bottom:4px">drone_agent sees</div>
         <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">Inspection points<br>Approved plan</div>
         <div style="font-size:10.5px;font-weight:700;color:#E05252;margin-top:6px;margin-bottom:4px">does NOT see</div>
@@ -111,9 +142,20 @@
       <div class="panel-title text-amber">3 — Analysis loop</div>
       <span class="agent-tag tag-analysis">analysis_agent</span>
 
-      <div class="mini-code"><span class="tok-l">&lt;-</span> image analyses<br>  <span class="tok-e">&lt;=</span> for every captured<br>      image<br><br>      <span class="tok-l">&lt;-</span> image analysis<br>          <span class="tok-e">&lt;=</span> analyse image<br>              for defects<br>          <span class="tok-l">&lt;-</span> captured image<br>          <span class="tok-l">&lt;-</span> analysis criteria<br><br>  <span class="tok-l">&lt;-</span> captured images<br>  <span class="tok-c">&lt;* captured image</span><br>      <span class="tok-c">from captured images</span></div>
+      <div class="mini-code"><span class="tok-l">&lt;-</span> image analyses
+  <span class="tok-e">&lt;=</span> for every captured image
 
-      <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:5px;padding:9px;margin-top:auto">
+    <span class="tok-l">&lt;-</span> image analysis
+      <span class="tok-e">&lt;=</span> analyse image
+          for defects
+      <span class="tok-l">&lt;-</span> captured image
+      <span class="tok-l">&lt;-</span> analysis criteria
+
+  <span class="tok-l">&lt;-</span> captured images
+  <span class="tok-cond">&lt;*</span> <span class="tok-c">captured image
+      from captured images</span></div>
+
+      <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:5px;padding:9px;margin-top:auto;flex-shrink:0">
         <div style="font-size:10.5px;font-weight:700;color:#D97706;margin-bottom:4px">analysis_agent sees</div>
         <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">One image<br>Analysis criteria</div>
         <div style="font-size:10.5px;font-weight:700;color:#E05252;margin-top:6px;margin-bottom:4px">does NOT see</div>

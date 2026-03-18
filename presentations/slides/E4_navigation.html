@@ -78,7 +78,7 @@
   </div>
 
   <div class="slide-headline">
-    The Syntactic Backbone Carries the Deterministic Work.
+    Mature Automation and LLM Improvisation Coexist in the Same Flow.
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0">
@@ -91,35 +91,34 @@
 
         <div class="code-row">
           <span class="code-text"><span class="tok-left">&lt;-</span> flight log</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-eq">&lt;=</span> compile flight log</span>
           <span class="badge badge-sem">planning_agent</span>
         </div>
         <div class="code-row">
           <span class="code-text">  <span class="tok-left">&lt;-</span> raw waypoints</span>
-          <span class="badge badge-syn">syntactic</span>
         </div>
         <div class="code-row">
           <span class="code-text">      <span class="tok-eq">&lt;=</span> extract waypoints</span>
-          <span class="badge badge-syn">syntactic</span>
+          <span class="badge badge-syn">automated</span>
         </div>
         <div class="code-row">
           <span class="code-text">  <span class="tok-left">&lt;-</span> filtered waypoints</span>
-          <span class="badge badge-syn">syntactic</span>
         </div>
         <div class="code-row">
           <span class="code-text">      <span class="tok-eq">&lt;=</span> filter min altitude</span>
-          <span class="badge badge-syn">syntactic</span>
+          <span class="badge badge-syn">automated</span>
         </div>
         <div class="code-row">
           <span class="code-text">  <span class="tok-left">&lt;-</span> route</span>
-          <span class="badge badge-syn">syntactic</span>
         </div>
         <div class="code-row">
           <span class="code-text">      <span class="tok-eq">&lt;=</span> plan optimal route</span>
-          <span class="badge badge-syn">syntactic</span>
+          <span class="badge badge-syn">automated</span>
         </div>
         <div class="code-row">
           <span class="code-text">  <span class="tok-left">&lt;-</span> waypoint records</span>
-          <span class="badge badge-loop">loop</span>
         </div>
         <div class="code-row">
           <span class="code-text">      <span class="tok-eq">&lt;=</span> for every waypoint</span>
@@ -127,7 +126,6 @@
         </div>
         <div class="code-row">
           <span class="code-text">          <span class="tok-left">&lt;-</span> current position</span>
-          <span class="badge badge-sem">drone_agent</span>
         </div>
         <div class="code-row">
           <span class="code-text">              <span class="tok-eq">&lt;=</span> fly to waypoint</span>
@@ -135,7 +133,6 @@
         </div>
         <div class="code-row">
           <span class="code-text">          <span class="tok-left">&lt;-</span> sensor reading</span>
-          <span class="badge badge-sem">drone_agent</span>
         </div>
         <div class="code-row">
           <span class="code-text">              <span class="tok-eq">&lt;=</span> scan at waypoint</span>
@@ -143,15 +140,14 @@
         </div>
         <div class="code-row" style="border-bottom:none">
           <span class="code-text">          <span class="tok-left">&lt;-</span> waypoint outcome</span>
-          <span class="badge badge-sem">drone_agent</span>
         </div>
 
       </div>
 
       <!-- legend -->
       <div style="display:flex;gap:10px;margin-top:2px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-syn">syntactic</span><span style="font-size:11px;color:#6B7A99">deterministic, free, no LLM</span></div>
-        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-sem">drone_agent</span><span style="font-size:11px;color:#6B7A99">intelligent, bounded by scope</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-syn">automated</span><span style="font-size:11px;color:#6B7A99">mature — scripts, prompts, or flow structure</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-sem">drone_agent</span><span style="font-size:11px;color:#6B7A99">improvisation — LLM adapts within scope</span></div>
         <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-loop">loop</span><span style="font-size:11px;color:#6B7A99">structure — free</span></div>
       </div>
     </div>

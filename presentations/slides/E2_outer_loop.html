@@ -9,50 +9,50 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/slides.css">
   <style>
-    .loop-box {
+    .annotated-code {
       background: #F0F4F8;
       border: 1px solid #D8E2F0;
       border-radius: 8px;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .loop-step {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(48,54,61,0.4);
-    }
-    .loop-step:last-child { border-bottom: none; }
-    .loop-step-label {
+      padding: 12px 14px;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 11.5px;
-      color: #2D3748;
-      flex: 1;
-      white-space: pre;
+      font-size: 10.5px;
+      line-height: 1;
     }
-    .loop-step-note {
-      font-size: 11px;
-      color: #6B7A99;
-      font-style: italic;
-      text-align: right;
+    .code-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 2.8px 0;
+      border-bottom: 1px solid rgba(48,54,61,0.30);
+    }
+    .code-row:last-child { border-bottom: none; }
+    .code-text { white-space: pre; flex-shrink: 0; }
+    .tok-left { color: #1E9FE0; font-weight: 600; }
+    .tok-eq   { color: #9B6FD4; font-weight: 600; }
+    .tok-ctx  { color: #D97706; font-weight: 600; }
+    .tok-dim  { color: #A8B4C8; }
+    .badge {
+      font-size: 9px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
       white-space: nowrap;
     }
-    .loop-arrow {
-      height: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #A8B4C8;
-      font-size: 13px;
-    }
+    .badge-loop { background: rgba(245,158,11,0.10); color: #D97706; border: 1px solid rgba(245,158,11,0.25); }
+    .badge-user { background: rgba(155,111,212,0.10); color: #9B6FD4; border: 1px solid rgba(139,92,246,0.25); }
+    .badge-seed { background: rgba(59,191,245,0.10);  color: #1E9FE0; border: 1px solid rgba(30,159,224,0.3); }
+    .badge-gate { background: rgba(34,197,94,0.08);   color: #1DA067; border: 1px solid rgba(34,197,94,0.2); }
+    .badge-ext  { background: rgba(168,180,200,0.12); color: #8896B0; border: 1px solid rgba(168,180,200,0.3); }
+
     .branch-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
-      margin: 6px 0;
     }
     .branch-card {
       background: #F5F8FF;
@@ -61,10 +61,10 @@
       padding: 8px 10px;
       font-size: 11px;
       color: #6B7A99;
-      line-height: 1.4;
+      line-height: 1.45;
     }
     .branch-card-title {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.06em;
@@ -74,7 +74,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
-      margin-top: 6px;
     }
     .gate-card {
       border-radius: 6px;
@@ -98,77 +97,102 @@
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0">
 
-    <!-- LEFT: loop structure -->
+    <!-- LEFT: annotated code -->
     <div style="display:flex;flex-direction:column;gap:8px">
-      <h3>Self-seeding ReAct loop</h3>
+      <h3>uav_user_assistant.ncds — annotated</h3>
 
-      <div class="loop-box">
+      <div class="annotated-code">
 
-        <div class="loop-step">
-          <span class="loop-step-label" style="color:#A8B4C8">on-going messages  ← starts empty</span>
-          <span class="loop-step-note">self-seeds</span>
+        <div class="code-row">
+          <span class="code-text"><span class="tok-left">&lt;-</span> session result</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> on-going messages</span>
+          <span class="badge badge-seed">self-seed</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> initialize to empty conversation</span>
+          <span class="badge badge-seed">self-seed</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> all session turns</span>
+          <span class="badge badge-loop">loop</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> for every on-going message</span>
+          <span class="badge badge-loop">loop</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> session turn</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> operator message</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> fleet status</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> operator intent</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> is mission request?</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> is direct question?</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> is ambiguous?</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-left">&lt;-</span> response sent</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> is session end?</span>
+          <span class="badge badge-user">user_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> on-going messages</span>
+          <span class="badge badge-gate">gate</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-eq tok-dim">&lt;=</span> <span class="tok-dim">if session should NOT end</span></span>
+          <span class="badge badge-gate">gate</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-ctx tok-dim">&lt;*</span> <span class="tok-dim">is session end?</span></span>
+          <span class="badge badge-gate">gate</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-left">&lt;-</span> on-going messages</span>
+          <span class="badge badge-loop">loop base</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-ctx">&lt;*</span> message in on-going messages</span>
+          <span class="badge badge-loop">context</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left tok-dim">&lt;-</span> <span class="tok-dim">session</span></span>
+          <span class="badge badge-ext">external</span>
         </div>
 
-        <div class="loop-arrow">↓</div>
-
-        <div class="loop-step" style="background:rgba(59,130,246,0.04);margin:0 -16px;padding:6px 16px">
-          <span style="font-size:10px;font-weight:700;color:#A8B4C8;text-transform:uppercase;letter-spacing:0.07em;flex-shrink:0">each turn</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> operator message</span>
-          <span class="loop-step-note">read input</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> fleet status</span>
-          <span class="loop-step-note">retrieve UAV state</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> operator intent</span>
-          <span class="loop-step-note">interpret in context</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is mission request?</span>
-          <span class="loop-step-note">classify</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is direct question?</span>
-          <span class="loop-step-note">classify</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is ambiguous?</span>
-          <span class="loop-step-note">classify</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#9B6FD4;font-weight:600">&lt;=</span> select + send response</span>
-          <span class="loop-step-note">route by intent</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is session end?</span>
-          <span class="loop-step-note">termination check</span>
-        </div>
-
-        <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#9B6FD4;font-weight:600">&lt;=</span> append</span>
-          <span class="loop-step-note">loop gate</span>
-        </div>
-
-        <div class="loop-step" style="padding-left:16px;border-bottom:none">
-          <span class="loop-step-label" style="color:#A8B4C8">    &lt;= if session should NOT end</span>
-          <span class="loop-step-note" style="color:#A8B4C8">&lt;* is session end?</span>
-        </div>
       </div>
 
+      <!-- legend -->
+      <div style="display:flex;gap:8px;margin-top:2px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:4px"><span class="badge badge-seed">self-seed</span><span style="font-size:10.5px;color:#6B7A99">starts empty</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="badge badge-loop">loop</span><span style="font-size:10.5px;color:#6B7A99">structure, free</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="badge badge-user">user_agent</span><span style="font-size:10.5px;color:#6B7A99">intelligent, scoped</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="badge badge-gate">gate</span><span style="font-size:10.5px;color:#6B7A99">conditional append</span></div>
+      </div>
     </div>
 
-    <!-- RIGHT: three response branches + isolation note -->
+    <!-- RIGHT: response branches + isolation -->
     <div style="display:flex;flex-direction:column;gap:10px">
 
       <h3>Three response branches</h3>
@@ -177,17 +201,17 @@
         <div class="branch-card" style="border-color:rgba(155,111,212,0.3)">
           <div class="branch-card-title text-purple">Mission request</div>
           Distribute → uav_mission.ncds<br>
-          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if mission request?</span>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:9.5px">&lt;= if mission request?</span>
         </div>
         <div class="branch-card" style="border-color:rgba(30,159,224,0.3)">
           <div class="branch-card-title text-blue">Direct question</div>
           Answer from fleet context<br>
-          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if direct question?</span>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:9.5px">&lt;= if direct question?</span>
         </div>
         <div class="branch-card" style="border-color:rgba(245,158,11,0.3)">
-          <div class="branch-card-title text-amber">Ambiguous</div>
+          <div class="branch-card-title" style="color:#D97706">Ambiguous</div>
           Clarification prompt<br>
-          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if ambiguous?</span>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:9.5px">&lt;= if ambiguous?</span>
         </div>
       </div>
 
@@ -196,7 +220,7 @@
       <div class="gate-row">
         <div class="gate-card" style="background:rgba(59,191,245,0.06);border:1px solid rgba(30,159,224,0.2)">
           <div style="font-size:11px;font-weight:700;color:#1E9FE0;margin-bottom:5px">user_agent SEES</div>
-          <div style="font-size:12px;color:#6B7A99;line-height:1.5">
+          <div style="font-size:11.5px;color:#6B7A99;line-height:1.5">
             Operator message<br>
             Conversation history<br>
             Fleet availability<br>
@@ -205,7 +229,7 @@
         </div>
         <div class="gate-card" style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15)">
           <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:5px">user_agent does NOT see</div>
-          <div style="font-size:12px;color:#6B7A99;line-height:1.5">
+          <div style="font-size:11.5px;color:#6B7A99;line-height:1.5">
             Drone telemetry<br>
             Flight commands<br>
             Sensor readings<br>
@@ -216,7 +240,7 @@
 
       <div class="note-strip" style="margin-top:auto">
         Loop terminates when <code style="font-size:11px;color:#9B6FD4;background:rgba(139,92,246,0.1);padding:1px 5px;border-radius:3px">is session end?</code> is true —
-        the append gate is skipped, no new messages are queued, the loop ends naturally.
+        the append gate is skipped, no new message is queued, the loop ends naturally.
       </div>
 
     </div>

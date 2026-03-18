@@ -134,47 +134,42 @@
 
         <div class="code-row">
           <span class="code-text"><span class="tok-left">&lt;-</span> <span class="tok-name">mission report</span></span>
-          <span class="code-badge badge-sem">semantic</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">    <span class="tok-eq">&lt;=</span> <span class="tok-name">compile findings</span></span>
-          <span class="code-badge badge-sem">semantic</span>
+          <span class="code-badge badge-sem">agent</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">    <span class="tok-left">&lt;-</span> <span class="tok-name">flight log</span></span>
-          <span class="code-badge badge-sem">semantic</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">        <span class="tok-eq">&lt;=</span> <span class="tok-name">navigate</span></span>
-          <span class="code-badge badge-sem">semantic</span>
+          <span class="code-badge badge-sem">agent</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">        <span class="tok-left">&lt;-</span> <span class="tok-name">sensor reading</span></span>
-          <span class="code-badge badge-syn">syntactic</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">            <span class="tok-eq">&lt;=</span> <span class="tok-name">scan</span></span>
-          <span class="code-badge badge-syn">syntactic</span>
+          <span class="code-badge badge-syn">automated</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">            <span class="tok-left">&lt;-</span> <span class="tok-name">position</span></span>
-          <span class="code-badge badge-syn">syntactic</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">        <span class="tok-left">&lt;-</span> <span class="tok-name">route plan</span></span>
-          <span class="code-badge badge-syn">syntactic</span>
         </div>
 
         <div class="code-row">
           <span class="code-text">            <span class="tok-eq">&lt;=</span> <span class="tok-name">plan route</span></span>
-          <span class="code-badge badge-syn">syntactic</span>
+          <span class="code-badge badge-syn">automated</span>
         </div>
 
         <div class="code-row">
@@ -190,68 +185,59 @@
       <!-- Legend -->
       <div style="display:flex;gap:14px;margin-top:2px">
         <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
-          <span class="code-badge badge-syn">syntactic</span>
-          <span>deterministic — no LLM</span>
+          <span class="code-badge badge-syn">automated</span>
+          <span>mature — scripts, prompts, or flow structure</span>
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
-          <span class="code-badge badge-sem">semantic</span>
-          <span>worker executes with intelligence</span>
+          <span class="code-badge badge-sem">agent</span>
+          <span>LLM improvisation within scope</span>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: Node type explanations -->
+    <!-- RIGHT: Two capabilities -->
     <div style="display:flex;flex-direction:column;gap:10px">
 
-      <h3>The two node types</h3>
+      <h3>Two capabilities in the same contract</h3>
 
-      <!-- Syntactic node card -->
+      <!-- Mature automation card -->
       <div class="node-card node-card-blue">
-        <div class="node-card-title text-blue">Syntactic Node</div>
+        <div class="node-card-title text-blue">Mature Automation</div>
         <div class="node-card-item">
           <span class="dot dot-blue"></span>
-          <span>Deterministic, rule-based execution — no LLM involved</span>
+          <span>The plan's flow structure, along with provided scripts and prompts, embeds mature automation directly</span>
         </div>
         <div class="node-card-item">
           <span class="dot dot-blue"></span>
-          <span>Zero latency, zero cost, fully auditable</span>
+          <span>Route planning, waypoint extraction, threshold checks — work we already know how to do exactly</span>
         </div>
         <div class="node-card-item">
           <span class="dot dot-blue"></span>
-          <span>This is where our existing automation lives — route planning,
-          waypoint loops, sensor collection, anomaly rules</span>
-        </div>
-        <div class="node-card-item">
-          <span class="dot dot-blue"></span>
-          <span>Behavior is constrained by the rule set — identical to today</span>
+          <span>These steps run exactly as authored — no improvisation needed, zero latency, fully auditable</span>
         </div>
       </div>
 
-      <!-- Semantic node card -->
+      <!-- Self-improvisation card -->
       <div class="node-card node-card-purple">
-        <div class="node-card-title text-purple">Semantic Node</div>
+        <div class="node-card-title text-purple">LLM Improvisation</div>
         <div class="node-card-item">
           <span class="dot dot-purple"></span>
-          <span>A worker is assigned — one agent or a group</span>
+          <span>Agent workers bring LLM judgment and correction to steps where the work can't be hardcoded</span>
         </div>
         <div class="node-card-item">
           <span class="dot dot-purple"></span>
-          <span>Worker receives only the inputs declared in the step's scope</span>
+          <span>Each worker improvises freely within its declared scope — adapts, corrects, handles novel cases</span>
         </div>
         <div class="node-card-item">
           <span class="dot dot-purple"></span>
-          <span>Worker applies configured abilities to produce the declared deliverable</span>
-        </div>
-        <div class="node-card-item">
-          <span class="dot dot-purple"></span>
-          <span>Adapts, reasons, handles novel cases — but cannot exceed its scope</span>
+          <span>The ReAct loop and Distribute mechanism enable continual engagement when needed</span>
         </div>
       </div>
 
       <!-- Bottom note -->
       <div class="note-strip">
-        The boundary between fixed and adaptive is explicit in the contract —
-        declared at authoring time, not discovered at runtime.
+        What is mature is authored as automation. What requires judgment is delegated to an agent.
+        Both are declared in the contract — not discovered at runtime.
       </div>
 
     </div>
