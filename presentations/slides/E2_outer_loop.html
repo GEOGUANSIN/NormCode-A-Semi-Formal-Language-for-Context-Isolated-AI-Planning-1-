@@ -131,17 +131,17 @@
         </div>
 
         <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> &lt;is mission request&gt;</span>
+          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is mission request?</span>
           <span class="loop-step-note">classify</span>
         </div>
 
         <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> &lt;is direct question&gt;</span>
+          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is direct question?</span>
           <span class="loop-step-note">classify</span>
         </div>
 
         <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> &lt;is ambiguous&gt;</span>
+          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is ambiguous?</span>
           <span class="loop-step-note">classify</span>
         </div>
 
@@ -151,13 +151,18 @@
         </div>
 
         <div class="loop-step">
-          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> &lt;is session end&gt;</span>
+          <span class="loop-step-label"><span style="color:#1E9FE0;font-weight:600">&lt;-</span> is session end?</span>
           <span class="loop-step-note">termination check</span>
         </div>
 
-        <div class="loop-step" style="border-bottom:none">
-          <span class="loop-step-label"><span style="color:#9B6FD4;font-weight:600">&lt;=</span> append  <span style="color:#A8B4C8">@:! &lt;is session end&gt;</span></span>
+        <div class="loop-step">
+          <span class="loop-step-label"><span style="color:#9B6FD4;font-weight:600">&lt;=</span> append</span>
           <span class="loop-step-note">loop gate</span>
+        </div>
+
+        <div class="loop-step" style="padding-left:16px;border-bottom:none">
+          <span class="loop-step-label" style="color:#A8B4C8">    &lt;= if session should NOT end</span>
+          <span class="loop-step-note" style="color:#A8B4C8">&lt;* is session end?</span>
         </div>
       </div>
 
@@ -171,18 +176,18 @@
       <div class="branch-row">
         <div class="branch-card" style="border-color:rgba(155,111,212,0.3)">
           <div class="branch-card-title text-purple">Mission request</div>
-          Distribute<br>→ uav_mission.ncds<br>
-          <span style="color:#A8B4C8">validated intent passed</span>
+          Distribute → uav_mission.ncds<br>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if mission request?</span>
         </div>
         <div class="branch-card" style="border-color:rgba(30,159,224,0.3)">
           <div class="branch-card-title text-blue">Direct question</div>
-          Answer from fleet context + knowledge<br>
-          <span style="color:#A8B4C8">no sub-plan needed</span>
+          Answer from fleet context<br>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if direct question?</span>
         </div>
         <div class="branch-card" style="border-color:rgba(245,158,11,0.3)">
           <div class="branch-card-title text-amber">Ambiguous</div>
-          Ask operator for clarification<br>
-          <span style="color:#A8B4C8">loop continues</span>
+          Clarification prompt<br>
+          <span style="color:#A8B4C8;font-family:'IBM Plex Mono',monospace;font-size:10px">&lt;= if ambiguous?</span>
         </div>
       </div>
 
@@ -210,7 +215,7 @@
       </div>
 
       <div class="note-strip" style="margin-top:auto">
-        Loop terminates when <code style="font-size:11px;color:#9B6FD4;background:rgba(139,92,246,0.1);padding:1px 5px;border-radius:3px">&lt;is session end&gt;</code> is true —
+        Loop terminates when <code style="font-size:11px;color:#9B6FD4;background:rgba(139,92,246,0.1);padding:1px 5px;border-radius:3px">is session end?</code> is true —
         the append gate is skipped, no new messages are queued, the loop ends naturally.
       </div>
 
