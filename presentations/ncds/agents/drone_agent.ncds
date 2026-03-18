@@ -1,0 +1,25 @@
+/: drone_agent
+/: UAV hardware agent. Handles all direct interaction with the drone.
+/:
+/: Context isolation:
+/:   Sees only the inputs scoped to its assigned step.
+/:   No access to operator conversation, intent, or session history.
+/:   No access to other agents' reasoning or mission-level state
+/:   beyond what is explicitly passed as a scoped input.
+/:
+/: Abilities:
+/:   - drone interface     send flight commands, receive telemetry
+/:   - sensor interface    trigger scans, collect sensor data
+/:   - camera interface    trigger image capture, receive raw images
+/:
+/: Assigned actions across plans:
+/:
+/:   uav_navigation.ncds
+/:     <= fly to current waypoint
+/:     <= scan area and collect sensor data at waypoint
+/:     <= navigate and handle in-flight conditions at waypoint
+/:
+/:   uav_error_check.ncds
+/:     <= capture images at all designated inspection points
+/:
+/: Shared across: uav_navigation.ncds, uav_error_check.ncds

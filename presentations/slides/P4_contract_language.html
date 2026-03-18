@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P4 — NormCode: A Contract Language</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    /* ---- Code + annotation block ---- */
+    .annotated-code {
+      background: #F0F4F8;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-family: 'IBM Plex Mono', 'Cascadia Code', 'Consolas', monospace;
+      font-size: 12.5px;
+      line-height: 1;
+    }
+
+    .code-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 3.5px 0;
+    }
+
+    .code-line:not(:last-child) {
+      border-bottom: 1px solid rgba(48,54,61,0.4);
+    }
+
+    .code-text {
+      white-space: pre;
+      flex-shrink: 0;
+    }
+
+    .code-ann {
+      font-size: 11px;
+      color: #6B7A99;
+      font-style: italic;
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .code-ann::before {
+      content: '← ';
+      color: #A8B4C8;
+    }
+
+    .tok-arrow-left { color: #1E9FE0; font-weight: 600; }
+    .tok-arrow-eq   { color: #9B6FD4; font-weight: 600; }
+    .tok-name       { color: #2D3748; }
+
+    .code-scope-note {
+      margin-top: 10px;
+      font-size: 11.5px;
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      color: #6B7A99;
+      font-style: italic;
+      border-top: 1px solid #E2EAF4;
+      padding-top: 8px;
+    }
+
+    /* ---- Right column role cards ---- */
+    .role-card {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 7px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .role-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      line-height: 1.2;
+    }
+
+    .role-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1A1F36;
+      margin-bottom: 3px;
+    }
+
+    .role-desc {
+      font-size: 12.5px;
+      color: #6B7A99;
+      line-height: 1.45;
+    }
+
+    /* ---- Bottom split banner ---- */
+    .split-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #D8E2F0;
+      margin-top: auto;
+    }
+
+    .split-panel {
+      padding: 13px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .split-panel-blue  { background: rgba(59,191,245,0.07); border-right: 1px solid #30363d; }
+    .split-panel-purple { background: rgba(155,111,212,0.07); }
+
+    .split-panel-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 3px;
+    }
+
+    .split-panel-desc {
+      font-size: 12.5px;
+      color: #6B7A99;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P4</span>
+    <span class="tag tag-purple">The Solution</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    The Plan Is the Contract.
+    <span class="text-muted" style="font-weight:400">Workers Bring the Agentic Capability.</span>
+  </div>
+
+  <!-- Body: 50/50 two-column -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0">
+
+    <!-- LEFT: Annotated code block -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>The .ncds contract</h3>
+
+      <div class="annotated-code">
+
+        <div class="code-line">
+          <span class="code-text"><span class="tok-arrow-left">&lt;-</span> <span class="tok-name">mission report</span></span>
+          <span class="code-ann">what the contract delivers</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">    <span class="tok-arrow-eq">&lt;=</span> <span class="tok-name">compile findings</span></span>
+          <span class="code-ann">how it is produced</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">    <span class="tok-arrow-left">&lt;-</span> <span class="tok-name">flight log</span></span>
+          <span class="code-ann">worker A's deliverable</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">        <span class="tok-arrow-eq">&lt;=</span> <span class="tok-name">navigate</span></span>
+          <span class="code-ann">worker A's contracted task</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">        <span class="tok-arrow-left">&lt;-</span> <span class="tok-name">sensor reading</span></span>
+          <span class="code-ann">what worker A receives</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">            <span class="tok-arrow-eq">&lt;=</span> <span class="tok-name">scan</span></span>
+          <span class="code-ann">sub-task: worker acts here</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">            <span class="tok-arrow-left">&lt;-</span> <span class="tok-name">position</span></span>
+          <span class="code-ann">only this — nothing else</span>
+        </div>
+
+        <div class="code-line">
+          <span class="code-text">        <span class="tok-arrow-left">&lt;-</span> <span class="tok-name">current wp</span></span>
+          <span class="code-ann">only this — nothing else</span>
+        </div>
+
+        <div class="code-line" style="border-bottom:none">
+          <span class="code-text">    <span class="tok-arrow-left">&lt;-</span> <span class="tok-name">mission brief</span></span>
+          <span class="code-ann">external input</span>
+        </div>
+
+        <div class="code-scope-note">
+          The scope rule: each worker only sees what the contract gave them.
+        </div>
+
+      </div>
+
+      <!-- Legend chips -->
+      <div style="display:flex;gap:10px;margin-top:2px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
+          <span style="font-family:'IBM Plex Mono',monospace;color:#1E9FE0;font-weight:600">&lt;-</span>
+          <span>declares a deliverable</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
+          <span style="font-family:'IBM Plex Mono',monospace;color:#9B6FD4;font-weight:600">&lt;=</span>
+          <span>declares a task</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Three role cards + split banner -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <h3>What the contract does</h3>
+
+      <!-- Role: Readable -->
+      <div class="role-card">
+        <div class="role-icon">📄</div>
+        <div>
+          <div class="role-title">Readable</div>
+          <div class="role-desc">
+            A <code style="font-size:11.5px;color:#9B6FD4;background:rgba(139,92,246,0.1);padding:1px 5px;border-radius:3px">.ncn</code>
+            plain-English narrative is generated before takeoff. The operator reads and approves it before the UAV lifts off.
+          </div>
+        </div>
+      </div>
+
+      <!-- Role: Enforceable -->
+      <div class="role-card">
+        <div class="role-icon">⚙️</div>
+        <div>
+          <div class="role-title">Enforceable</div>
+          <div class="role-desc">
+            The compiler verifies scope at every node. The orchestrator executes exactly what was reviewed — no deviation is possible within the system.
+          </div>
+        </div>
+      </div>
+
+      <!-- Role: Composable -->
+      <div class="role-card">
+        <div class="role-icon">🔗</div>
+        <div>
+          <div class="role-title">Composable</div>
+          <div class="role-desc">
+            Sub-plans are sub-contracts.
+            <code style="font-size:11px;color:#1E9FE0;background:rgba(59,191,245,0.08);padding:1px 5px;border-radius:3px">uav_navigation.ncds</code>
+            is called from
+            <code style="font-size:11px;color:#1E9FE0;background:rgba(59,191,245,0.08);padding:1px 5px;border-radius:3px">uav_mission.ncds</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- Split automation banner -->
+      <div class="split-banner">
+        <div class="split-panel split-panel-blue">
+          <div class="split-panel-title text-blue">Mature automation</div>
+          <div class="split-panel-desc">
+            Syntactic nodes — our existing rule logic.<br>
+            <span style="color:#A8B4C8;font-size:11.5px">Deterministic · free · zero LLM latency</span>
+          </div>
+        </div>
+        <div class="split-panel split-panel-purple">
+          <div class="split-panel-title text-purple">Self-improvisation</div>
+          <div class="split-panel-desc">
+            Semantic nodes — worker capability (one agent or a group) exercised within each step's scope.<br>
+            <span style="color:#A8B4C8;font-size:11.5px">Adaptive · bounded · inspectable</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- end right col -->
+
+  </div>
+  <!-- end body grid -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/: uav_error_check.ncds
+/: UAV Error Check — capture images and analyse in a loop
+/:
+/: Dispatched from uav_mission.ncds via Distribute.
+/: Takes inspection pictures at designated points, then analyses each
+/: image in a loop to detect defects and anomalies. Produces a report.
+/:
+/: Agents:
+/:   drone_agent — dedicated to UAV hardware interaction only.
+/:               Independent context: sees only this step's scoped inputs.
+/:               Shared with uav_navigation.ncds.
+/:
+/: Execution order (inside-out, top-down):
+/:   <criteria discussion required>  — worker assesses if discussion is warranted
+/:   refined criteria                — only if discussion required (Distribute)
+/:   default criteria                — only if discussion not required
+/:   analysis criteria               — select whichever was produced
+/:   inspection points               — extract from approved plan
+/:   captured images                 — fly to each point and take picture
+/:   image analyses                  — analyse each image in a loop
+/:   error check report              — compile findings (root)
+
+<- error check report
+    <= compile error check report from all image analyses
+
+    <- <criteria discussion required>
+        <= assess whether criteria discussion is warranted for this mission
+        <- approved plan
+
+    <- refined criteria
+        /: Distribute -> uav_analysis_criteria.ncds
+        <= load and refine analysis criteria with operator
+            @:' <criteria discussion required>
+        <- approved plan
+
+    <- default criteria
+        <= load default analysis criteria for this mission type
+            @:! <criteria discussion required>
+        <- approved plan
+
+    <- analysis criteria
+        <= select criteria to use for this run
+        <- refined criteria
+        <- default criteria
+
+    <- inspection points
+        <= extract inspection points from approved plan
+        <- approved plan
+
+    <- captured images
+        /: [drone_agent]
+        <= capture images at all designated inspection points
+        <- inspection points
+        <- approved plan
+
+    <- image analyses
+        <= for every captured image
+
+            <= return the image analysis per iteration
+
+            <- image analysis
+                /: [analysis_agent]
+                <= analyse image for defects and anomalies
+                <- captured image
+                <- analysis criteria
+
+        <- captured images
+        <* captured image from captured images
+
+    <- approved plan

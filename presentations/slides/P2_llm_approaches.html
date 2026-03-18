@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P2 — LLM Approaches</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .approach-card {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 10px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .approach-card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1A1F36;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .approach-card-subtitle {
+      font-size: 12px;
+      color: #6B7A99;
+      font-style: italic;
+    }
+
+    .diagram-area {
+      background: #F0F4F8;
+      border: 1px solid #E2EAF4;
+      border-radius: 6px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .bullets-sm li {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .card-bottom-tag {
+      margin-top: auto;
+      font-size: 12px;
+      font-style: italic;
+      color: #6B7A99;
+      padding-top: 10px;
+      border-top: 1px solid #E2EAF4;
+    }
+
+    /* Hub-and-spoke SVG container */
+    .hub-spoke {
+      width: 100%;
+      height: 80px;
+    }
+
+    /* Workflow flow SVG */
+    .workflow-svg {
+      width: 100%;
+      height: 50px;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P2</span>
+    <span class="tag tag-section">The Problem</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    The LLM Revolution Offered Two Paths.
+    <span class="text-muted" style="font-weight:400">Both Are Incomplete.</span>
+  </div>
+
+  <!-- Two cards -->
+  <div style="display:flex;gap:20px;flex:1;min-height:0">
+
+    <!-- LEFT CARD: Agentic Frameworks -->
+    <div class="approach-card" style="border-color:rgba(30,159,224,0.35)">
+
+      <div>
+        <div class="approach-card-title">
+          <span style="color:#1E9FE0">Agentic Frameworks</span>
+        </div>
+        <div class="approach-card-subtitle">Claude, Cursor, AutoGen</div>
+      </div>
+
+      <!-- Hub-and-spoke diagram -->
+      <div class="diagram-area">
+        <svg class="hub-spoke" viewBox="0 0 340 80" xmlns="http://www.w3.org/2000/svg">
+          <!-- Spoke lines -->
+          <line x1="170" y1="40" x2="80"  y2="20" stroke="#D8E2F0" stroke-width="1.5"/>
+          <line x1="170" y1="40" x2="170" y2="10" stroke="#D8E2F0" stroke-width="1.5"/>
+          <line x1="170" y1="40" x2="260" y2="20" stroke="#D8E2F0" stroke-width="1.5"/>
+          <!-- Tool nodes -->
+          <rect x="44"  y="6"  width="66" height="22" rx="4" fill="#F0F4F8" stroke="#3b82f6" stroke-width="1" opacity="0.7"/>
+          <text x="77"  y="21" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E9FE0">fly</text>
+          <rect x="132" y="0"  width="76" height="22" rx="4" fill="#F0F4F8" stroke="#3b82f6" stroke-width="1" opacity="0.7"/>
+          <text x="170" y="15" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E9FE0">scan</text>
+          <rect x="228" y="6"  width="80" height="22" rx="4" fill="#F0F4F8" stroke="#3b82f6" stroke-width="1" opacity="0.7"/>
+          <text x="268" y="21" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#1E9FE0">analyze</text>
+          <!-- Center agent node -->
+          <circle cx="170" cy="55" r="18" fill="rgba(59,191,245,0.10)" stroke="#3b82f6" stroke-width="1.5"/>
+          <text x="170" y="59" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" font-weight="600" fill="#1E9FE0">Agent</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="section-label text-green">Gives you</div>
+        <ul class="bullets bullets-sm" style="gap:6px">
+          <li class="check">Self-improvisation — adapts, retries, changes approach</li>
+          <li class="check">Handles novel cases the rule set never anticipated</li>
+          <li class="check">Reads ambiguous instructions and makes reasonable decisions</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label text-red">Takes away</div>
+        <ul class="bullets bullets-sm" style="gap:5px">
+          <li class="cross">Unclear execution boundary — tools invoked in any order</li>
+          <li class="cross">Hard to inject our existing rule-based automation</li>
+          <li class="cross">Non-reproducible — same mission, different behavior</li>
+          <li class="cross">Not auditable — what did the agent decide at step 7?</li>
+        </ul>
+      </div>
+
+      <div class="card-bottom-tag">
+        "Self-improvisation with no contract"
+      </div>
+
+    </div>
+    <!-- end left card -->
+
+    <!-- RIGHT CARD: Workflow Platforms -->
+    <div class="approach-card" style="border-color:rgba(139,92,246,0.35)">
+
+      <div>
+        <div class="approach-card-title">
+          <span style="color:#9B6FD4">Workflow Platforms</span>
+        </div>
+        <div class="approach-card-subtitle">Dify, LlamaIndex, n8n</div>
+      </div>
+
+      <!-- Linear flow diagram -->
+      <div class="diagram-area">
+        <svg class="workflow-svg" viewBox="0 0 460 50" xmlns="http://www.w3.org/2000/svg">
+          <!-- Nodes -->
+          <rect x="0"   y="10" width="60" height="28" rx="4" fill="#F0F4F8" stroke="#8b5cf6" stroke-width="1" opacity="0.7"/>
+          <text x="30"  y="29" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">Input</text>
+
+          <line x1="60" y1="24" x2="88" y2="24" stroke="#D8E2F0" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="88"  y="10" width="64" height="28" rx="4" fill="#F0F4F8" stroke="#8b5cf6" stroke-width="1" opacity="0.7"/>
+          <text x="120" y="29" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">Plan</text>
+
+          <line x1="152" y1="24" x2="180" y2="24" stroke="#D8E2F0" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="180" y="10" width="64" height="28" rx="4" fill="#F0F4F8" stroke="#8b5cf6" stroke-width="1" opacity="0.7"/>
+          <text x="212" y="29" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">Loop</text>
+
+          <line x1="244" y1="24" x2="272" y2="24" stroke="#D8E2F0" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="272" y="10" width="64" height="28" rx="4" fill="#F0F4F8" stroke="#8b5cf6" stroke-width="1" opacity="0.7"/>
+          <text x="304" y="29" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">Scan</text>
+
+          <line x1="336" y1="24" x2="364" y2="24" stroke="#D8E2F0" stroke-width="1.5" marker-end="url(#arr)"/>
+          <rect x="364" y="10" width="68" height="28" rx="4" fill="#F0F4F8" stroke="#8b5cf6" stroke-width="1" opacity="0.7"/>
+          <text x="398" y="29" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">Report</text>
+
+          <!-- Arrowhead marker -->
+          <defs>
+            <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#A8B4C8"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div>
+        <div class="section-label text-green">Gives you</div>
+        <ul class="bullets bullets-sm" style="gap:6px">
+          <li class="check">Explicit structure — every step is visible and declared</li>
+          <li class="check">Readable by non-developers — the graph is the plan</li>
+          <li class="check">Predictable — execution follows what you designed</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="section-label text-red">Takes away</div>
+        <ul class="bullets bullets-sm" style="gap:5px">
+          <li class="cross">Limited adaptation when a case is unexpected</li>
+          <li class="cross">No structural isolation between nodes</li>
+          <li class="cross">Complex missions require complex, unmaintainable graphs</li>
+          <li class="cross">Locked to the platform — plans are not portable</li>
+        </ul>
+      </div>
+
+      <div class="card-bottom-tag">
+        "Mature structure with no real adaptability"
+      </div>
+
+    </div>
+    <!-- end right card -->
+
+  </div>
+  <!-- end two cards row -->
+
+  <!-- Footer strip -->
+  <div class="note-strip amber-bg" style="margin-top:14px">
+    Both fail at the same point: neither makes the boundary between fixed automation and adaptive behavior explicit.
+  </div>
+
+</div>
+</body>
+</html>

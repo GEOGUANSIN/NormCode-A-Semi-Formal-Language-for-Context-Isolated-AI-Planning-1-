@@ -1,0 +1,103 @@
+/: uav_user_assistant.ncds
+/: UAV Operator Assistant — ReAct loop with intent routing
+/:
+/: Self-seeding ReAct loop. Starts with an empty conversation.
+/: Each iteration (inside-out, top-down):
+/:   operator message  — read operator input                  (no deps, runs first)
+/:   fleet status      — retrieve UAV state                   (depends on session)
+/:   operator intent   — interpret message in context         (depends on message, fleet, history)
+/:   intent classes    — classify intent into propositions    (depend on operator intent)
+/:   response sent     — route and respond                    (depends on all above, runs last)
+/:
+/: At the loop level, after session turn resolves:
+/:   <is session end>  — judge termination                    (reads from session turn outputs)
+/:   on-going messages — conditional append gate              (depends on <is session end>)
+/:
+/: Loop terminates when operator signals end of session.
+/: uav_mission.ncds is called from the mission response branch (work outsourcing).
+/:
+/: Agents:
+/:   user_agent — dedicated to operator-facing interaction only.
+/:              Independent context: sees only this step's scoped inputs.
+/:              No access to drone hardware or flight state.
+
+<- session result
+    <= select all session turns as final result
+
+    <- on-going messages
+        <= initialize to empty conversation
+
+    <- all session turns
+        <= for every on-going message
+
+            <= return the session turn per iteration
+
+            <- session turn
+                <= bundle operator message, intent, and response together
+
+                <- operator message
+                    <= read operator input
+
+                <- fleet status
+                    <= retrieve current fleet availability and UAV state
+                    <- session
+
+                <- operator intent
+                    /: [user_agent]
+                    <= interpret operator message within conversation context
+                    <- operator message
+                    <- on-going messages
+                    <- fleet status
+
+                <- <is mission request>
+                    <= assess whether operator intent describes a mission request
+                    <- operator intent
+
+                <- <is direct question>
+                    <= assess whether operator intent is a direct question
+                    <- operator intent
+
+                <- <is ambiguous>
+                    <= assess whether operator intent is unclear or underspecified
+                    <- operator intent
+
+                <- response sent
+                    /: [user_agent]
+                    <= send response to operator
+                    <- response content
+                        <= select appropriate response for detected intent
+                        <- mission response
+                            /: Distribute -> uav_mission.ncds
+                            <= triage and execute mission
+                            <- validated intent
+                                <= validate that mission intent is actionable
+                                <- operator intent
+                                <- fleet status
+                        <- direct answer
+                            <= answer operator question from fleet context and knowledge
+                                @:' <is direct question>
+                            <- operator intent
+                            <- fleet status
+                            <- on-going messages
+                        <- clarification prompt
+                            <= generate targeted clarification question for operator
+                                @:' <is ambiguous>
+                            <- operator intent
+                            <- on-going messages
+
+            <- <is session end>
+                <= judge if the operator wants to end the session
+                <- operator message
+                <- operator intent
+
+            <- on-going messages
+                <= append current message to on-going messages
+                    <= if session should NOT end
+                    <* <is session end>
+                <- operator message
+                <- on-going messages
+
+        <- on-going messages
+        <* message in on-going messages
+
+    <- session

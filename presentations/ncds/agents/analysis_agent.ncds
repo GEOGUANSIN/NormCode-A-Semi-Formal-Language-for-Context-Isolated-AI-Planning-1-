@@ -1,0 +1,25 @@
+/: analysis_agent
+/: Image and data analysis agent. Handles interpretation of captured imagery
+/: and sensor data. Separate from drone_agent — receives images as inputs,
+/: does not interact with drone hardware directly.
+/:
+/: Context isolation:
+/:   Sees only the image or data and analysis criteria scoped to its step.
+/:   No access to flight commands, telemetry, or operator conversation.
+/:   No awareness of how the image was captured or what mission produced it.
+/:
+/: Abilities:
+/:   - image analysis      inspect images for defects, anomalies, patterns
+/:   - criteria reasoning  apply and adapt analysis criteria to findings
+/:   - file I/O            read captured images, write structured findings
+/:
+/: Assigned actions across plans:
+/:
+/:   uav_error_check.ncds
+/:     <= analyse image for defects and anomalies
+/:
+/:   uav_analysis_criteria.ncds
+/:     <= apply operator modifications to current criteria
+/:     <= load default analysis criteria for this mission type
+/:
+/: Shared across: uav_error_check.ncds, uav_analysis_criteria.ncds

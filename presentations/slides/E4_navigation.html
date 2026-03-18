@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E4 — Navigation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .annotated-code {
+      background: #F0F4F8;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 13px 15px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1;
+    }
+    .code-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(48,54,61,0.35);
+    }
+    .code-row:last-child { border-bottom: none; }
+    .code-text { white-space: pre; flex-shrink: 0; }
+    .tok-left  { color: #1E9FE0; font-weight: 600; }
+    .tok-eq    { color: #9B6FD4; font-weight: 600; }
+    .tok-dim   { color: #A8B4C8; }
+    .badge {
+      font-size: 9.5px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .badge-syn  { background: rgba(59,191,245,0.10);  color: #1E9FE0;  border: 1px solid rgba(30,159,224,0.3); }
+    .badge-sem  { background: rgba(34,197,94,0.1);    color: #1DA067;  border: 1px solid rgba(34,197,94,0.2); }
+    .badge-loop { background: rgba(245,158,11,0.1);   color: #D97706;  border: 1px solid rgba(245,158,11,0.2); }
+
+    .scope-box {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 7px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #6B7A99;
+      line-height: 1.5;
+    }
+    .scope-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+    .scope-item {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 3px;
+      font-size: 11.5px;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <div class="slide-header">
+    <span class="slide-number">E4</span>
+    <span class="tag" style="background:rgba(34,197,94,0.1);color:#1DA067;border:1px solid rgba(34,197,94,0.2)">uav_navigation.ncds</span>
+  </div>
+
+  <div class="slide-headline">
+    The Syntactic Backbone Carries the Deterministic Work.
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0">
+
+    <!-- LEFT: annotated code -->
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h3>uav_navigation.ncds — annotated</h3>
+
+      <div class="annotated-code">
+
+        <div class="code-row">
+          <span class="code-text"><span class="tok-left">&lt;-</span> flight log</span>
+          <span class="badge badge-sem">planning_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> raw waypoints</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> extract waypoints</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> filtered waypoints</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> filter min altitude</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> route</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> plan optimal route</span>
+          <span class="badge badge-syn">syntactic</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">  <span class="tok-left">&lt;-</span> waypoint records</span>
+          <span class="badge badge-loop">loop</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">      <span class="tok-eq">&lt;=</span> for every waypoint</span>
+          <span class="badge badge-loop">loop</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> current position</span>
+          <span class="badge badge-sem">drone_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-eq">&lt;=</span> fly to waypoint</span>
+          <span class="badge badge-sem">drone_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> sensor reading</span>
+          <span class="badge badge-sem">drone_agent</span>
+        </div>
+        <div class="code-row">
+          <span class="code-text">              <span class="tok-eq">&lt;=</span> scan at waypoint</span>
+          <span class="badge badge-sem">drone_agent</span>
+        </div>
+        <div class="code-row" style="border-bottom:none">
+          <span class="code-text">          <span class="tok-left">&lt;-</span> waypoint outcome</span>
+          <span class="badge badge-sem">drone_agent</span>
+        </div>
+
+      </div>
+
+      <!-- legend -->
+      <div style="display:flex;gap:10px;margin-top:2px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-syn">syntactic</span><span style="font-size:11px;color:#6B7A99">deterministic, free, no LLM</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-sem">drone_agent</span><span style="font-size:11px;color:#6B7A99">intelligent, bounded by scope</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><span class="badge badge-loop">loop</span><span style="font-size:11px;color:#6B7A99">structure — free</span></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: scope cards -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>drone_agent scope per action</h3>
+
+      <div class="scope-box">
+        <div class="scope-title" style="color:#1DA067">&lt;= fly to current waypoint</div>
+        <div class="scope-item"><span style="color:#1DA067">✓</span> current waypoint</div>
+        <div class="scope-item"><span style="color:#1DA067">✓</span> route</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> mission brief or operator intent</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> previous waypoint outcomes</div>
+      </div>
+
+      <div class="scope-box">
+        <div class="scope-title" style="color:#1DA067">&lt;= scan area and collect sensor data</div>
+        <div class="scope-item"><span style="color:#1DA067">✓</span> current position</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> route or waypoint list</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> any prior sensor readings</div>
+      </div>
+
+      <div class="scope-box">
+        <div class="scope-title" style="color:#1DA067">&lt;= navigate and handle in-flight conditions</div>
+        <div class="scope-item"><span style="color:#1DA067">✓</span> sensor reading</div>
+        <div class="scope-item"><span style="color:#1DA067">✓</span> current waypoint + route</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> full flight history</div>
+        <div class="scope-item"><span style="color:#E05252">✗</span> operator conversation</div>
+      </div>
+
+      <div class="note-strip" style="margin-top:auto">
+        The drone_agent is invoked three times per waypoint — each time with a
+        fresh, minimal scope. It adapts to real-world conditions without
+        accumulating context it was not given.
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

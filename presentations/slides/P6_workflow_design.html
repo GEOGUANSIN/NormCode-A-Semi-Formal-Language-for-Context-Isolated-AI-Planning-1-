@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P6 — Workflow Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    /* ---- Annotated code ---- */
+    .annotated-code {
+      background: #F0F4F8;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .code-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 3px 0;
+      border-bottom: 1px solid rgba(48,54,61,0.35);
+    }
+
+    .code-row:last-child { border-bottom: none; }
+
+    .code-text { white-space: pre; flex-shrink: 0; }
+
+    .code-badge {
+      font-size: 10px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .badge-syn {
+      background: rgba(59,191,245,0.10);
+      color: #1E9FE0;
+      border: 1px solid rgba(30,159,224,0.3);
+    }
+
+    .badge-sem {
+      background: rgba(155,111,212,0.10);
+      color: #9B6FD4;
+      border: 1px solid rgba(139,92,246,0.25);
+    }
+
+    .tok-left  { color: #1E9FE0; font-weight: 600; }
+    .tok-eq    { color: #9B6FD4; font-weight: 600; }
+    .tok-name  { color: #2D3748; }
+
+    .code-scope-note {
+      margin-top: 10px;
+      font-size: 11px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      color: #6B7A99;
+      font-style: italic;
+      border-top: 1px solid #E2EAF4;
+      padding-top: 8px;
+    }
+
+    /* ---- Node type cards ---- */
+    .node-card {
+      border-radius: 7px;
+      padding: 13px 15px;
+      flex: 1;
+    }
+
+    .node-card-blue   { background: rgba(59,191,245,0.06);  border: 1px solid rgba(30,159,224,0.3); }
+    .node-card-purple { background: rgba(155,111,212,0.06); border: 1px solid rgba(139,92,246,0.25); }
+
+    .node-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .node-card-item {
+      font-size: 12px;
+      color: #6B7A99;
+      line-height: 1.5;
+      margin-bottom: 4px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .node-card-item .dot {
+      flex-shrink: 0;
+      margin-top: 4px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .dot-blue   { background: #3b82f6; }
+    .dot-purple { background: #8b5cf6; }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P6</span>
+    <span class="tag tag-purple">The Solution</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    Each Step Is a Declared Work.
+    <span class="text-muted" style="font-weight:400">Not an Open Instruction.</span>
+  </div>
+
+  <!-- Body -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;flex:1;min-height:0">
+
+    <!-- LEFT: Annotated .ncds -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>UAV navigation — .ncds contract</h3>
+
+      <div class="annotated-code">
+
+        <div class="code-row">
+          <span class="code-text"><span class="tok-left">&lt;-</span> <span class="tok-name">mission report</span></span>
+          <span class="code-badge badge-sem">semantic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">    <span class="tok-eq">&lt;=</span> <span class="tok-name">compile findings</span></span>
+          <span class="code-badge badge-sem">semantic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">    <span class="tok-left">&lt;-</span> <span class="tok-name">flight log</span></span>
+          <span class="code-badge badge-sem">semantic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">        <span class="tok-eq">&lt;=</span> <span class="tok-name">navigate</span></span>
+          <span class="code-badge badge-sem">semantic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">        <span class="tok-left">&lt;-</span> <span class="tok-name">sensor reading</span></span>
+          <span class="code-badge badge-syn">syntactic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">            <span class="tok-eq">&lt;=</span> <span class="tok-name">scan</span></span>
+          <span class="code-badge badge-syn">syntactic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">            <span class="tok-left">&lt;-</span> <span class="tok-name">position</span></span>
+          <span class="code-badge badge-syn">syntactic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">        <span class="tok-left">&lt;-</span> <span class="tok-name">route plan</span></span>
+          <span class="code-badge badge-syn">syntactic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">            <span class="tok-eq">&lt;=</span> <span class="tok-name">plan route</span></span>
+          <span class="code-badge badge-syn">syntactic</span>
+        </div>
+
+        <div class="code-row">
+          <span class="code-text">        <span class="tok-left">&lt;-</span> <span class="tok-name">mission brief</span></span>
+          <span class="code-badge" style="background:transparent;border:none;color:#A8B4C8;font-size:10px;font-family:'IBM Plex Sans',sans-serif;font-style:italic">external input</span>
+        </div>
+
+        <div class="code-scope-note">
+          Scope rule: each step's inputs are declared in its indented block — nothing else is visible.
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div style="display:flex;gap:14px;margin-top:2px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
+          <span class="code-badge badge-syn">syntactic</span>
+          <span>deterministic — no LLM</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7A99">
+          <span class="code-badge badge-sem">semantic</span>
+          <span>worker executes with intelligence</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Node type explanations -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <h3>The two node types</h3>
+
+      <!-- Syntactic node card -->
+      <div class="node-card node-card-blue">
+        <div class="node-card-title text-blue">Syntactic Node</div>
+        <div class="node-card-item">
+          <span class="dot dot-blue"></span>
+          <span>Deterministic, rule-based execution — no LLM involved</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-blue"></span>
+          <span>Zero latency, zero cost, fully auditable</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-blue"></span>
+          <span>This is where our existing automation lives — route planning,
+          waypoint loops, sensor collection, anomaly rules</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-blue"></span>
+          <span>Behavior is constrained by the rule set — identical to today</span>
+        </div>
+      </div>
+
+      <!-- Semantic node card -->
+      <div class="node-card node-card-purple">
+        <div class="node-card-title text-purple">Semantic Node</div>
+        <div class="node-card-item">
+          <span class="dot dot-purple"></span>
+          <span>A worker is assigned — one agent or a group</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-purple"></span>
+          <span>Worker receives only the inputs declared in the step's scope</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-purple"></span>
+          <span>Worker applies configured abilities to produce the declared deliverable</span>
+        </div>
+        <div class="node-card-item">
+          <span class="dot dot-purple"></span>
+          <span>Adapts, reasons, handles novel cases — but cannot exceed its scope</span>
+        </div>
+      </div>
+
+      <!-- Bottom note -->
+      <div class="note-strip">
+        The boundary between fixed and adaptive is explicit in the contract —
+        declared at authoring time, not discovered at runtime.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

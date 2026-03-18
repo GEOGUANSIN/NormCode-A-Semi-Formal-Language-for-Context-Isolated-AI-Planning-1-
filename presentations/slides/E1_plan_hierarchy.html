@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E1 — The Plan Hierarchy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .plan-node {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 11px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .plan-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #2D3748;
+    }
+    .plan-desc {
+      font-size: 11px;
+      color: #6B7A99;
+    }
+    .plan-agents {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .agent-chip {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .chip-user     { background: rgba(59,191,245,0.10);  color: #1E9FE0;  border: 1px solid rgba(30,159,224,0.3); }
+    .chip-drone    { background: rgba(34,197,94,0.1);    color: #1DA067;  border: 1px solid rgba(34,197,94,0.2); }
+    .chip-analysis { background: rgba(245,158,11,0.1);   color: #D97706;  border: 1px solid rgba(245,158,11,0.2); }
+    .chip-planning { background: rgba(155,111,212,0.10);  color: #9B6FD4;  border: 1px solid rgba(139,92,246,0.25); }
+
+    .dist-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .dist-line { width: 1px; background: #30363d; flex: 1; min-height: 14px; }
+    .dist-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #A8B4C8;
+      white-space: nowrap;
+    }
+    .dist-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #484f58;
+      flex-shrink: 0;
+    }
+
+    .scope-rule {
+      background: rgba(155,111,212,0.06);
+      border: 1px solid rgba(155,111,212,0.2);
+      border-radius: 7px;
+      padding: 13px 18px;
+      font-size: 12.5px;
+      color: #6B7A99;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <div class="slide-header">
+    <span class="slide-number">E1</span>
+    <span class="tag" style="background:rgba(34,197,94,0.1);color:#1DA067;border:1px solid rgba(34,197,94,0.2)">Our UAV System</span>
+  </div>
+
+  <div class="slide-headline">
+    Five Plans.
+    <span class="text-muted" style="font-weight:400">One Coherent System.</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0">
+
+    <!-- LEFT: tree diagram -->
+    <div style="display:flex;flex-direction:column;gap:0;align-items:stretch">
+      <h3 style="margin-bottom:14px">Plan hierarchy</h3>
+
+      <!-- Root -->
+      <div class="plan-node" style="border-color:rgba(30,159,224,0.35)">
+        <div class="plan-name">uav_user_assistant.ncds</div>
+        <div class="plan-desc">Operator session — ReAct loop</div>
+        <div class="plan-agents">
+          <span class="agent-chip chip-user">user_agent</span>
+        </div>
+      </div>
+
+      <!-- Arrow down to mission -->
+      <div class="dist-arrow" style="align-self:center;height:28px">
+        <div class="dist-line"></div>
+        <div class="dist-label">Distribute</div>
+        <div class="dist-dot"></div>
+      </div>
+
+      <!-- Mission -->
+      <div class="plan-node" style="border-color:rgba(139,92,246,0.35)">
+        <div class="plan-name">uav_mission.ncds</div>
+        <div class="plan-desc">Triage — assess + dispatch</div>
+        <div class="plan-agents">
+          <span class="agent-chip chip-planning">planning_agent</span>
+        </div>
+      </div>
+
+      <!-- Split to nav + error check -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:0">
+        <div class="dist-arrow" style="height:28px">
+          <div class="dist-line"></div>
+          <div class="dist-label">Distribute</div>
+          <div class="dist-dot"></div>
+        </div>
+        <div class="dist-arrow" style="height:28px">
+          <div class="dist-line"></div>
+          <div class="dist-label">Distribute</div>
+          <div class="dist-dot"></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="plan-node" style="border-color:rgba(34,197,94,0.25)">
+          <div class="plan-name" style="font-size:11px">uav_navigation.ncds</div>
+          <div class="plan-desc">Waypoint loop</div>
+          <div class="plan-agents">
+            <span class="agent-chip chip-drone">drone_agent</span>
+            <span class="agent-chip chip-planning">planning_agent</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <div class="plan-node" style="border-color:rgba(245,158,11,0.25)">
+            <div class="plan-name" style="font-size:11px">uav_error_check.ncds</div>
+            <div class="plan-desc">Image capture + analysis</div>
+            <div class="plan-agents">
+              <span class="agent-chip chip-drone">drone_agent</span>
+              <span class="agent-chip chip-analysis">analysis_agent</span>
+            </div>
+          </div>
+          <div class="dist-arrow" style="align-self:center;height:22px">
+            <div class="dist-line"></div>
+            <div class="dist-label" style="font-size:9px">Distribute (conditional)</div>
+            <div class="dist-dot"></div>
+          </div>
+          <div class="plan-node" style="border-color:rgba(30,159,224,0.2)">
+            <div class="plan-name" style="font-size:10.5px">uav_analysis_criteria.ncds</div>
+            <div class="plan-desc">Criteria discussion</div>
+            <div class="plan-agents">
+              <span class="agent-chip chip-user">user_agent</span>
+              <span class="agent-chip chip-analysis">analysis_agent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: legend + key point -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3>What each plan is</h3>
+
+      <div class="card" style="flex:0">
+        <div style="font-size:12px;font-weight:700;color:#1A1F36;margin-bottom:8px">Each plan is a scope-isolated contract</div>
+        <div style="font-size:12.5px;color:#6B7A99;line-height:1.5">
+          No plan reaches outside its declared inputs. The Distribute arrows
+          are the only connections — and each one passes only what the
+          receiving plan declares it needs.
+        </div>
+      </div>
+
+      <h3 style="margin-top:4px">Agent legend</h3>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="agent-chip chip-user" style="font-size:11px;padding:3px 10px">user_agent</span>
+          <span style="font-size:12px;color:#6B7A99">Operator-facing interaction only</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="agent-chip chip-drone" style="font-size:11px;padding:3px 10px">drone_agent</span>
+          <span style="font-size:12px;color:#6B7A99">UAV hardware and sensors only</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="agent-chip chip-analysis" style="font-size:11px;padding:3px 10px">analysis_agent</span>
+          <span style="font-size:12px;color:#6B7A99">Image and data analysis only</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="agent-chip chip-planning" style="font-size:11px;padding:3px 10px">planning_agent</span>
+          <span style="font-size:12px;color:#6B7A99">Mission structure and reporting</span>
+        </div>
+      </div>
+
+      <div class="scope-rule" style="margin-top:auto">
+        Agents are shared across plans — but each invocation is a fresh,
+        scoped call. Sharing capability does not mean sharing context.
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

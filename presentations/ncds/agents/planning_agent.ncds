@@ -1,0 +1,35 @@
+/: planning_agent
+/: Mission planning and reporting agent. Handles mission structure,
+/: triage, requirement assessment, and compilation of results.
+/: Operates on plans and structured data — not on operator conversation
+/: or drone hardware directly.
+/:
+/: Context isolation:
+/:   Sees only the validated intent, approved plan, or result sets
+/:   scoped to its assigned step.
+/:   No access to operator conversation history or drone telemetry.
+/:
+/: Abilities:
+/:   - mission reasoning   triage requests, assess mission components
+/:   - file I/O            read mission plans, write structured reports
+/:   - code execution      run rule-based logic for route planning,
+/:                         waypoint filtering, threshold checks
+/:
+/: Assigned actions across plans:
+/:
+/:   uav_mission.ncds
+/:     <= triage validated intent into required mission components
+/:     <= assess whether navigation work is required by the approved plan
+/:     <= assess whether error check work is required by the approved plan
+/:     <= compile results from all completed mission components
+/:     <= deliver mission summary to caller
+/:
+/:   uav_navigation.ncds
+/:     <= compile flight log from all waypoint records
+/:     <= record outcome for this waypoint
+/:
+/:   uav_error_check.ncds
+/:     <= compile error check report from all image analyses
+/:     <= assess whether criteria discussion is warranted for this mission
+/:
+/: Shared across: uav_mission.ncds, uav_navigation.ncds, uav_error_check.ncds

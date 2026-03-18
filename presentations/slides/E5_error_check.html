@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E5 — Error Check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .panel {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    .mini-code {
+      background: #F0F4F8;
+      border: 1px solid #E2EAF4;
+      border-radius: 5px;
+      padding: 8px 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      color: #2D3748;
+    }
+    .tok-l { color: #1E9FE0; font-weight: 600; }
+    .tok-e { color: #9B6FD4; font-weight: 600; }
+    .tok-c { color: #A8B4C8; font-style: italic; }
+    .tok-cond { color: #D97706; }
+    .panel-note {
+      font-size: 11.5px;
+      color: #6B7A99;
+      line-height: 1.45;
+      font-style: italic;
+    }
+    .agent-tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'IBM Plex Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+    .tag-user     { background: rgba(59,191,245,0.10);  color: #1E9FE0;  border: 1px solid rgba(30,159,224,0.3); }
+    .tag-drone    { background: rgba(34,197,94,0.1);    color: #1DA067;  border: 1px solid rgba(34,197,94,0.2); }
+    .tag-analysis { background: rgba(245,158,11,0.1);   color: #D97706;  border: 1px solid rgba(245,158,11,0.2); }
+    .tag-planning { background: rgba(155,111,212,0.10);  color: #9B6FD4;  border: 1px solid rgba(139,92,246,0.25); }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <div class="slide-header">
+    <span class="slide-number">E5</span>
+    <span class="tag" style="background:rgba(245,158,11,0.1);color:#D97706;border:1px solid rgba(245,158,11,0.2)">uav_error_check.ncds</span>
+  </div>
+
+  <div class="slide-headline">
+    The Worker Decides Whether to Engage.
+    <span class="text-muted" style="font-weight:400">The Contract Bounds How.</span>
+  </div>
+
+  <!-- Three panels -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;flex:1;min-height:0">
+
+    <!-- Panel 1: Criteria decision -->
+    <div class="panel">
+      <div class="panel-title text-purple">1 — Criteria decision</div>
+      <span class="agent-tag tag-planning">planning_agent</span>
+
+      <div class="mini-code"><span class="tok-l">&lt;-</span> &lt;criteria discussion<br>      required&gt;<br>  <span class="tok-e">&lt;=</span> <span class="tok-c">assess if warranted</span><br>  <span class="tok-l">&lt;-</span> approved plan<br><br><span class="tok-l">&lt;-</span> refined criteria<br>  <span class="tok-c">/: Distribute -&gt;</span><br>  <span class="tok-c">   uav_analysis_criteria</span><br>  <span class="tok-e">&lt;=</span> refine with operator<br>      <span class="tok-cond">@:' &lt;required&gt;</span><br><br><span class="tok-l">&lt;-</span> default criteria<br>  <span class="tok-e">&lt;=</span> load defaults<br>      <span class="tok-cond">@:! &lt;required&gt;</span><br><br><span class="tok-l">&lt;-</span> analysis criteria<br>  <span class="tok-e">&lt;=</span> select criteria</div>
+
+      <div class="panel-note">
+        If the mission warrants it, the operator can discuss and refine
+        criteria before any image is analysed. Otherwise defaults are used —
+        no unnecessary interaction.
+      </div>
+    </div>
+
+    <!-- Panel 2: Image capture -->
+    <div class="panel">
+      <div class="panel-title text-green">2 — Image capture loop</div>
+      <span class="agent-tag tag-drone">drone_agent</span>
+
+      <div class="mini-code"><span class="tok-l">&lt;-</span> inspection points<br>  <span class="tok-e">&lt;=</span> extract from plan<br>  <span class="tok-l">&lt;-</span> approved plan<br><br><span class="tok-l">&lt;-</span> captured images<br>  <span class="tok-e">&lt;=</span> capture images at<br>      all inspection points<br>  <span class="tok-l">&lt;-</span> inspection points<br>  <span class="tok-l">&lt;-</span> approved plan</div>
+
+      <div style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.15);border-radius:5px;padding:9px;margin-top:auto">
+        <div style="font-size:10.5px;font-weight:700;color:#1DA067;margin-bottom:4px">drone_agent sees</div>
+        <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">Inspection points<br>Approved plan</div>
+        <div style="font-size:10.5px;font-weight:700;color:#E05252;margin-top:6px;margin-bottom:4px">does NOT see</div>
+        <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">Analysis criteria<br>Operator conversation</div>
+      </div>
+    </div>
+
+    <!-- Panel 3: Analysis loop -->
+    <div class="panel">
+      <div class="panel-title text-amber">3 — Analysis loop</div>
+      <span class="agent-tag tag-analysis">analysis_agent</span>
+
+      <div class="mini-code"><span class="tok-l">&lt;-</span> image analyses<br>  <span class="tok-e">&lt;=</span> for every captured<br>      image<br><br>      <span class="tok-l">&lt;-</span> image analysis<br>          <span class="tok-e">&lt;=</span> analyse image<br>              for defects<br>          <span class="tok-l">&lt;-</span> captured image<br>          <span class="tok-l">&lt;-</span> analysis criteria<br><br>  <span class="tok-l">&lt;-</span> captured images<br>  <span class="tok-c">&lt;* captured image</span><br>      <span class="tok-c">from captured images</span></div>
+
+      <div style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.15);border-radius:5px;padding:9px;margin-top:auto">
+        <div style="font-size:10.5px;font-weight:700;color:#D97706;margin-bottom:4px">analysis_agent sees</div>
+        <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">One image<br>Analysis criteria</div>
+        <div style="font-size:10.5px;font-weight:700;color:#E05252;margin-top:6px;margin-bottom:4px">does NOT see</div>
+        <div style="font-size:11.5px;color:#6B7A99;line-height:1.4">Other images<br>Flight path or telemetry</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-strip amber-bg" style="margin-top:12px">
+    Two agents — drone_agent and analysis_agent — handle the same mission step with completely separate contexts.
+    Capture and interpretation are structurally isolated, not just instructionally separated.
+  </div>
+
+</div>
+</body>
+</html>

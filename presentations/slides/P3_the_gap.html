@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P3 — The Gap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    /* ---- Spectrum bar ---- */
+    .spectrum-wrapper {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 10px;
+      padding: 24px 36px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .spectrum-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .spectrum-label-text {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .spectrum-bar-row {
+      position: relative;
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+
+    .spectrum-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #3b82f6, #8b5cf6);
+      opacity: 0.85;
+      position: relative;
+    }
+
+    /* dot markers on the bar */
+    .dot {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid #0d1117;
+    }
+
+    .dot-blue   { background: #3b82f6; left: 4%; }
+    .dot-purple { background: #8b5cf6; left: 96%; }
+    .dot-star   { background: #f59e0b; left: 50%; width: 20px; height: 20px; border-radius: 50%; border-color: #0d1117; }
+
+    .star-label {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      color: #D97706;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .dot-label-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .dot-label {
+      font-size: 12px;
+      color: #6B7A99;
+      font-style: italic;
+      line-height: 1.35;
+      max-width: 140px;
+    }
+
+    .dot-label-center {
+      font-size: 12px;
+      color: #D97706;
+      font-style: italic;
+      text-align: center;
+      flex: 1;
+      padding-top: 4px;
+    }
+
+    /* ---- Bottom concept box ---- */
+    .concept-box {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 18px 22px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 18px;
+    }
+
+    .concept-divider {
+      background: #30363d;
+      width: 1px;
+    }
+
+    .concept-col-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .concept-item {
+      display: flex;
+      gap: 8px;
+      font-size: 13px;
+      color: #2D3748;
+      line-height: 1.45;
+      margin-bottom: 7px;
+    }
+
+    .concept-item .bullet-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: #A8B4C8;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .concept-item-fail {
+      display: flex;
+      gap: 8px;
+      font-size: 13px;
+      color: #2D3748;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .concept-item-fail .bullet-dash {
+      color: #A8B4C8;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P3</span>
+    <span class="tag tag-section">The Problem</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    You Need Structure <span class="text-muted" style="font-weight:400">AND</span> Adaptation.
+    <span class="text-muted" style="font-weight:400">At The Same Time.</span>
+  </div>
+
+  <!-- Spectrum diagram -->
+  <div class="spectrum-wrapper" style="margin-bottom:18px">
+
+    <div class="spectrum-labels">
+      <span class="spectrum-label-text text-blue">Structured</span>
+      <span class="spectrum-label-text" style="color:#6B7A99;font-weight:500;font-size:11px;letter-spacing:0.06em;text-transform:uppercase">Where the approaches land</span>
+      <span class="spectrum-label-text text-purple">Adaptive</span>
+    </div>
+
+    <!-- Bar with markers -->
+    <div class="spectrum-bar-row">
+      <div class="spectrum-bar" style="position:relative">
+        <span class="dot dot-blue"   title="Workflow Platforms"></span>
+        <span class="dot dot-purple" title="Agentic Frameworks"></span>
+        <span class="dot dot-star"   title="You need to be here"></span>
+      </div>
+    </div>
+
+    <!-- Labels under bar -->
+    <div class="dot-label-row">
+      <div class="dot-label text-blue">
+        Workflow Platforms<br>
+        <span style="color:#A8B4C8">(structure, no adaptation)</span>
+      </div>
+      <div class="dot-label-center">
+        ★ You need to be here
+      </div>
+      <div class="dot-label text-purple" style="text-align:right">
+        Agentic Frameworks<br>
+        <span style="color:#A8B4C8">(adaptation, no structure)</span>
+      </div>
+    </div>
+
+  </div>
+  <!-- end spectrum -->
+
+  <!-- Concept box: The AI Worker -->
+  <div class="concept-box">
+
+    <!-- Left: What you're looking for -->
+    <div>
+      <div class="concept-col-title text-green">What you're really looking for</div>
+
+      <div class="concept-item">
+        <span class="bullet-num">1.</span>
+        <span>
+          <strong style="color:#1A1F36">A contract</strong> — specifying what work will be done,
+          in what order, with what inputs. Our mature automation expressed in structured form.
+        </span>
+      </div>
+      <div class="concept-item">
+        <span class="bullet-num">2.</span>
+        <span>
+          <strong style="color:#1A1F36">Agentic capability</strong> — a worker who executes each
+          contracted step intelligently, improvises within scope, and learns from past runs.
+        </span>
+      </div>
+
+      <div style="margin-top:10px;font-size:12px;color:#6B7A99;font-style:italic">
+        The contract is not code. The contract is not a drag-and-drop graph.<br>
+        The contract is a language.
+      </div>
+    </div>
+
+    <div class="concept-divider"></div>
+
+    <!-- Right: Why neither works -->
+    <div>
+      <div class="concept-col-title text-red">Why neither current approach works</div>
+
+      <div class="concept-item-fail">
+        <span class="bullet-dash">—</span>
+        <span>
+          <strong style="color:#1E9FE0">Agents:</strong> no contract — the worker does whatever it thinks
+          is right. No plan to review. No checkpoint to audit. No scope to enforce.
+        </span>
+      </div>
+      <div class="concept-item-fail">
+        <span class="bullet-dash">—</span>
+        <span>
+          <strong style="color:#9B6FD4">Workflows:</strong> no worker — the graph is rigid. When the
+          world doesn't match the graph, execution fails. There is no intelligence to improvise.
+        </span>
+      </div>
+
+      <div style="margin-top:10px;font-size:12px;color:#6B7A99;font-style:italic">
+        The boundary between fixed and adaptive is not explicit in either approach.<br>
+        That is the gap NormCode closes.
+      </div>
+    </div>
+
+  </div>
+  <!-- end concept box -->
+
+</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+/: uav_mission.ncds
+/: UAV Mission Orchestration — work triage and sub-mission dispatch
+/:
+/: Dispatched from uav_user_assistant.ncds via Distribute.
+/: Receives a validated operator intent. Triages required mission components,
+/: presents the plan for operator approval, then dispatches sub-missions.
+/:
+/: Execution order (inside-out, top-down):
+/:   fleet status        — retrieve UAV state              (depends on session)
+/:   mission history     — load past missions for context  (depends on session)
+/:   approved plan       — triage + operator approval      (depends on fleet status, history)
+/:   <navigation req>    — assess if navigation needed     (depends on approved plan)
+/:   <error check req>   — assess if error check needed    (depends on approved plan)
+/:   compiled results    — dispatch sub-missions + collect (depends on req flags + approved plan)
+/:   mission complete    — deliver summary to caller       (root)
+
+<- mission complete
+    <= deliver mission summary to caller
+
+    <- fleet status
+        <= retrieve current UAV fleet state and availability
+        <- session
+
+    <- mission history
+        <= load relevant past missions for context
+        <- session
+
+    <- approved plan
+        <= present triaged plan to operator and await approval
+        <- mission plan
+            <= triage validated intent into required mission components
+            <- validated intent
+            <- fleet status
+            <- mission history
+
+    <- <navigation required>
+        <= assess whether navigation work is required by the approved plan
+        <- approved plan
+
+    <- <error check required>
+        <= assess whether error check work is required by the approved plan
+        <- approved plan
+
+    <- compiled results
+        <= compile results from all completed mission components
+        <- navigation result
+            /: Distribute -> uav_navigation.ncds
+            <= execute navigation mission
+                @:' <navigation required>
+            <- approved plan
+        <- error check result
+            /: Distribute -> uav_error_check.ncds
+            <= execute error check mission
+                @:' <error check required>
+            <- approved plan
+
+    <- validated intent
+    <- session

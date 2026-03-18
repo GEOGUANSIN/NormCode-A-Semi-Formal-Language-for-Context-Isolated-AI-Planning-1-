@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P7 — Continual Engagement</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    /* ---- Mechanism panels ---- */
+    .mech-panel {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .mech-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1A1F36;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mech-desc {
+      font-size: 12.5px;
+      color: #6B7A99;
+      line-height: 1.5;
+    }
+
+    .mech-diagram {
+      background: #F0F4F8;
+      border: 1px solid #E2EAF4;
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mech-detail {
+      font-size: 12px;
+      color: #6B7A99;
+      font-style: italic;
+      line-height: 1.45;
+      border-top: 1px solid #E2EAF4;
+      padding-top: 10px;
+    }
+
+    .mech-detail strong {
+      color: #6B7A99;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P7</span>
+    <span class="tag tag-purple">The Solution</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    Adaptation Happens.
+    <span class="text-muted" style="font-weight:400">Inside the Contract.</span>
+  </div>
+
+  <!-- Intro line -->
+  <div style="font-size:14px;color:#6B7A99;margin-bottom:16px;margin-top:-10px">
+    Two mechanisms give each worker limited improvisation — without rewriting the contract.
+  </div>
+
+  <!-- Two panels -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:1;min-height:0">
+
+    <!-- LEFT: ReAct Loop -->
+    <div class="mech-panel">
+
+      <div class="mech-title">
+        <span style="background:rgba(59,191,245,0.10);border:1px solid rgba(30,159,224,0.3);border-radius:5px;padding:3px 9px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#1E9FE0">Mechanism 1</span>
+        ReAct Loop
+      </div>
+
+      <!-- Diagram -->
+      <div class="mech-diagram">
+        <svg viewBox="0 0 300 100" width="300" height="100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Step boundary box -->
+          <rect x="4" y="4" width="292" height="92" rx="6" fill="none" stroke="#D8E2F0" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="14" y="18" font-family="IBM Plex Mono,monospace" font-size="9" fill="#A8B4C8">step scope</text>
+
+          <!-- Observe node -->
+          <rect x="20" y="30" width="72" height="30" rx="4" fill="#F5F8FF" stroke="#3b82f6" stroke-width="1" opacity="0.85"/>
+          <text x="56" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" font-weight="600" fill="#1E9FE0">Observe</text>
+
+          <!-- Arrow: observe -> act -->
+          <line x1="92" y1="45" x2="114" y2="45" stroke="#484f58" stroke-width="1.5" marker-end="url(#ra)"/>
+
+          <!-- Act node -->
+          <rect x="116" y="30" width="72" height="30" rx="4" fill="#F5F8FF" stroke="#3b82f6" stroke-width="1" opacity="0.85"/>
+          <text x="152" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" font-weight="600" fill="#1E9FE0">Act</text>
+
+          <!-- Arrow: act -> observe (loop back) -->
+          <path d="M188 45 Q220 45 220 72 Q220 88 152 88 Q84 88 84 72 Q84 60 92 50" fill="none" stroke="#484f58" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#ra)"/>
+          <text x="152" y="82" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#A8B4C8">iterate until deliverable met</text>
+
+          <!-- Arrow: act -> deliver -->
+          <line x1="188" y1="45" x2="210" y2="45" stroke="#22c55e" stroke-width="1.5" marker-end="url(#rg)"/>
+
+          <!-- Deliver node -->
+          <rect x="212" y="30" width="72" height="30" rx="4" fill="rgba(34,197,94,0.06)" stroke="rgba(34,197,94,0.3)" stroke-width="1"/>
+          <text x="248" y="50" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="10.5" font-weight="600" fill="#4ade80">Deliver</text>
+
+          <defs>
+            <marker id="ra" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#A8B4C8"/>
+            </marker>
+            <marker id="rg" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="mech-desc">
+        Within a single step, the worker observes the result of its action and
+        decides whether to act again. The loop runs entirely inside the declared
+        scope — the contract does not change.
+      </div>
+
+      <div class="mech-detail">
+        <strong>UAV example:</strong> The scan step receives an ambiguous sensor
+        reading. The worker retries the scan with a different approach, then
+        delivers the sensor reading once confident. The navigate step never sees
+        the retry — only the final deliverable.
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Distribute Tool -->
+    <div class="mech-panel">
+
+      <div class="mech-title">
+        <span style="background:rgba(155,111,212,0.10);border:1px solid rgba(155,111,212,0.3);border-radius:5px;padding:3px 9px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#9B6FD4">Mechanism 2</span>
+        Distribute Tool
+        <span style="font-size:10.5px;font-weight:500;color:#A8B4C8;font-style:italic">coming soon</span>
+      </div>
+
+      <!-- Diagram -->
+      <div class="mech-diagram">
+        <svg viewBox="0 0 300 100" width="300" height="100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Main step box -->
+          <rect x="4" y="20" width="100" height="50" rx="5" fill="rgba(155,111,212,0.06)" stroke="rgba(155,111,212,0.3)" stroke-width="1"/>
+          <text x="54" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" fill="#9B6FD4">navigate</text>
+          <text x="54" y="57" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="9" fill="#6B7A99">worker</text>
+
+          <!-- Distribute arrow down -->
+          <line x1="104" y1="36" x2="148" y2="25" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#dp)"/>
+          <text x="126" y="22" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8.5" fill="#8b5cf6">delegate</text>
+
+          <!-- Sub-worker box -->
+          <rect x="150" y="8" width="100" height="36" rx="4" fill="#F5F8FF" stroke="rgba(155,111,212,0.4)" stroke-width="1"/>
+          <text x="200" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#9B6FD4">obstacle assess</text>
+          <text x="200" y="37" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8.5" fill="#6B7A99">sub-worker</text>
+
+          <!-- Return arrow -->
+          <line x1="150" y1="36" x2="108" y2="46" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#dg)"/>
+          <text x="128" y="52" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8.5" fill="#22c55e">result</text>
+
+          <!-- Scope note for sub-worker -->
+          <rect x="150" y="54" width="146" height="38" rx="4" fill="rgba(48,54,61,0.3)" stroke="#D8E2F0" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="223" y="69" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8.5" fill="#A8B4C8">sub-worker scope =</text>
+          <text x="223" y="81" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="8.5" fill="#A8B4C8">subset of navigate's inputs</text>
+
+          <defs>
+            <marker id="dp" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#8b5cf6"/>
+            </marker>
+            <marker id="dg" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#22c55e"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="mech-desc">
+        A worker delegates part of its work to a sub-worker. The sub-worker receives
+        a scoped subset of the current step's inputs, produces a partial result, and
+        returns it. The original worker integrates and completes the deliverable.
+      </div>
+
+      <div class="mech-detail">
+        <strong>UAV example:</strong> The navigate step delegates obstacle assessment
+        to a specialist sub-worker. The sub-worker receives only position and sensor
+        data — not the full mission brief. The full mission context never leaves the
+        navigate step's scope.
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="note-strip" style="margin-top:14px">
+    Both mechanisms are <strong style="color:#2D3748">limited improvisation</strong> — the worker adapts, but adaptation is bounded
+    by the declared scope. The contract is not rewritten at runtime.
+  </div>
+
+</div>
+</body>
+</html>

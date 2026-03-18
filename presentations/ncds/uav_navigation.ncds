@@ -1,0 +1,71 @@
+/: uav_navigation.ncds
+/: UAV Navigation — waypoint execution and flight log production
+/:
+/: Dispatched from uav_mission.ncds via Distribute.
+/: Receives an approved navigation plan. Plans the route, iterates over
+/: each waypoint: flies, scans, collects sensor data. Produces a flight log.
+/:
+/: Agents:
+/:   drone_agent — dedicated to UAV hardware interaction only.
+/:               Independent context: sees only what this step's scope provides.
+/:               Shared with uav_error_check.ncds.
+/:
+/: Syntactic nodes (deterministic, no LLM, no agent):
+/:   extract waypoints, filter altitude, plan route, loop structure
+/: Semantic nodes (drone_agent executes):
+/:   fly, scan, navigate, compile flight log
+/:
+/: Execution order (inside-out, top-down):
+/:   raw waypoints     — extract from approved plan      (syntactic)
+/:   filtered waypoints — filter unsafe altitude         (syntactic)
+/:   route             — plan optimal route              (syntactic)
+/:   waypoint records  — loop: fly + scan per waypoint   (drone_agent)
+/:   flight log        — compile findings                (root)
+
+<- flight log
+    /: [planning_agent]
+    <= compile flight log from all waypoint records
+
+    <- raw waypoints
+        <= extract waypoints from approved navigation plan
+        <- approved navigation plan
+
+    <- filtered waypoints
+        <= filter waypoints below minimum safe altitude
+        <- raw waypoints
+
+    <- route
+        <= plan optimal route from approved waypoints
+        <- filtered waypoints
+
+    <- waypoint records
+        <= for every waypoint in the route
+
+            <= return the waypoint record per iteration
+
+            <- waypoint record
+                /: [planning_agent]
+                <= bundle position, sensor reading, and outcome together
+
+                <- current position
+                    /: [drone_agent]
+                    <= fly to current waypoint
+                    <- current waypoint
+                    <- route
+
+                <- sensor reading
+                    /: [drone_agent]
+                    <= scan area and collect sensor data at waypoint
+                    <- current position
+
+                <- waypoint outcome
+                    /: [drone_agent]
+                    <= navigate and handle in-flight conditions at waypoint
+                    <- sensor reading
+                    <- current waypoint
+                    <- route
+
+        <- route
+        <* current waypoint from route
+
+    <- approved navigation plan

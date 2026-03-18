@@ -1,0 +1,274 @@
+/* ============================================================
+   slides.css — NormCode Presentation Shared Stylesheet
+   Autel light theme, IBM Plex Sans, 1280×720 fixed slide canvas
+   Brand palette: sky blue #3BBFF5 → pink #E87BC8
+   ============================================================ */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------- Slide Canvas ---------- */
+.slide {
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: #FFFFFF;
+  color: #1A1F36;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 48px;
+  position: relative;
+}
+
+/* ---------- Typography ---------- */
+.slide-headline {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1A1F36;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.slide-subheadline {
+  font-size: 20px;
+  color: #6B7A99;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6B7A99;
+  margin-bottom: 12px;
+}
+
+/* ---------- Colour Utilities ---------- */
+.text-purple  { color: #9B6FD4; }
+.text-blue    { color: #1E9FE0; }
+.text-green   { color: #1DA067; }
+.text-red     { color: #E05252; }
+.text-amber   { color: #D97706; }
+.text-muted   { color: #6B7A99; }
+.text-pink    { color: #D45FA8; }
+
+/* ---------- Autel gradient utility ---------- */
+.autel-gradient {
+  background: linear-gradient(135deg, #3BBFF5, #E87BC8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ---------- Slide Header Row ---------- */
+.slide-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+/* ---------- Slide Number ---------- */
+.slide-number {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6B7A99;
+  background: #F0F4F8;
+  border: 1px solid #D8E2F0;
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-family: 'IBM Plex Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+/* ---------- Tags / Chips ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 3px 9px;
+  line-height: 1;
+}
+
+.tag-section {
+  background: #F0F4F8;
+  color: #6B7A99;
+  border: 1px solid #D8E2F0;
+}
+
+.tag-purple {
+  background: rgba(155, 111, 212, 0.1);
+  color: #8B5FCF;
+  border: 1px solid rgba(155, 111, 212, 0.3);
+}
+
+.tag-blue {
+  background: rgba(59, 191, 245, 0.1);
+  color: #1E9FE0;
+  border: 1px solid rgba(59, 191, 245, 0.3);
+}
+
+.tag-amber {
+  background: rgba(217, 119, 6, 0.08);
+  color: #D97706;
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.tag-green {
+  background: rgba(29, 160, 103, 0.08);
+  color: #1DA067;
+  border: 1px solid rgba(29, 160, 103, 0.2);
+}
+
+.tag-muted {
+  background: #F0F4F8;
+  color: #8B96B0;
+  border: 1px solid #D8E2F0;
+}
+
+.tag-pink {
+  background: rgba(232, 123, 200, 0.1);
+  color: #C44D96;
+  border: 1px solid rgba(232, 123, 200, 0.3);
+}
+
+/* ---------- Card / Surface ---------- */
+.card {
+  background: #F5F8FF;
+  border: 1px solid #D8E2F0;
+  border-radius: 8px;
+  padding: 20px 22px;
+}
+
+.card-purple-border {
+  border-color: rgba(155, 111, 212, 0.4);
+}
+
+.card-blue-border {
+  border-color: rgba(59, 191, 245, 0.4);
+}
+
+/* ---------- Two-Column Grid ---------- */
+.col-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.col-2-4060 {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 24px;
+}
+
+.col-2-5050 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ---------- Bullet Lists ---------- */
+ul.bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+ul.bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #3A4560;
+  line-height: 1.45;
+}
+
+/* Check / Cross list items */
+.check::before {
+  content: '✓';
+  color: #1DA067;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 13px;
+}
+
+.cross::before {
+  content: '✗';
+  color: #E05252;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 13px;
+}
+
+/* ---------- Code Block ---------- */
+.code-block {
+  background: #F0F4F8;
+  border: 1px solid #D8E2F0;
+  border-radius: 8px;
+  padding: 18px 20px;
+  font-family: 'IBM Plex Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #2D3748;
+  overflow: hidden;
+}
+
+.code-block .token-arrow-left  { color: #1E9FE0; }
+.code-block .token-arrow-eq    { color: #9B6FD4; }
+.code-block .token-comment     { color: #8B96B0; font-style: italic; }
+.code-block .token-annotation  { color: #6B7A99; font-style: italic; }
+
+/* ---------- Note Strip ---------- */
+.note-strip {
+  font-size: 13px;
+  color: #6B7A99;
+  line-height: 1.5;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #E8EDF5;
+}
+
+.note-strip.amber-bg {
+  background: rgba(217, 119, 6, 0.06);
+  border: 1px solid rgba(217, 119, 6, 0.18);
+  border-radius: 6px;
+  padding: 11px 16px;
+  color: #D97706;
+  margin-top: auto;
+}
+
+/* ---------- Divider ---------- */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: #E8EDF5;
+  margin: 14px 0;
+}
+
+/* ---------- Inline flex helpers ---------- */
+.flex-row   { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+.flex-col   { display: flex; flex-direction: column; }
+.gap-8      { gap: 8px; }
+.gap-12     { gap: 12px; }
+.gap-16     { gap: 16px; }
+.gap-20     { gap: 20px; }
+.mt-auto    { margin-top: auto; }
+.flex-1     { flex: 1; }

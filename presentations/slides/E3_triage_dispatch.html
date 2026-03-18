@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E3 — Triage and Dispatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .flow-node {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-size: 12px;
+      color: #2D3748;
+      text-align: center;
+    }
+    .flow-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 16px;
+      color: #A8B4C8;
+      font-size: 13px;
+    }
+    .flow-label {
+      font-size: 10px;
+      color: #A8B4C8;
+      text-align: center;
+      font-style: italic;
+      margin-top: -4px;
+      margin-bottom: 2px;
+    }
+    .cond-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: rgba(245,158,11,0.1);
+      color: #D97706;
+      border: 1px solid rgba(245,158,11,0.25);
+    }
+    .dispatch-box {
+      border-radius: 7px;
+      padding: 12px 14px;
+      flex: 1;
+    }
+    .dispatch-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 6px;
+    }
+    .dispatch-item {
+      font-size: 12px;
+      color: #6B7A99;
+      line-height: 1.45;
+      display: flex;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <div class="slide-header">
+    <span class="slide-number">E3</span>
+    <span class="tag" style="background:rgba(155,111,212,0.10);color:#9B6FD4;border:1px solid rgba(139,92,246,0.25)">uav_mission.ncds</span>
+  </div>
+
+  <div class="slide-headline">
+    The Plan Decides What Work Is Needed.
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;min-height:0">
+
+    <!-- LEFT: flow diagram -->
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <h3 style="margin-bottom:10px">Conditional dispatch flow</h3>
+
+      <!-- Inputs -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+        <div class="flow-node" style="font-size:11px;color:#6B7A99">validated intent<br><span style="color:#A8B4C8;font-size:10px">from user assistant</span></div>
+        <div class="flow-node" style="font-size:11px;color:#6B7A99">fleet status<br><span style="color:#A8B4C8;font-size:10px">retrieved fresh</span></div>
+        <div class="flow-node" style="font-size:11px;color:#6B7A99">mission history<br><span style="color:#A8B4C8;font-size:10px">past missions</span></div>
+      </div>
+      <div class="flow-arrow">↓</div>
+
+      <!-- Approved plan -->
+      <div class="flow-node" style="border-color:rgba(155,111,212,0.4);background:rgba(155,111,212,0.06)">
+        <span style="color:#9B6FD4;font-weight:600">approved plan</span>
+        <div style="font-size:10.5px;color:#6B7A99;margin-top:3px">planning_agent triages → operator approves</div>
+      </div>
+      <div class="flow-arrow">↓</div>
+
+      <!-- Two flags -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="flow-node" style="border-color:rgba(34,197,94,0.3)">
+          <span style="color:#1DA067;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:11px">&lt;navigation required&gt;</span>
+          <div style="font-size:10.5px;color:#6B7A99;margin-top:3px">assessed from plan</div>
+        </div>
+        <div class="flow-node" style="border-color:rgba(245,158,11,0.3)">
+          <span style="color:#D97706;font-weight:600;font-family:'IBM Plex Mono',monospace;font-size:11px">&lt;error check required&gt;</span>
+          <div style="font-size:10.5px;color:#6B7A99;margin-top:3px">assessed from plan</div>
+        </div>
+      </div>
+
+      <!-- Conditional gates -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span class="cond-badge">@:' if true</span>
+          <div class="flow-arrow">↓</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span class="cond-badge">@:' if true</span>
+          <div class="flow-arrow">↓</div>
+        </div>
+      </div>
+
+      <!-- Distribute boxes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="flow-node" style="border-color:rgba(34,197,94,0.35);background:rgba(34,197,94,0.05)">
+          <div style="font-size:9.5px;color:#1DA067;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Distribute</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2D3748">uav_navigation.ncds</div>
+        </div>
+        <div class="flow-node" style="border-color:rgba(245,158,11,0.35);background:rgba(245,158,11,0.05)">
+          <div style="font-size:9.5px;color:#D97706;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Distribute</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2D3748">uav_error_check.ncds</div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">↓</div>
+      <div class="flow-node" style="border-color:rgba(155,111,212,0.3)">
+        <span style="color:#9B6FD4;font-weight:600">compiled results</span>
+        <span style="color:#6B7A99;font-size:11px"> → mission complete → returned to caller</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: what this means -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h3>What the conditions mean in practice</h3>
+
+      <div class="dispatch-box" style="background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2)">
+        <div class="dispatch-title text-green">Navigation only</div>
+        <div class="dispatch-item"><span class="dot" style="background:#22c55e"></span><span>Operator requests a survey flight or route execution</span></div>
+        <div class="dispatch-item"><span class="dot" style="background:#22c55e"></span><span>uav_navigation.ncds runs — uav_error_check.ncds is skipped entirely</span></div>
+      </div>
+
+      <div class="dispatch-box" style="background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2)">
+        <div class="dispatch-title text-amber">Error check only</div>
+        <div class="dispatch-item"><span class="dot" style="background:#f59e0b"></span><span>Operator requests inspection of a specific asset</span></div>
+        <div class="dispatch-item"><span class="dot" style="background:#f59e0b"></span><span>uav_error_check.ncds runs — uav_navigation.ncds is skipped entirely</span></div>
+      </div>
+
+      <div class="dispatch-box" style="background:rgba(139,92,246,0.05);border:1px solid rgba(155,111,212,0.2)">
+        <div class="dispatch-title text-purple">Both</div>
+        <div class="dispatch-item"><span class="dot" style="background:#8b5cf6"></span><span>Full mission: navigate to site, then inspect</span></div>
+        <div class="dispatch-item"><span class="dot" style="background:#8b5cf6"></span><span>Both sub-plans run from the same approved plan</span></div>
+      </div>
+
+      <div class="note-strip" style="margin-top:auto">
+        The conditions are declared in the contract and assessed by
+        <strong style="color:#2D3748">planning_agent</strong> —
+        not hardcoded. The same plan structure handles all three cases.
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

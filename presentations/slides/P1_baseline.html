@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P1 — The Baseline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    /* ---- Pipeline diagram ---- */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
+    }
+
+    .pipeline-box {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 6px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .pipeline-box-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #2D3748;
+    }
+
+    .pipeline-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 20px;
+      color: #A8B4C8;
+      font-size: 16px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    /* ---- Right column sub-section ---- */
+    .assessment-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .assessment-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .bullets-tight li {
+      font-size: 13.5px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <!-- Header -->
+  <div class="slide-header">
+    <span class="slide-number">P1</span>
+    <span class="tag tag-section">The Problem</span>
+  </div>
+
+  <!-- Headline -->
+  <div class="slide-headline">
+    Our Rule-Based Automation Works.
+    <span class="text-muted" style="font-weight:400">But It Has a Ceiling.</span>
+  </div>
+
+  <!-- Body: 40/60 two-column -->
+  <div class="col-2-4060" style="flex:1;min-height:0">
+
+    <!-- LEFT: Pipeline diagram -->
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <h3 style="margin-bottom:14px">Rule-based automation stack</h3>
+
+      <div class="pipeline">
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Mission Input</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+        <div class="pipeline-arrow">↓</div>
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Route Planning Algorithm</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+        <div class="pipeline-arrow">↓</div>
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Waypoint Execution Loop</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+        <div class="pipeline-arrow">↓</div>
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Sensor Data Collection</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+        <div class="pipeline-arrow">↓</div>
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Anomaly Detection Rules</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+        <div class="pipeline-arrow">↓</div>
+
+        <div class="pipeline-box">
+          <span class="pipeline-box-label">Report Generation</span>
+          <span class="tag tag-muted">deterministic</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: Strengths + Limits -->
+    <div style="display:flex;flex-direction:column;gap:18px">
+
+      <!-- What it does well -->
+      <div class="card" style="flex:1">
+        <div class="assessment-label text-green">What this does well</div>
+        <ul class="bullets bullets-tight" style="gap:9px">
+          <li class="check">Repeatable — same input produces the same output, every time</li>
+          <li class="check">Auditable — every decision is traceable to a rule</li>
+          <li class="check">Fast — no LLM latency on deterministic steps</li>
+          <li class="check">Bounded — behavior is constrained by the rule set</li>
+        </ul>
+      </div>
+
+      <!-- What it cannot do -->
+      <div class="card" style="flex:1">
+        <div class="assessment-label text-red">What it cannot do</div>
+        <ul class="bullets bullets-tight" style="gap:7px">
+          <li class="cross">Handle terrain or obstacle types outside the rule set</li>
+          <li class="cross">Adapt when the mission brief is ambiguous or novel</li>
+          <li class="cross">Learn from past missions to improve future ones</li>
+          <li class="cross">Reason about tradeoffs between competing objectives</li>
+          <li class="cross">Scale to new mission types without re-engineering rules</li>
+        </ul>
+      </div>
+
+    </div>
+    <!-- end right col -->
+
+  </div>
+  <!-- end col-2-4060 -->
+
+  <!-- Footer note -->
+  <div class="note-strip" style="margin-top:16px">
+    Rule-based automation is our foundation. It is not going away. The question is what we build on top of it.
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/: uav_analysis_criteria.ncds
+/: UAV Analysis Criteria — load defaults and refine with operator in discussion
+/:
+/: Dispatched from uav_error_check.ncds via Distribute.
+/: Loads default criteria for the mission type, presents them to the operator,
+/: and enters a discussion loop so the operator can modify, add, or remove
+/: criteria before analysis begins. Returns finalised criteria.
+/:
+/: Execution order (inside-out, top-down):
+/:   default criteria     — load rule-based defaults for mission type  (depends on approved plan)
+/:   on-going discussion  — self-seed empty                            (no deps)
+/:   all discussion turns — ReAct loop: present + refine with operator (depends on defaults)
+/:   finalised criteria   — confirmed by operator                      (root)
+
+<- finalised criteria
+    <= confirm and return operator-approved criteria
+
+    <- default criteria
+        <= load default analysis criteria for this mission type
+        <- approved plan
+
+    <- on-going discussion
+        <= initialize to empty discussion
+
+    <- all discussion turns
+        <= for every on-going message
+
+            <= return the discussion turn per iteration
+
+            <- discussion turn
+                <= bundle criteria state and operator response together
+
+                <- current criteria
+                    <= apply operator modifications to current criteria
+                    <- operator modifications
+                        <= extract requested modifications from operator message
+                        <- operator message
+                        <- current criteria
+                    <- current criteria
+                    <- default criteria
+
+                <- response sent
+                    <= present current criteria to operator and await input
+                    <- operator message
+                        <= read operator input
+
+            <- <criteria approved>
+                <= judge if operator has approved the criteria
+                <- operator message
+                <- current criteria
+
+            <- on-going discussion
+                <= append current message to discussion
+                    <= if criteria NOT yet approved
+                    <* <criteria approved>
+                <- operator message
+                <- on-going discussion
+
+        <- on-going discussion
+        <* message in on-going discussion
+
+    <- approved plan

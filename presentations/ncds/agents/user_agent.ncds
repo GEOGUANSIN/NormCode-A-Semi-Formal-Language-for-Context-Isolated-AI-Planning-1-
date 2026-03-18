@@ -1,0 +1,33 @@
+/: user_agent
+/: Operator-facing agent. Handles all interaction with the human operator.
+/:
+/: Context isolation:
+/:   Sees only the inputs scoped to its assigned step.
+/:   No access to drone telemetry, hardware state, or image data.
+/:   No access to other agents' internal reasoning.
+/:
+/: Abilities:
+/:   - human-in-the-loop   read operator input, send responses, await approval
+/:   - conversation        maintain and reason over conversation history
+/:   - intent resolution   interpret natural language, resolve ambiguity
+/:
+/: Assigned actions across plans:
+/:
+/:   uav_user_assistant.ncds
+/:     <= interpret operator message within conversation context
+/:     <= assess whether operator intent describes a mission request
+/:     <= assess whether operator intent is a direct question
+/:     <= assess whether operator intent is unclear or underspecified
+/:     <= send response to operator
+/:     <= answer operator question from fleet context and knowledge
+/:     <= generate targeted clarification question for operator
+/:     <= validate that mission intent is actionable
+/:     <= judge if the operator wants to end the session
+/:
+/:   uav_analysis_criteria.ncds
+/:     <= read operator input
+/:     <= extract requested modifications from operator message
+/:     <= present current criteria to operator and await input
+/:     <= judge if operator has approved the criteria
+/:
+/: Shared across: uav_user_assistant.ncds, uav_analysis_criteria.ncds

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E6 — The Agent Layer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/slides.css">
+  <style>
+    .agent-card {
+      background: #F5F8FF;
+      border: 1px solid #D8E2F0;
+      border-radius: 8px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .agent-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .agent-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .agent-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .agent-item {
+      font-size: 12px;
+      color: #6B7A99;
+      display: flex;
+      gap: 6px;
+      line-height: 1.35;
+      margin-bottom: 3px;
+    }
+    .agent-item .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .plans-row {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .plan-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      padding: 2px 7px;
+      border-radius: 3px;
+      background: #F0F4F8;
+      border: 1px solid #D8E2F0;
+      color: #6B7A99;
+    }
+    .isolation-strip {
+      font-size: 11px;
+      color: #A8B4C8;
+      font-style: italic;
+      border-top: 1px solid #E2EAF4;
+      padding-top: 7px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body style="margin:0;background:#FFFFFF">
+<div class="slide">
+
+  <div class="slide-header">
+    <span class="slide-number">E6</span>
+    <span class="tag tag-purple">Agentic Design</span>
+  </div>
+
+  <div class="slide-headline">
+    Four Agents.
+    <span class="text-muted" style="font-weight:400">Independent Contexts. Shared Across Plans.</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;flex:1;min-height:0">
+
+    <!-- user_agent -->
+    <div class="agent-card" style="border-color:rgba(30,159,224,0.3)">
+      <div class="agent-card-header">
+        <div class="agent-name text-blue">user_agent</div>
+      </div>
+      <div>
+        <div class="agent-section-label text-green">Abilities</div>
+        <div class="agent-item"><span class="dot" style="background:#3b82f6"></span>Human-in-the-loop — read input, send responses, await approval</div>
+        <div class="agent-item"><span class="dot" style="background:#3b82f6"></span>Conversation — reason over history, resolve ambiguity</div>
+        <div class="agent-item"><span class="dot" style="background:#3b82f6"></span>Intent resolution — classify operator messages</div>
+      </div>
+      <div>
+        <div class="agent-section-label" style="color:#6B7A99">Appears in</div>
+        <div class="plans-row">
+          <span class="plan-chip">uav_user_assistant.ncds</span>
+          <span class="plan-chip">uav_analysis_criteria.ncds</span>
+        </div>
+      </div>
+      <div class="isolation-strip">
+        Isolated from: drone telemetry, flight commands, sensor readings, image data
+      </div>
+    </div>
+
+    <!-- drone_agent -->
+    <div class="agent-card" style="border-color:rgba(34,197,94,0.3)">
+      <div class="agent-card-header">
+        <div class="agent-name text-green">drone_agent</div>
+      </div>
+      <div>
+        <div class="agent-section-label text-green">Abilities</div>
+        <div class="agent-item"><span class="dot" style="background:#22c55e"></span>Drone interface — send flight commands, receive telemetry</div>
+        <div class="agent-item"><span class="dot" style="background:#22c55e"></span>Sensor interface — trigger scans, collect sensor data</div>
+        <div class="agent-item"><span class="dot" style="background:#22c55e"></span>Camera interface — trigger capture, receive raw images</div>
+      </div>
+      <div>
+        <div class="agent-section-label" style="color:#6B7A99">Appears in</div>
+        <div class="plans-row">
+          <span class="plan-chip">uav_navigation.ncds</span>
+          <span class="plan-chip">uav_error_check.ncds</span>
+        </div>
+      </div>
+      <div class="isolation-strip">
+        Isolated from: operator conversation, session history, intent, mission-level state
+      </div>
+    </div>
+
+    <!-- analysis_agent -->
+    <div class="agent-card" style="border-color:rgba(245,158,11,0.3)">
+      <div class="agent-card-header">
+        <div class="agent-name text-amber">analysis_agent</div>
+      </div>
+      <div>
+        <div class="agent-section-label text-green">Abilities</div>
+        <div class="agent-item"><span class="dot" style="background:#f59e0b"></span>Image analysis — inspect images for defects, anomalies, patterns</div>
+        <div class="agent-item"><span class="dot" style="background:#f59e0b"></span>Criteria reasoning — apply and adapt analysis criteria</div>
+        <div class="agent-item"><span class="dot" style="background:#f59e0b"></span>File I/O — read captured images, write structured findings</div>
+      </div>
+      <div>
+        <div class="agent-section-label" style="color:#6B7A99">Appears in</div>
+        <div class="plans-row">
+          <span class="plan-chip">uav_error_check.ncds</span>
+          <span class="plan-chip">uav_analysis_criteria.ncds</span>
+        </div>
+      </div>
+      <div class="isolation-strip">
+        Isolated from: flight commands, operator conversation, telemetry, how images were captured
+      </div>
+    </div>
+
+    <!-- planning_agent -->
+    <div class="agent-card" style="border-color:rgba(155,111,212,0.3)">
+      <div class="agent-card-header">
+        <div class="agent-name text-purple">planning_agent</div>
+      </div>
+      <div>
+        <div class="agent-section-label text-green">Abilities</div>
+        <div class="agent-item"><span class="dot" style="background:#8b5cf6"></span>Mission reasoning — triage requests, assess mission components</div>
+        <div class="agent-item"><span class="dot" style="background:#8b5cf6"></span>Code execution — rule-based route planning, waypoint filtering</div>
+        <div class="agent-item"><span class="dot" style="background:#8b5cf6"></span>File I/O — read mission plans, write structured reports</div>
+      </div>
+      <div>
+        <div class="agent-section-label" style="color:#6B7A99">Appears in</div>
+        <div class="plans-row">
+          <span class="plan-chip">uav_mission.ncds</span>
+          <span class="plan-chip">uav_navigation.ncds</span>
+          <span class="plan-chip">uav_error_check.ncds</span>
+        </div>
+      </div>
+      <div class="isolation-strip">
+        Isolated from: operator conversation history, drone hardware, raw sensor data
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
